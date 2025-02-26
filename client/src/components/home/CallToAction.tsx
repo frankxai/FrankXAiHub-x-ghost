@@ -13,9 +13,10 @@ const CallToAction = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-5xl font-clash font-bold mb-6">Ready to Transform Your Enterprise with AI?</h2>
+          <h2 className="text-3xl md:text-5xl font-clash font-bold mb-6">Done with AI Disappointment?</h2>
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
-            Get started with FrankX.AI today and unlock the full potential of AI across your organization.
+            Let's build something that actually works. I've helped Fortune 500s cut through 
+            the AI hype—now it's your turn.
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -24,7 +25,7 @@ const CallToAction = () => {
                 className="bg-secondary hover:bg-secondary/90 h-14 px-8 text-white"
                 size="lg"
               >
-                Schedule a Consultation
+                Let's Talk, Frankly
               </Button>
             </Link>
             <Link href="/resources">
@@ -33,7 +34,7 @@ const CallToAction = () => {
                 className="border-white text-white hover:bg-white hover:bg-opacity-10 h-14 px-8"
                 size="lg"
               >
-                Explore Solutions
+                Show Me What Works
               </Button>
             </Link>
           </div>
