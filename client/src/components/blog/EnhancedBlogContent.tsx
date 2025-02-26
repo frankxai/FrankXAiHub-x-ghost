@@ -40,7 +40,8 @@ const EnhancedBlogContent: React.FC<EnhancedBlogContentProps> = ({
       <ReactMarkdown
         rehypePlugins={[rehypeRaw]}
         components={{
-          code({ node, inline, className, children, ...props }) {
+          code(props) {
+            const { className, children, ...rest } = props;
             const value = String(children).replace(/\n$/, '');
             
             // Check if this is a mermaid placeholder
@@ -49,10 +50,11 @@ const EnhancedBlogContent: React.FC<EnhancedBlogContentProps> = ({
             }
             
             const match = /language-(\w+)/.exec(className || '');
+            const isInline = !(rest.node?.tagName === 'pre');
             
-            return !inline && match ? (
+            return !isInline && match ? (
               <SyntaxHighlighter
-                style={coldarkDark}
+                style={coldarkDark as any}
                 language={match[1]}
                 PreTag="div"
                 className="rounded-md !bg-zinc-900 dark:!bg-black my-8"
@@ -61,20 +63,19 @@ const EnhancedBlogContent: React.FC<EnhancedBlogContentProps> = ({
                   borderRadius: '0.5rem',
                   fontSize: '0.9rem',
                 }}
-                {...props}
               >
                 {value}
               </SyntaxHighlighter>
             ) : (
               <code
                 className={`${className} rounded px-1 py-0.5 bg-gray-100 dark:bg-gray-800`}
-                {...props}
+                {...rest}
               >
                 {children}
               </code>
             );
           },
-          img({ node, ...props }) {
+          img(props) {
             return (
               <img 
                 className="rounded-lg shadow-md my-8 max-h-[600px] object-cover mx-auto" 
@@ -83,7 +84,7 @@ const EnhancedBlogContent: React.FC<EnhancedBlogContentProps> = ({
               />
             );
           },
-          blockquote({ node, ...props }) {
+          blockquote(props) {
             return (
               <blockquote 
                 className="border-l-4 border-secondary pl-4 italic my-6 text-gray-700 dark:text-gray-300"
@@ -91,7 +92,7 @@ const EnhancedBlogContent: React.FC<EnhancedBlogContentProps> = ({
               />
             );
           },
-          a({ node, ...props }) {
+          a(props) {
             return (
               <a
                 className="text-secondary hover:text-secondary/80 transition-colors"

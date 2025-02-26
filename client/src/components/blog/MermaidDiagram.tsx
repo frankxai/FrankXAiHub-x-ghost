@@ -1,13 +1,8 @@
 import { useEffect, useRef } from 'react';
 import mermaid from 'mermaid';
+import { useTheme } from '@/hooks/use-theme';
 
-// Initialize mermaid with configuration
-mermaid.initialize({
-  startOnLoad: true,
-  theme: 'neutral',
-  securityLevel: 'loose',
-  fontFamily: 'Inter, sans-serif',
-});
+// We'll initialize mermaid in the component to handle theme changes
 
 interface MermaidDiagramProps {
   chart: string;
@@ -16,8 +11,18 @@ interface MermaidDiagramProps {
 
 const MermaidDiagram = ({ chart, className = '' }: MermaidDiagramProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
   
   useEffect(() => {
+    // Initialize with theme-specific configuration
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: theme === 'dark' ? 'dark' : 'neutral',
+      securityLevel: 'loose',
+      fontFamily: 'Inter, sans-serif',
+      darkMode: theme === 'dark',
+    });
+    
     if (containerRef.current) {
       try {
         // Clear existing content to prevent duplicates
@@ -43,7 +48,7 @@ const MermaidDiagram = ({ chart, className = '' }: MermaidDiagramProps) => {
         }
       }
     }
-  }, [chart]);
+  }, [chart, theme]);
 
   return (
     <div 

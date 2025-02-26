@@ -24,12 +24,12 @@ const BlogPost = () => {
       <div className="pt-28 pb-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
-            <div className="h-10 bg-gray-200 rounded animate-pulse mb-4 w-3/4"></div>
-            <div className="h-6 bg-gray-200 rounded animate-pulse mb-8 w-1/2"></div>
-            <div className="aspect-video bg-gray-200 rounded animate-pulse mb-8"></div>
+            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mb-4 w-3/4"></div>
+            <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mb-8 w-1/2"></div>
+            <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded animate-pulse mb-8"></div>
             <div className="space-y-4">
               {[...Array(10)].map((_, i) => (
-                <div key={i} className="h-4 bg-gray-200 rounded animate-pulse w-full"></div>
+                <div key={i} className="h-4 bg-gray-200 dark:bg-gray-800 rounded animate-pulse w-full"></div>
               ))}
             </div>
           </div>
@@ -43,7 +43,7 @@ const BlogPost = () => {
       <div className="pt-28 pb-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
-          <p className="text-overlay mb-6">The article you're looking for doesn't exist or has been removed.</p>
+          <p className="text-muted-foreground mb-6">The article you're looking for doesn't exist or has been removed.</p>
           <Button onClick={() => window.history.back()}>Go Back</Button>
         </div>
       </div>
