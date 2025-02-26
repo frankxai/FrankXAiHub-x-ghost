@@ -4,55 +4,72 @@
 
 @layer base {
   :root {
-    --primary: 210 100% 35%;
+    /* Near black (sleek, high-tech aesthetic) - FrankX.AI primary brand color */
+    --primary: 0 0% 9%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 195 100% 44%;
+    /* Electric blue (futuristic, AI innovation) */
+    --secondary: 195 100% 50%;
     --secondary-foreground: 0 0% 100%;
     
-    --accent: 285 70% 36%;
+    /* Coral red (energy, creativity) */
+    --accent: 348 100% 60%;
     --accent-foreground: 0 0% 100%;
     
+    /* Clean white background with dark text */
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
     
+    /* Card styling */
     --card: 210 40% 98%;
     --card-foreground: 222 47% 11%;
     
+    /* Popover styling */
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
     
+    /* Border and input styling */
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     
+    /* Muted elements */
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
     
+    /* Border radius */
     --radius: 0.5rem;
   }
  
   .dark {
-    --primary: 210 100% 40%;
+    /* Near black primary with slightly lighter shade for dark mode */
+    --primary: 0 0% 9%;
     --primary-foreground: 0 0% 100%;
     
+    /* Brighter electric blue for dark mode */
     --secondary: 195 100% 50%;
     --secondary-foreground: 0 0% 100%;
     
-    --accent: 285 70% 45%;
+    /* Brighter coral accent for dark mode */
+    --accent: 348 100% 60%;
     --accent-foreground: 0 0% 100%;
     
-    --background: 222 47% 11%;
+    /* Dark mode background - deep navy/black */
+    --background: 222 35% 6%;
     --foreground: 210 40% 98%;
     
-    --card: 222 47% 15%;
+    /* Dark mode card */
+    --card: 222 47% 11%;
     --card-foreground: 210 40% 98%;
     
+    /* Dark mode popover */
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
     
+    /* Dark mode border and input */
     --border: 217 33% 17%;
     --input: 217 33% 17%;
     
+    /* Dark mode muted elements */
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
   }
@@ -63,27 +80,69 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground transition-colors duration-300;
+    text-rendering: optimizeLegibility;
   }
 }
 
 @layer components {
+  /* Useful utility classes */
   .gradient-text {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent;
   }
   
+  .gradient-text-primary {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+  }
+  
+  .glass-panel {
+    @apply bg-white/80 dark:bg-slate-900/70 backdrop-blur-md border border-white/20 dark:border-slate-700/30;
+  }
+  
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+  
+  .card-modern {
+    @apply bg-white dark:bg-slate-800/90 backdrop-blur-sm rounded-xl border border-slate-100 dark:border-slate-700/30 shadow-lg shadow-slate-200/50 dark:shadow-black/20 p-6 transition-all duration-300;
   }
   
   .enterprise-container {
     @apply container mx-auto px-4 sm:px-6 lg:px-8;
   }
   
+  /* Typography classes */
   .section-heading {
-    @apply text-3xl md:text-4xl font-clash font-bold mb-6;
+    @apply text-3xl md:text-5xl font-clash font-bold mb-6;
   }
   
   .section-subheading {
-    @apply text-xl text-muted-foreground mb-10 max-w-2xl;
+    @apply text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl leading-relaxed;
+  }
+  
+  /* Animation utility classes */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-secondary/10;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-secondary/20;
+  }
+  
+  /* Color washes and gradient overlays */
+  .gradient-wash-primary {
+    @apply bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20;
+  }
+  
+  .gradient-wash-secondary {
+    @apply bg-gradient-to-br from-secondary/5 to-secondary/10 dark:from-secondary/10 dark:to-secondary/20;
+  }
+  
+  .gradient-wash-accent {
+    @apply bg-gradient-to-br from-accent/5 to-accent/10 dark:from-accent/10 dark:to-accent/20;
+  }
+  
+  /* Sophisticated button effects */
+  .btn-glow {
+    @apply shadow-lg shadow-secondary/20 hover:shadow-xl hover:shadow-secondary/30 transition-all duration-300;
   }
 }
