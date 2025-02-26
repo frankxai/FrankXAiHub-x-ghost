@@ -1,10 +1,13 @@
 // Color scheme
 export const COLORS = {
-  primary: '#171717',
-  secondary: '#00C2FF',
-  accent: '#FF3366',
+  primary: '#0056B3',
+  secondary: '#00A6E0',
+  accent: '#6A1B9A',
   background: '#FFFFFF',
-  overlay: '#8A8F98',
+  backgroundDark: '#121620',
+  text: '#1A202C',
+  textDark: '#F7FAFC',
+  overlay: '#64748B',
 };
 
 // Navigation links
@@ -47,8 +50,8 @@ export const FEATURES = [
 // Company info for footer
 export const COMPANY_INFO = {
   name: 'FrankX.AI',
-  description: 'A global AI Center of Excellence helping enterprises implement strategic AI solutions that drive innovation and measurable business outcomes.',
-  tagline: 'Next-Gen AI Excellence™',
+  description: 'Enterprise AI Center of Excellence delivering strategic implementation frameworks, governance models, and transformative business solutions for Fortune 500 companies worldwide.',
+  tagline: 'Enterprise AI Transformation Partner',
   social: [
     { name: 'LinkedIn', icon: 'linkedin', url: '#' },
     { name: 'Twitter', icon: 'twitter', url: '#' },

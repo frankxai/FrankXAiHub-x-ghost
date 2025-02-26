@@ -31,13 +31,13 @@ const HeroSection = () => {
             variants={itemVariants}
           >
             <h1 className="text-4xl md:text-6xl font-clash font-bold leading-tight mb-6">
-              Next-Gen <br />
+              Enterprise <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">
-                AI Excellence
+                AI Transformation
               </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
-              Transforming enterprises and innovators with AI that delivers measurable impact. From strategy to implementation—we build solutions that create real competitive advantage.
+              Strategic AI implementation for Fortune 500 companies. Our Center of Excellence accelerates adoption, maximizes ROI, and builds sustainable competitive advantage through data-driven solutions.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -66,7 +66,7 @@ const HeroSection = () => {
                 ))}
               </div>
               <div className="ml-4">
-                <p className="text-sm text-muted-foreground">"Transformative AI expertise for enterprise"</p>
+                <p className="text-sm text-muted-foreground">"Strategic AI implementation expertise driving measurable business outcomes"</p>
                 <div className="flex items-center">
                   <div className="flex text-yellow-400">
                     <Star className="h-4 w-4 fill-current" />
@@ -75,7 +75,7 @@ const HeroSection = () => {
                     <Star className="h-4 w-4 fill-current" />
                     <StarHalf className="h-4 w-4 fill-current" />
                   </div>
-                  <span className="ml-1 text-sm font-medium text-muted-foreground">4.8/5 — Fortune 500 clients</span>
+                  <span className="ml-1 text-sm font-medium text-muted-foreground">4.8/5 — Global 2000 Enterprises</span>
                 </div>
               </div>
             </div>
@@ -168,8 +168,8 @@ const HeroSection = () => {
                     </svg>
                   </div>
                   <div className="text-center">
-                    <h4 className="font-medium text-sm">FrankX Assistant</h4>
-                    <p className="text-xs text-muted-foreground">Enterprise AI</p>
+                    <h4 className="font-medium text-sm">Enterprise AI Assistant</h4>
+                    <p className="text-xs text-muted-foreground">Advanced Analytics</p>
                   </div>
                 </motion.div>
                 
