@@ -5,7 +5,8 @@ import { pageVariants, containerVariants, itemVariants } from "@/lib/animations"
 import { Resource, BlogPost, MusicSample } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { BarChart, LineChart, PieChart } from "@/components/ui/charts";
+// Remove non-existent charts import
+// import { BarChart, LineChart, PieChart } from "@/components/ui/charts";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -285,6 +286,344 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          {/* Content Creation Central Hub */}
+          <TabsContent value="content" className="mt-6">
+            <div className="grid grid-cols-1 gap-6">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <div>
+                  <h2 className="text-2xl font-clash font-bold mb-1">Content Creation Hub</h2>
+                  <p className="text-muted-foreground">Manage all your content in one place</p>
+                </div>
+                <div className="mt-4 md:mt-0 space-x-2">
+                  <Button onClick={() => setActiveTab("blog")} className="bg-[#171717] text-white hover:bg-[#171717]/90">
+                    <Edit className="mr-2 h-4 w-4" /> Create Blog Post
+                  </Button>
+                  <Button onClick={() => setActiveTab("music")} className="bg-[#00C2FF] text-white hover:bg-[#00C2FF]/90">
+                    <Music className="mr-2 h-4 w-4" /> Create Music
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base font-medium">Recent Blog Posts</CardTitle>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="grid gap-2">
+                    <div className="flex items-center space-x-4 rounded-md border p-4">
+                      <PenTool className="h-6 w-6 text-[#00C2FF]" />
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm font-medium leading-none">Building an AI Center of Excellence</p>
+                        <p className="text-sm text-muted-foreground">Feb 24, 2025 • 5 mins read</p>
+                      </div>
+                      <Button variant="ghost" size="sm" className="ml-auto flex shrink-0 items-center gap-1">
+                        Edit
+                      </Button>
+                    </div>
+                    <div className="flex items-center space-x-4 rounded-md border p-4">
+                      <PenTool className="h-6 w-6 text-[#FF3366]" />
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm font-medium leading-none">AI Implementation Guide for Enterprises</p>
+                        <p className="text-sm text-muted-foreground">Feb 20, 2025 • 8 mins read</p>
+                      </div>
+                      <Button variant="ghost" size="sm" className="ml-auto flex shrink-0 items-center gap-1">
+                        Edit
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base font-medium">AI Music Samples</CardTitle>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="grid gap-2">
+                    <div className="flex items-center space-x-4 rounded-md border p-4">
+                      <Music className="h-6 w-6 text-[#00C2FF]" />
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm font-medium leading-none">Corporate Innovation</p>
+                        <p className="text-sm text-muted-foreground">Ambient • 3:24</p>
+                      </div>
+                      <Button variant="ghost" size="icon" className="ml-auto h-8 w-8">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex items-center space-x-4 rounded-md border p-4">
+                      <Music className="h-6 w-6 text-[#FF3366]" />
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm font-medium leading-none">Tech Future</p>
+                        <p className="text-sm text-muted-foreground">Electronic • 2:45</p>
+                      </div>
+                      <Button variant="ghost" size="icon" className="ml-auto h-8 w-8">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base font-medium">Recent Analytics</CardTitle>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <BarChart3 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium leading-none">Blog Views</p>
+                          <div className="text-sm font-medium">1,293</div>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+                          <div className="h-full rounded-full bg-gradient-to-r from-[#171717] to-[#00C2FF]" style={{ width: "75%" }} />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium leading-none">Music Plays</p>
+                          <div className="text-sm font-medium">845</div>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+                          <div className="h-full rounded-full bg-gradient-to-r from-[#00C2FF] to-[#FF3366]" style={{ width: "63%" }} />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium leading-none">Resource Downloads</p>
+                          <div className="text-sm font-medium">327</div>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+                          <div className="h-full rounded-full bg-gradient-to-r from-[#FF3366] to-[#171717]" style={{ width: "45%" }} />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+          
+          {/* Music Studio Tab */}
+          <TabsContent value="music" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>AI Music Studio</CardTitle>
+                    <CardDescription>
+                      Upload and manage your AI-generated music or use Suno links to import tracks
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <MusicUploader />
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Suno AI Integration</CardTitle>
+                    <CardDescription>
+                      Paste a Suno link to directly import your AI-generated music
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="sunoLink" className="block text-sm font-medium mb-1">
+                          Suno Track Link
+                        </label>
+                        <div className="flex gap-2">
+                          <Input 
+                            id="sunoLink"
+                            placeholder="https://suno.ai/song/..."
+                            className="flex-1"
+                          />
+                          <Button className="bg-gradient-to-r from-[#00C2FF] to-[#FF3366] text-white hover:opacity-90">
+                            <ArrowUpRight className="mr-2 h-4 w-4" />
+                            Import
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Alternatively, you can upload MP3 files directly from your computer using the uploader.
+                        </p>
+                        
+                        <div className="p-4 border border-dashed rounded-lg">
+                          <div className="flex items-center">
+                            <div className="bg-[#00C2FF]/10 p-2 rounded-full mr-3">
+                              <Layers className="h-5 w-5 text-[#00C2FF]" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Your music is stored securely</p>
+                              <p className="text-xs text-muted-foreground">
+                                Files are stored with high-quality compression and streaming capabilities
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Music Library Management</CardTitle>
+                    <CardDescription>
+                      Organize and categorize your AI music collection
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="flex items-center space-x-3 border rounded-lg p-3">
+                          <div className="flex-shrink-0">
+                            <div className="h-10 w-10 rounded-md bg-gradient-to-br from-[#00C2FF] to-[#FF3366] flex items-center justify-center">
+                              <Music className="h-5 w-5 text-white" />
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">Ambient</p>
+                            <p className="text-xs text-muted-foreground">3 tracks</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-3 border rounded-lg p-3">
+                          <div className="flex-shrink-0">
+                            <div className="h-10 w-10 rounded-md bg-gradient-to-br from-[#171717] to-[#00C2FF] flex items-center justify-center">
+                              <Music className="h-5 w-5 text-white" />
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">Electronic</p>
+                            <p className="text-xs text-muted-foreground">2 tracks</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-3 border rounded-lg p-3">
+                          <div className="flex-shrink-0">
+                            <div className="h-10 w-10 rounded-md bg-gradient-to-br from-[#FF3366] to-[#171717] flex items-center justify-center">
+                              <Music className="h-5 w-5 text-white" />
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">Corporate</p>
+                            <p className="text-xs text-muted-foreground">4 tracks</p>
+                          </div>
+                        </div>
+                        
+                        <Button variant="outline" className="flex items-center justify-center h-full">
+                          <PlusCircle className="h-4 w-4 mr-2" />
+                          Add Category
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+          
+          {/* Blog Editor Tab */}
+          <TabsContent value="blog" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>New Blog Post</CardTitle>
+                    <CardDescription>
+                      Create a new blog post with rich multimedia content
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="postTitle" className="block text-sm font-medium mb-1">
+                          Post Title
+                        </label>
+                        <Input 
+                          id="postTitle"
+                          placeholder="Enter a compelling title..."
+                        />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="postExcerpt" className="block text-sm font-medium mb-1">
+                          Excerpt
+                        </label>
+                        <Textarea
+                          id="postExcerpt"
+                          placeholder="Write a brief summary of your post..."
+                          rows={3}
+                        />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="postCategory" className="block text-sm font-medium mb-1">
+                          Category
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {["AI Strategy", "Implementation", "Case Studies", "Technical", "Thought Leadership"].map((category) => (
+                            <Button 
+                              key={category}
+                              variant="outline" 
+                              className="mb-2 text-xs"
+                              size="sm"
+                            >
+                              {category}
+                            </Button>
+                          ))}
+                          <Button variant="outline" size="sm" className="mb-2 text-xs">
+                            <PlusCircle className="h-3 w-3 mr-1" /> New
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="postContent" className="block text-sm font-medium mb-1">
+                          Content
+                        </label>
+                        <Textarea
+                          id="postContent"
+                          placeholder="Write your post content or use markdown..."
+                          rows={10}
+                          className="font-mono text-sm"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <Button variant="outline">Save Draft</Button>
+                    <Button className="bg-gradient-to-r from-[#171717] to-[#00C2FF] text-white hover:opacity-90">
+                      Publish Post
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
+              
+              <div>
+                <BlogContentUploader />
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
