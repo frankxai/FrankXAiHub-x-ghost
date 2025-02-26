@@ -58,8 +58,8 @@ const Conversation = () => {
               {selectedCharacter ? (
                 <ChatInterface character={selectedCharacter} />
               ) : (
-                <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
-                  <p className="text-lg text-overlay">Please select an AI character to start a conversation.</p>
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-8 text-center border border-gray-100 dark:border-gray-700">
+                  <p className="text-lg text-overlay dark:text-gray-300">Please select an AI character to start a conversation.</p>
                 </div>
               )}
             </div>

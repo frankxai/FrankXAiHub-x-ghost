@@ -52,8 +52,8 @@ const Resources = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-clash font-bold mb-4">AI Center of Excellence</h1>
-          <p className="text-lg text-overlay">
+          <h1 className="text-4xl md:text-5xl font-clash font-bold mb-4 dark:text-white">AI Center of Excellence</h1>
+          <p className="text-lg text-overlay dark:text-gray-300">
             Access frameworks, tools, and resources to build your organization's AI capabilities.
           </p>
         </div>
@@ -111,7 +111,7 @@ const Resources = () => {
         
         {/* Featured resources section */}
         <section className="mb-16">
-          <h2 className="text-2xl font-clash font-bold mb-6">Featured Resources</h2>
+          <h2 className="text-2xl font-clash font-bold mb-6 dark:text-white">Featured Resources</h2>
           
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 gap-8"
@@ -120,33 +120,33 @@ const Resources = () => {
             animate="animate"
           >
             <motion.div 
-              className="bg-gray-50 rounded-2xl p-8 border border-gray-100"
+              className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700"
               variants={itemVariants}
             >
-              <div className="mb-4 text-secondary">
+              <div className="mb-4 text-[#00C2FF] dark:text-[#00C2FF]">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-clash font-bold mb-2">Complete AI Transformation Playbook</h3>
-              <p className="text-overlay mb-6">A comprehensive guide to implementing AI across your organization, from strategy to execution.</p>
-              <Button>
+              <h3 className="text-2xl font-clash font-bold mb-2 dark:text-white">Complete AI Transformation Playbook</h3>
+              <p className="text-overlay dark:text-gray-300 mb-6">A comprehensive guide to implementing AI across your organization, from strategy to execution.</p>
+              <Button className="dark:bg-[#00C2FF] dark:text-white dark:hover:bg-[#0099CC]">
                 Download Playbook
               </Button>
             </motion.div>
             
             <motion.div 
-              className="bg-gray-50 rounded-2xl p-8 border border-gray-100"
+              className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700"
               variants={itemVariants}
             >
-              <div className="mb-4 text-accent">
+              <div className="mb-4 text-[#FF3366] dark:text-[#FF3366]">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-clash font-bold mb-2">AI Center of Excellence Webinar Series</h3>
-              <p className="text-overlay mb-6">Join our expert-led webinars on building and scaling an AI Center of Excellence in your organization.</p>
-              <Button>
+              <h3 className="text-2xl font-clash font-bold mb-2 dark:text-white">AI Center of Excellence Webinar Series</h3>
+              <p className="text-overlay dark:text-gray-300 mb-6">Join our expert-led webinars on building and scaling an AI Center of Excellence in your organization.</p>
+              <Button className="dark:bg-[#00C2FF] dark:text-white dark:hover:bg-[#0099CC]">
                 Register Now
               </Button>
             </motion.div>
@@ -155,12 +155,12 @@ const Resources = () => {
         
         {/* Resources grid */}
         <section>
-          <h2 className="text-2xl font-clash font-bold mb-6">All Resources</h2>
+          <h2 className="text-2xl font-clash font-bold mb-6 dark:text-white">All Resources</h2>
           
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div key={i} className="bg-gray-100 rounded-2xl h-48 animate-pulse"></div>
+                <div key={i} className="bg-gray-100 dark:bg-gray-700 rounded-2xl h-48 animate-pulse"></div>
               ))}
             </div>
           ) : filteredResources && filteredResources.length > 0 ? (
@@ -182,12 +182,15 @@ const Resources = () => {
             </motion.div>
           ) : (
             <div className="text-center py-12">
-              <h3 className="text-xl font-medium mb-2">No resources found</h3>
-              <p className="text-overlay mb-6">Try adjusting your search or filters</p>
-              <Button onClick={() => {
-                setSearchTerm("");
-                setActiveType("all");
-              }}>
+              <h3 className="text-xl font-medium mb-2 dark:text-white">No resources found</h3>
+              <p className="text-overlay dark:text-gray-300 mb-6">Try adjusting your search or filters</p>
+              <Button 
+                onClick={() => {
+                  setSearchTerm("");
+                  setActiveType("all");
+                }}
+                className="dark:bg-[#00C2FF] dark:text-white dark:hover:bg-[#0099CC]"
+              >
                 Clear Filters
               </Button>
             </div>
@@ -195,14 +198,14 @@ const Resources = () => {
         </section>
         
         {/* CTA Section */}
-        <section className="mt-20 bg-gray-900 text-white rounded-2xl p-8 md:p-12">
+        <section className="mt-20 bg-gray-900 dark:bg-gray-900 text-white rounded-2xl p-8 md:p-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <h2 className="text-3xl font-clash font-bold mb-4">Need Custom AI Resources?</h2>
               <p className="text-gray-300 mb-6">
                 Our team of AI experts can develop customized frameworks, training programs, and implementation guides specific to your organization's needs.
               </p>
-              <Button className="bg-secondary hover:bg-secondary/90 text-white">
+              <Button className="bg-[#00C2FF] hover:bg-[#00C2FF]/90 text-white">
                 Request Custom Resources
               </Button>
             </div>
