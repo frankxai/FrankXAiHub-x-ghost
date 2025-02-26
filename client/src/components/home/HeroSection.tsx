@@ -62,7 +62,7 @@ const HeroSection = () => {
             <h1 className="text-5xl md:text-7xl font-clash font-bold leading-tight mb-8">
               <span className="text-slate-900 dark:text-white">Crafting</span> <br />
               <motion.span 
-                className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent"
+                className="bg-clip-text text-transparent bg-gradient-to-r from-[#171717] via-[#00C2FF] to-[#FF3366]"
                 initial={{ backgroundPosition: '0% center' }}
                 animate={{ backgroundPosition: '100% center' }}
                 transition={{ 
@@ -89,7 +89,7 @@ const HeroSection = () => {
                   whileHover={{ scale: 1.03, boxShadow: "0 20px 40px -12px rgba(0, 120, 255, 0.18)" }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 h-14 px-8 rounded-xl shadow-xl shadow-primary/10 dark:shadow-primary/20 group">
+                  <Button className="bg-gradient-to-r from-[#171717] to-[#00C2FF] hover:from-[#171717]/90 hover:to-[#00C2FF]/90 h-14 px-8 rounded-xl shadow-xl shadow-[#00C2FF]/10 dark:shadow-[#00C2FF]/20 group">
                     <Atom className="mr-2 h-5 w-5" /> Experience My AI Lab
                   </Button>
                 </motion.div>
@@ -113,8 +113,8 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
             >
-              <div className="mr-4 h-12 w-12 rounded-xl bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center shadow-inner">
-                <Brain className="h-6 w-6 text-secondary dark:text-white" />
+              <div className="mr-4 h-12 w-12 rounded-xl bg-gradient-to-br from-[#00C2FF]/20 to-[#FF3366]/20 flex items-center justify-center shadow-inner">
+                <Brain className="h-6 w-6 text-[#00C2FF] dark:text-white" />
               </div>
               <div>
                 <p className="font-medium text-slate-900 dark:text-white">Pushing AI boundaries since 2022</p>
@@ -173,7 +173,7 @@ const HeroSection = () => {
                       </div>
                       <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
                         <motion.div 
-                          className="h-full rounded-full bg-gradient-to-r from-secondary to-accent"
+                          className="h-full rounded-full bg-gradient-to-r from-[#00C2FF] to-[#FF3366]"
                           initial={{ width: 0 }}
                           animate={{ width: "92%" }}
                           transition={{ duration: 1, delay: 0.5 }}
@@ -188,7 +188,7 @@ const HeroSection = () => {
                       </div>
                       <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
                         <motion.div 
-                          className="h-full rounded-full bg-gradient-to-r from-primary to-secondary"
+                          className="h-full rounded-full bg-gradient-to-r from-[#171717] to-[#00C2FF]"
                           initial={{ width: 0 }}
                           animate={{ width: "87%" }}
                           transition={{ duration: 1, delay: 0.7 }}
@@ -226,8 +226,8 @@ const HeroSection = () => {
                     transition: { duration: 0.3 } 
                   }}
                 >
-                  <div className="bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 rounded-lg h-24 mb-3 flex items-center justify-center">
-                    <Layers className="h-10 w-10 text-primary dark:text-white" />
+                  <div className="bg-gradient-to-br from-[#171717]/10 to-[#00C2FF]/10 dark:from-[#171717]/20 dark:to-[#00C2FF]/20 rounded-lg h-24 mb-3 flex items-center justify-center">
+                    <Layers className="h-10 w-10 text-[#171717] dark:text-white" />
                   </div>
                   <div>
                     <h4 className="font-medium text-base text-slate-900 dark:text-white mb-1">Neural Networks</h4>
