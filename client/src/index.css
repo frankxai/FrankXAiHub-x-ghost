@@ -3,11 +3,87 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --primary: 210 100% 35%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 195 100% 44%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --accent: 285 70% 36%;
+    --accent-foreground: 0 0% 100%;
+    
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    
+    --card: 210 40% 98%;
+    --card-foreground: 222 47% 11%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --primary: 210 100% 40%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 195 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --accent: 285 70% 45%;
+    --accent-foreground: 0 0% 100%;
+    
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    
+    --card: 222 47% 15%;
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+  }
+
   * {
     @apply border-border;
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground transition-colors duration-300;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  .enterprise-container {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-heading {
+    @apply text-3xl md:text-4xl font-clash font-bold mb-6;
+  }
+  
+  .section-subheading {
+    @apply text-xl text-muted-foreground mb-10 max-w-2xl;
   }
 }

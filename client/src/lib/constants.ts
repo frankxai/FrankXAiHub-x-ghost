@@ -10,40 +10,41 @@ export const COLORS = {
   overlay: '#64748B',
 };
 
-// Navigation links
+// Navigation links with SEO-optimized labels
 export const NAV_LINKS = [
   { title: 'Home', path: '/' },
-  { title: 'Insights & Research', path: '/blog' },
-  { title: 'AI Excellence Hub', path: '/resources' },
-  { title: 'AI Assistants', path: '/conversation' },
-  { title: 'Media Generation', path: '/music' },
+  { title: 'AI Insights', path: '/blog' },
+  { title: 'Center of Excellence', path: '/resources' },
+  { title: 'Enterprise Strategy', path: '/conversation' },
+  { title: 'Generative AI', path: '/music' },
+  { title: 'AI Assessment', path: '/assessment' },
 ];
 
-// Feature sections
+// Feature sections with SEO-optimized keywords
 export const FEATURES = [
   {
     title: 'AI Center of Excellence',
-    description: 'Access strategic frameworks, implementation guides, and best practices to develop your enterprise AI capability and governance structure.',
+    description: 'Access enterprise-grade frameworks, governance models, and implementation playbooks to establish a strategic AI Center of Excellence within your organization.',
     icon: 'brain',
     iconColor: 'secondary',
     link: '/resources',
-    linkText: 'Explore Resources',
+    linkText: 'Access CoE Resources',
   },
   {
-    title: 'Enterprise AI Assistants',
-    description: 'Leverage our advanced AI assistants designed specifically for enterprise use cases from strategy development to implementation planning.',
+    title: 'Enterprise AI Strategy',
+    description: 'Develop comprehensive AI transformation strategies with our advanced AI assistants specialized in ROI analysis, implementation planning, and change management.',
     icon: 'robot',
     iconColor: 'accent',
     link: '/conversation',
-    linkText: 'Explore Assistants',
+    linkText: 'Strategic Planning Tools',
   },
   {
-    title: 'AI Media Generation',
-    description: 'Discover cutting-edge AI tools for content creation, digital asset generation, and creative applications across your organization.',
-    icon: 'music',
+    title: 'Generative AI Applications',
+    description: 'Explore enterprise-ready generative AI solutions for content creation, data visualization, and creative business applications with measurable business outcomes.',
+    icon: 'sparkles',
     iconColor: 'primary',
     link: '/music',
-    linkText: 'Explore Media Tools',
+    linkText: 'Explore Generative AI',
   },
 ];
 
