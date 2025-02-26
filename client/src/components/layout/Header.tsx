@@ -136,7 +136,7 @@ const Header = () => {
                   FrankX.AI
                 </motion.span>
                 <span className="text-xs text-muted-foreground font-medium leading-tight">
-                  Enterprise AI Excellence
+                  AI Excellence for People
                 </span>
               </div>
             </motion.div>
@@ -196,7 +196,7 @@ const Header = () => {
                 variants={buttonVariants}
               >
                 <Button className="bg-secondary hover:bg-secondary text-white h-10 px-4 gap-1.5 group shadow-md shadow-secondary/20 dark:shadow-secondary/10 font-medium">
-                  Build Your AI CoE
+                  Start Your AI Journey
                   <ChevronRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
                 </Button>
               </motion.div>
@@ -230,7 +230,7 @@ const Header = () => {
                   </div>
                 </SheetTitle>
                 <SheetDescription>
-                  Enterprise AI Excellence
+                  AI Excellence for People
                 </SheetDescription>
               </SheetHeader>
               <div className="flex flex-col space-y-1">
@@ -269,8 +269,8 @@ const Header = () => {
                   <Badge variant="outline" className="mb-2 bg-secondary/10 text-secondary border-secondary/20">
                     Featured
                   </Badge>
-                  <h4 className="text-sm font-medium mb-1">AI Center of Excellence</h4>
-                  <p className="text-xs text-muted-foreground mb-2">Establish your enterprise AI governance and strategy</p>
+                  <h4 className="text-sm font-medium mb-1">Personal AI Excellence</h4>
+                  <p className="text-xs text-muted-foreground mb-2">Elevate your AI skills and transform how you work</p>
                   <Link 
                     href="/assessment"
                     onClick={() => setMobileMenuOpen(false)}
@@ -279,7 +279,7 @@ const Header = () => {
                       className="bg-secondary hover:bg-secondary/90 text-white w-full"
                       size="sm"
                     >
-                      Build Your AI CoE
+                      Start Your AI Journey
                     </Button>
                   </Link>
                 </div>

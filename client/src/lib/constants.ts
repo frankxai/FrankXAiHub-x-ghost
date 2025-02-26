@@ -23,36 +23,36 @@ export const NAV_LINKS = [
 // Feature sections with SEO-optimized keywords
 export const FEATURES = [
   {
-    title: 'AI Center of Excellence',
-    description: 'Enterprise-grade frameworks, governance models, and implementation playbooks to establish strategic AI capabilities aligned with business objectives and regulatory requirements.',
-    icon: 'building',
+    title: 'Personal AI Mastery',
+    description: 'Intuitive frameworks and learning paths designed to help individuals master AI tools and techniques that enhance creativity, productivity and innovation in everyday work.',
+    icon: 'user',
     iconColor: 'secondary',
     link: '/resources',
-    linkText: 'Explore Excellence Framework',
+    linkText: 'Start Your Learning Path',
   },
   {
-    title: 'Strategic Implementation',
-    description: 'Comprehensive transformation roadmaps with specialized advisory services for ROI optimization, change management, and cross-functional adoption strategies.',
-    icon: 'network',
+    title: 'AI Growth Strategy',
+    description: 'Personalized roadmaps that help you identify opportunities for AI integration in your work and life, with practical guidance for sustainable skill development.',
+    icon: 'line-chart',
     iconColor: 'accent',
     link: '/conversation',
-    linkText: 'Implementation Roadmap',
+    linkText: 'Discover Your Potential',
   },
   {
-    title: 'Generative AI Innovation',
-    description: 'Enterprise-ready generative AI solutions for content creation, predictive analytics, and business process automation with measurable performance metrics.',
+    title: 'Creative AI Solutions',
+    description: 'Accessible AI tools and techniques for content creation, problem-solving, and personal productivity that unlock new ways of working and creating.',
     icon: 'sparkles',
     iconColor: 'primary',
     link: '/music',
-    linkText: 'Discover AI Capabilities',
+    linkText: 'Explore AI Creativity',
   },
 ];
 
 // Company info for footer
 export const COMPANY_INFO = {
-  name: 'Nexus AI',
-  description: 'Enterprise AI excellence delivering strategic implementation frameworks, governance models, and transformative business solutions for Fortune 500 companies and rapid-growth organizations worldwide.',
-  tagline: 'Strategic AI Excellence',
+  name: 'FrankX.AI',
+  description: 'Empowering people to achieve AI excellence through intuitive frameworks, personalized learning paths, and transformative tools that enhance creativity and productivity in everyday work.',
+  tagline: 'AI Excellence for People',
   social: [
     { name: 'LinkedIn', icon: 'linkedin', url: '#' },
     { name: 'Twitter', icon: 'twitter', url: '#' },
@@ -64,25 +64,25 @@ export const COMPANY_INFO = {
 // Footer links
 export const FOOTER_LINKS = {
   solutions: [
-    { name: 'AI Center of Excellence', url: '/resources' },
-    { name: 'Strategic Implementation', url: '/assessment' },
-    { name: 'AI Innovation Lab', url: '/music' },
-    { name: 'Enterprise Intelligence', url: '/conversation' },
-    { name: 'Executive AI Training', url: '/resources' },
+    { name: 'Personal AI Mastery', url: '/resources' },
+    { name: 'AI Growth Strategies', url: '/assessment' },
+    { name: 'Creative AI Tools', url: '/music' },
+    { name: 'AI Conversation Skills', url: '/conversation' },
+    { name: 'Practical AI Training', url: '/resources' },
   ],
   resources: [
-    { name: 'Industry Research', url: '/blog' },
-    { name: 'Enterprise Case Studies', url: '/blog' },
-    { name: 'Expert Insights', url: '/resources' },
-    { name: 'Technical Whitepapers', url: '/resources' },
-    { name: 'Transformation Roadmap', url: '/assessment' },
+    { name: 'Learning Guides', url: '/blog' },
+    { name: 'User Success Stories', url: '/blog' },
+    { name: 'Expert Tips & Tutorials', url: '/resources' },
+    { name: 'AI Tool Directory', url: '/resources' },
+    { name: 'Personal Growth Path', url: '/assessment' },
   ],
   company: [
     { name: 'About Us', url: '#' },
-    { name: 'Strategic Approach', url: '#' },
-    { name: 'Enterprise Partnerships', url: '#' },
+    { name: 'Our Approach', url: '#' },
+    { name: 'Community', url: '#' },
     { name: 'Contact', url: '#' },
-    { name: 'Leadership & Research', url: '#' },
+    { name: 'Team & Research', url: '#' },
   ],
 };
 
