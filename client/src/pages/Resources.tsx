@@ -107,7 +107,6 @@ const Resources = () => {
               </TabsList>
             </Tabs>
           </div>
-          </Tabs>
         </div>
         
         {/* Featured resources section */}
