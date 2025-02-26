@@ -1,0 +1,13 @@
+{
+  "variant": "professional",
+  "primary": "#171717",
+  "appearance": "light",
+  "radius": 0.5,
+  "colors": {
+    "primary": "#171717",
+    "secondary": "#00C2FF",
+    "accent": "#FF3366",
+    "background": "#FFFFFF",
+    "overlay": "#8A8F98"
+  }
+}
