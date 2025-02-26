@@ -13,7 +13,7 @@ import { useTheme } from "@/hooks/use-theme";
 
 const BlogPost = () => {
   const { id } = useParams();
-  const postId = parseInt(id);
+  const postId = id ? parseInt(id) : 0;
   
   const { data: post, isLoading, error } = useQuery<BlogPostType>({
     queryKey: [`/api/blog-posts/${postId}`],
@@ -81,9 +81,9 @@ const BlogPost = () => {
           <header className="mb-8">
             <Badge className="mb-4">{post.category}</Badge>
             <h1 className="text-3xl md:text-4xl font-clash font-bold mb-4">{post.title}</h1>
-            <p className="text-xl text-overlay mb-6">{post.excerpt}</p>
+            <p className="text-xl text-muted-foreground mb-6">{post.excerpt}</p>
             
-            <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+            <div className="flex items-center justify-between border-b border-border pb-6">
               <div className="flex items-center">
                 <Avatar className="h-12 w-12">
                   <AvatarFallback className="bg-secondary/10 text-secondary">
@@ -92,7 +92,7 @@ const BlogPost = () => {
                 </Avatar>
                 <div className="ml-3">
                   <p className="font-medium">{post.authorName}</p>
-                  <div className="flex items-center text-sm text-overlay">
+                  <div className="flex items-center text-sm text-muted-foreground">
                     <Calendar className="h-4 w-4 mr-1" />
                     <span>{formatDate(post.publishedAt)}</span>
                     <span className="mx-2">•</span>
@@ -125,11 +125,9 @@ const BlogPost = () => {
             </div>
           )}
           
-          <div className="prose prose-lg max-w-none">
-            <ReactMarkdown>{post.content}</ReactMarkdown>
-          </div>
+          <EnhancedBlogContent content={post.content} />
           
-          <div className="mt-12 pt-6 border-t border-gray-100">
+          <div className="mt-12 pt-6 border-t border-border">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Avatar className="h-12 w-12">
@@ -139,7 +137,7 @@ const BlogPost = () => {
                 </Avatar>
                 <div className="ml-3">
                   <p className="font-medium">Written by {post.authorName}</p>
-                  <p className="text-sm text-overlay">AI Transformation Expert</p>
+                  <p className="text-sm text-muted-foreground">AI Transformation Expert</p>
                 </div>
               </div>
               

@@ -19,7 +19,7 @@ const Blog = () => {
   
   // Get unique categories from blog posts
   const categories = blogPosts 
-    ? ["all", ...new Set(blogPosts.map(post => post.category.toLowerCase()))]
+    ? ["all", ...Array.from(new Set(blogPosts.map(post => post.category.toLowerCase())))]
     : ["all"];
   
   // Filter posts by search term and category
@@ -82,7 +82,7 @@ const Blog = () => {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse"></div>
+              <div key={i} className="bg-gray-100 dark:bg-gray-800 rounded-2xl h-96 animate-pulse"></div>
             ))}
           </div>
         ) : filteredPosts && filteredPosts.length > 0 ? (
@@ -92,9 +92,9 @@ const Blog = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
+          <div className="text-center py-12 border border-border rounded-lg dark:bg-black/10 bg-gray-50 p-8">
             <h3 className="text-xl font-medium mb-2">No articles found</h3>
-            <p className="text-overlay">Try adjusting your search or filters</p>
+            <p className="text-muted-foreground">Try adjusting your search or filters</p>
           </div>
         )}
         
@@ -106,7 +106,7 @@ const Blog = () => {
               <Badge 
                 key={category} 
                 variant="outline"
-                className="px-4 py-2 capitalize cursor-pointer hover:bg-gray-50"
+                className="px-4 py-2 capitalize cursor-pointer hover:bg-accent dark:hover:bg-accent/40"
                 onClick={() => setActiveCategory(category)}
               >
                 {category}
