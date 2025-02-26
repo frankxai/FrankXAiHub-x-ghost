@@ -33,8 +33,8 @@ const FeaturesSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-clash font-bold mb-4">AI That Actually Does Something</h2>
-          <p className="text-lg text-muted-foreground">No more AI snake oil. I help turn buzzword-laden PowerPoints into solutions that solve real problems.</p>
+          <h2 className="text-3xl md:text-4xl font-clash font-bold mb-4">Enterprise AI Excellence</h2>
+          <p className="text-lg text-muted-foreground">We help organizations build and scale AI capabilities with strategic frameworks and implementation roadmaps.</p>
         </motion.div>
         
         <motion.div 

@@ -31,24 +31,24 @@ const HeroSection = () => {
             variants={itemVariants}
           >
             <h1 className="text-4xl md:text-6xl font-clash font-bold leading-tight mb-6">
-              AI That's <br />
+              Next-Gen <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">
-                Frankly Good
+                AI Excellence
               </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
-              I help Fortune 500s and curious minds build AI that actually works. No buzzwords, no BS—just solutions that drive real value. Frankly, it's about time.
+              Transforming enterprises and innovators with AI that delivers measurable impact. From strategy to implementation—we build solutions that create real competitive advantage.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/assessment">
                 <Button className="bg-primary hover:bg-primary/90 h-12 px-6">
-                  Get Frank Advice
+                  Start Assessment
                 </Button>
               </Link>
               <Link href="/resources">
                 <Button variant="outline" className="h-12 px-6">
-                  See What Works
+                  Explore Resources
                 </Button>
               </Link>
             </div>
@@ -66,7 +66,7 @@ const HeroSection = () => {
                 ))}
               </div>
               <div className="ml-4">
-                <p className="text-sm text-muted-foreground">"Frankly the best AI advice we've had"</p>
+                <p className="text-sm text-muted-foreground">"Transformative AI expertise for enterprise"</p>
                 <div className="flex items-center">
                   <div className="flex text-yellow-400">
                     <Star className="h-4 w-4 fill-current" />
@@ -75,7 +75,7 @@ const HeroSection = () => {
                     <Star className="h-4 w-4 fill-current" />
                     <StarHalf className="h-4 w-4 fill-current" />
                   </div>
-                  <span className="ml-1 text-sm font-medium text-muted-foreground">4.8/5 — Real clients, real results</span>
+                  <span className="ml-1 text-sm font-medium text-muted-foreground">4.8/5 — Fortune 500 clients</span>
                 </div>
               </div>
             </div>
@@ -168,8 +168,8 @@ const HeroSection = () => {
                     </svg>
                   </div>
                   <div className="text-center">
-                    <h4 className="font-medium text-sm">Frank-AI</h4>
-                    <p className="text-xs text-muted-foreground">Frankly helpful</p>
+                    <h4 className="font-medium text-sm">FrankX Assistant</h4>
+                    <p className="text-xs text-muted-foreground">Enterprise AI</p>
                   </div>
                 </motion.div>
                 
