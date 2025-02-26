@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import type { AICharacter } from "@shared/schema";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/lib/animations";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Card, 
   CardContent, 
@@ -128,25 +130,25 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="py-4 border-b border-gray-100 flex flex-row items-center justify-between">
+    <Card className="h-full border border-gray-100 dark:border-gray-700">
+      <CardHeader className="py-4 border-b border-gray-100 dark:border-gray-700 flex flex-row items-center justify-between">
         <div className="flex items-center">
-          <Avatar className="h-10 w-10 bg-secondary bg-opacity-10">
-            <AvatarFallback className="bg-secondary bg-opacity-10">
+          <Avatar className="h-10 w-10 bg-[#00C2FF]/10 dark:bg-[#00C2FF]/20">
+            <AvatarFallback className="bg-[#00C2FF]/10 dark:bg-[#00C2FF]/20">
               {getIcon(character.icon)}
             </AvatarFallback>
           </Avatar>
           <div className="ml-3">
-            <h4 className="font-medium">{character.name}</h4>
-            <p className="text-xs text-overlay">{character.description}</p>
+            <h4 className="font-medium dark:text-white">{character.name}</h4>
+            <p className="text-xs text-overlay dark:text-gray-300">{character.description}</p>
           </div>
         </div>
         <div className="flex space-x-2">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Volume2 className="h-4 w-4 text-gray-400" />
+          <Button variant="ghost" size="icon" className="rounded-full text-gray-400 dark:text-gray-300 hover:text-[#00C2FF] dark:hover:text-[#00C2FF]">
+            <Volume2 className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <MoreHorizontal className="h-4 w-4 text-gray-400" />
+          <Button variant="ghost" size="icon" className="rounded-full text-gray-400 dark:text-gray-300 hover:text-[#00C2FF] dark:hover:text-[#00C2FF]">
+            <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
       </CardHeader>
@@ -164,8 +166,8 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
             animate="animate"
           >
             {message.sender === 'ai' && (
-              <Avatar className="h-8 w-8 flex-shrink-0 bg-secondary bg-opacity-10">
-                <AvatarFallback className="bg-secondary bg-opacity-10">
+              <Avatar className="h-8 w-8 flex-shrink-0 bg-[#00C2FF]/10 dark:bg-[#00C2FF]/20">
+                <AvatarFallback className="bg-[#00C2FF]/10 dark:bg-[#00C2FF]/20">
                   {getIcon(character.icon)}
                 </AvatarFallback>
               </Avatar>
@@ -174,8 +176,8 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
             <div 
               className={`mx-3 p-4 max-w-3xl whitespace-pre-line ${
                 message.sender === 'ai' 
-                  ? 'bg-gray-50 rounded-r-lg rounded-bl-lg' 
-                  : 'bg-secondary text-white rounded-l-lg rounded-br-lg'
+                  ? 'bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-r-lg rounded-bl-lg border border-gray-100 dark:border-gray-700' 
+                  : 'bg-[#00C2FF] text-white rounded-l-lg rounded-br-lg'
               }`}
             >
               {message.content.split('\n').map((line, i) => (
@@ -187,8 +189,8 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
             
             {message.sender === 'user' && (
               <Avatar className="h-8 w-8 flex-shrink-0">
-                <AvatarFallback className="bg-gray-200">
-                  <User className="h-4 w-4 text-gray-500" />
+                <AvatarFallback className="bg-[#171717] dark:bg-[#171717] text-white">
+                  <User className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
             )}
@@ -197,28 +199,28 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
         
         {isLoading && (
           <div className="flex mb-6">
-            <Avatar className="h-8 w-8 flex-shrink-0 bg-secondary bg-opacity-10">
-              <AvatarFallback className="bg-secondary bg-opacity-10">
+            <Avatar className="h-8 w-8 flex-shrink-0 bg-[#00C2FF]/10 dark:bg-[#00C2FF]/20">
+              <AvatarFallback className="bg-[#00C2FF]/10 dark:bg-[#00C2FF]/20">
                 {getIcon(character.icon)}
               </AvatarFallback>
             </Avatar>
-            <div className="ml-3 bg-gray-50 rounded-r-lg rounded-bl-lg p-4">
+            <div className="ml-3 bg-gray-50 dark:bg-gray-800 rounded-r-lg rounded-bl-lg p-4 border border-gray-100 dark:border-gray-700">
               <div className="flex space-x-2">
-                <div className="h-2 w-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="h-2 w-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                <div className="h-2 w-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '600ms' }}></div>
+                <div className="h-2 w-2 bg-[#00C2FF] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="h-2 w-2 bg-[#00C2FF] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="h-2 w-2 bg-[#00C2FF] rounded-full animate-bounce" style={{ animationDelay: '600ms' }}></div>
               </div>
             </div>
           </div>
         )}
       </CardContent>
       
-      <CardFooter className="border-t border-gray-100 p-4">
+      <CardFooter className="border-t border-gray-100 dark:border-gray-700 p-4">
         <form onSubmit={handleSubmit} className="w-full flex items-center">
           <Input
             type="text"
             placeholder="Type your message..."
-            className="flex-grow p-3 rounded-lg border border-gray-200 focus:outline-none focus:border-secondary"
+            className="flex-grow p-3 rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:outline-none focus:border-[#00C2FF]"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
@@ -226,7 +228,7 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
           <Button 
             type="submit"
             size="icon"
-            className="ml-3 w-10 h-10 rounded-lg bg-secondary text-white"
+            className="ml-3 w-10 h-10 rounded-lg bg-[#00C2FF] hover:bg-[#00C2FF]/90 text-white"
             disabled={isLoading || !input.trim()}
           >
             <Send className="h-5 w-5" />

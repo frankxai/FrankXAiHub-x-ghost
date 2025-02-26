@@ -68,11 +68,11 @@ const AssessmentForm = ({ onComplete }: AssessmentFormProps) => {
   };
 
   return (
-    <Card className="max-w-4xl mx-auto shadow-xl rounded-xl overflow-hidden border-0">
+    <Card className="max-w-4xl mx-auto shadow-xl rounded-xl overflow-hidden border-0 dark:bg-gray-800">
       <CardContent className="p-0">
-        <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6">
-          <h2 className="font-clash text-2xl font-bold text-primary">Enterprise AI Maturity Assessment</h2>
-          <p className="text-muted-foreground mt-2">Analyze your organization's AI readiness and receive a customized transformation roadmap</p>
+        <div className="bg-gradient-to-r from-[#00C2FF]/10 to-[#171717]/10 dark:from-[#00C2FF]/20 dark:to-[#00C2FF]/5 p-6">
+          <h2 className="font-clash text-2xl font-bold text-[#00C2FF] dark:text-[#00C2FF]">Enterprise AI Maturity Assessment 🧠</h2>
+          <p className="text-muted-foreground dark:text-gray-300 mt-2">Analyze your organization's AI readiness and receive a customized transformation roadmap</p>
         </div>
         
         <div className="p-8">
@@ -85,14 +85,14 @@ const AssessmentForm = ({ onComplete }: AssessmentFormProps) => {
                 className="space-y-6"
               >
                 <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center shadow-md">
+                  <div className="w-10 h-10 rounded-full bg-[#00C2FF] text-white flex items-center justify-center shadow-md">
                     <Building2 className="h-5 w-5" />
                   </div>
                   <div className="ml-4">
-                    <h3 className="font-clash font-bold text-lg">Organization Profile</h3>
-                    <p className="text-sm text-muted-foreground">Help us understand your business context</p>
+                    <h3 className="font-clash font-bold text-lg dark:text-white">Organization Profile</h3>
+                    <p className="text-sm text-muted-foreground dark:text-gray-300">Help us understand your business context</p>
                   </div>
-                  <Badge variant="outline" className="ml-auto">
+                  <Badge variant="outline" className="ml-auto dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600">
                     Step 1 of 4
                   </Badge>
                 </div>
@@ -211,12 +211,12 @@ const AssessmentForm = ({ onComplete }: AssessmentFormProps) => {
                   render={() => (
                     <FormItem className="space-y-4">
                       <div className="flex items-center">
-                        <div className="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center shadow-md">
+                        <div className="w-10 h-10 rounded-full bg-[#FF3366] text-white flex items-center justify-center shadow-md">
                           <BarChart2 className="h-5 w-5" />
                         </div>
                         <div className="ml-4">
-                          <FormLabel className="text-lg font-bold block">Strategic Objectives</FormLabel>
-                          <p className="text-sm text-muted-foreground">Select all applicable objectives for your AI initiatives</p>
+                          <FormLabel className="text-lg font-bold block dark:text-white">Strategic Objectives</FormLabel>
+                          <p className="text-sm text-muted-foreground dark:text-gray-300">Select all applicable objectives for your AI initiatives</p>
                         </div>
                       </div>
                       
@@ -228,10 +228,10 @@ const AssessmentForm = ({ onComplete }: AssessmentFormProps) => {
                             name="objectives"
                             render={({ field }) => {
                               return (
-                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 rounded-lg border transition-colors hover:bg-muted/40">
+                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 rounded-lg border dark:border-gray-700 transition-colors hover:bg-muted/40 dark:hover:bg-gray-700/40">
                                   <FormControl>
                                     <Checkbox
-                                      className="data-[state=checked]:bg-secondary"
+                                      className="data-[state=checked]:bg-[#FF3366]"
                                       checked={field.value?.includes(objective)}
                                       onCheckedChange={(checked) => {
                                         const updatedValue = checked
@@ -243,7 +243,7 @@ const AssessmentForm = ({ onComplete }: AssessmentFormProps) => {
                                       }}
                                     />
                                   </FormControl>
-                                  <FormLabel className="text-base font-medium cursor-pointer">
+                                  <FormLabel className="text-base font-medium cursor-pointer dark:text-gray-200">
                                     {objective}
                                   </FormLabel>
                                 </FormItem>
