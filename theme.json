@@ -2,30 +2,34 @@
   "variant": "professional",
   "primary": "#0056B3",
   "appearance": "system",
-  "radius": 0.5,
+  "radius": 0.75,
   "colors": {
     "primary": "#0056B3",
     "secondary": "#00A6E0",
     "accent": "#6A1B9A",
     "background": {
       "light": "#FFFFFF",
-      "dark": "#121620"
+      "dark": "#111827"
     },
     "text": {
       "light": "#1A202C",
-      "dark": "#F7FAFC"
+      "dark": "#F8FAFC"
     },
     "card": {
       "light": "#F8FAFC",
       "dark": "#1E293B"
     },
+    "muted": {
+      "light": "#F1F5F9",
+      "dark": "#1F2937"
+    },
     "border": {
       "light": "#E2E8F0",
-      "dark": "#2D3748"
+      "dark": "#374151"
     },
     "overlay": {
       "light": "#64748B",
-      "dark": "#94A3B8"
+      "dark": "#9CA3AF"
     }
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { NAV_LINKS, COMPANY_INFO } from "@/lib/constants";
+import { NAV_LINKS } from "@/lib/constants";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sheet,
@@ -11,8 +11,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Search, ChevronRight, Brain, BrainCircuit } from "lucide-react";
+import { Menu, Search, ChevronRight, Brain, BrainCircuit, Cog, Network, Cpu } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Badge } from "@/components/ui/badge";
 
 const Header = () => {
   const [location] = useLocation();
@@ -40,11 +41,20 @@ const Header = () => {
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.4, ease: "easeOut" }
+      transition: { 
+        duration: 0.4, 
+        ease: [0.22, 1, 0.36, 1] // Custom cubic-bezier for modern feel
+      }
     },
     hover: {
       scale: 1.05,
-      transition: { duration: 0.2, type: "spring", stiffness: 400 }
+      filter: "brightness(1.1)",
+      transition: { 
+        duration: 0.3, 
+        type: "spring", 
+        stiffness: 400, 
+        damping: 10 
+      }
     }
   };
   
@@ -52,19 +62,47 @@ const Header = () => {
     hover: { 
       scale: 1.05, 
       y: -2,
-      transition: { duration: 0.2, ease: "easeOut" }
+      color: "var(--secondary)",
+      transition: { 
+        duration: 0.3, 
+        ease: [0.34, 1.56, 0.64, 1] // Custom elastic-like cubic-bezier
+      }
     }
   };
   
   const buttonVariants = {
     hover: { 
-      scale: 1.05,
-      boxShadow: "0px 6px 15px rgba(0, 166, 224, 0.3)",
-      transition: { duration: 0.3, ease: "easeOut" }
+      scale: 1.03,
+      boxShadow: "0px 5px 15px rgba(0, 166, 224, 0.25)",
+      background: "var(--secondary)",
+      transition: { 
+        duration: 0.3, 
+        ease: "easeOut" 
+      }
     },
     tap: { 
-      scale: 0.95,
-      transition: { duration: 0.1 }
+      scale: 0.97,
+      transition: { 
+        duration: 0.1 
+      }
+    }
+  };
+  
+  // Logo animation variants with 3D effects
+  const logoIconVariants = {
+    initial: { 
+      rotateY: 0,
+      scale: 1
+    },
+    animate: { 
+      rotateY: [0, 10, 0, -10, 0],
+      scale: [1, 1.1, 1, 1.1, 1],
+      transition: {
+        duration: 6,
+        ease: "easeInOut",
+        repeat: Infinity,
+        repeatType: "mirror"
+      }
     }
   };
 
@@ -72,37 +110,57 @@ const Header = () => {
     <motion.header 
       className={`fixed w-full z-50 transition-all duration-300 ${
         scrolled 
-          ? "bg-background/90 backdrop-blur-md shadow-sm" 
+          ? "bg-background/95 backdrop-blur-md shadow-md dark:shadow-none" 
           : "bg-background/50 backdrop-blur-sm"
-      } border-b border-border/80`}
+      } border-b border-border/60 dark:border-border/30`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="enterprise-container">
         <div className="flex justify-between items-center py-4">
           <Link href="/" className="flex items-center">
             <motion.div 
-              className="flex items-center gap-2"
+              className="flex items-center gap-2.5"
               initial="hidden"
               animate="visible"
               whileHover="hover"
               variants={logoVariants}
             >
-              <BrainCircuit className="w-8 h-8 text-secondary" />
+              <motion.div
+                initial={{ rotateY: 0, scale: 1 }}
+                animate={{ 
+                  rotateY: [0, 10, 0, -10, 0],
+                  scale: [1, 1.1, 1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 6,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "mirror"
+                }}
+                style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
+              >
+                <div className="relative">
+                  <BrainCircuit className="w-8 h-8 text-primary absolute opacity-40 blur-[1px]" style={{ transform: "translateX(2px) translateY(2px)" }} />
+                  <Network className="w-8 h-8 text-secondary/80 absolute opacity-60" style={{ transform: "translateX(1px) translateY(1px) scale(0.95)" }} />
+                  <Cpu className="w-8 h-8 text-secondary relative" />
+                </div>
+              </motion.div>
               <div className="flex flex-col">
-                <span className="text-2xl font-clash font-bold gradient-text">
-                  {COMPANY_INFO.name}
+                <span className="text-2xl font-clash font-bold">
+                  <span className="text-foreground">FrankX</span>
+                  <span className="text-secondary">.AI</span>
                 </span>
-                <span className="text-xs text-muted-foreground">
-                  {COMPANY_INFO.tagline}
+                <span className="text-xs text-muted-foreground font-medium leading-tight">
+                  Enterprise AI Excellence
                 </span>
               </div>
             </motion.div>
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="hidden md:flex items-center space-x-0.5">
             <AnimatePresence>
               {NAV_LINKS.map((link, index) => (
                 <motion.div
@@ -112,7 +170,7 @@ const Header = () => {
                   transition={{ 
                     delay: index * 0.05, 
                     duration: 0.5,
-                    ease: "easeOut"
+                    ease: [0.22, 1, 0.36, 1]
                   }}
                 >
                   <motion.div
@@ -121,18 +179,23 @@ const Header = () => {
                   >
                     <Link 
                       href={link.path}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 relative ${
+                      className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300 relative ${
                         isActive(link.path) 
-                          ? "text-secondary" 
-                          : "text-foreground hover:text-secondary"
+                          ? "text-secondary dark:text-secondary" 
+                          : "text-foreground dark:text-foreground hover:text-secondary dark:hover:text-secondary"
                       }`}
                     >
                       {link.title}
                       {isActive(link.path) && (
                         <motion.span
-                          className="absolute bottom-1 left-0 right-0 mx-auto w-1.5 h-1.5 bg-secondary rounded-full"
+                          className="absolute bottom-0 left-0 right-0 mx-auto w-1 h-1 bg-secondary rounded-full"
                           layoutId="navIndicator"
-                          transition={{ duration: 0.5, type: "spring" }}
+                          transition={{ 
+                            duration: 0.5, 
+                            type: "spring", 
+                            stiffness: 500, 
+                            damping: 30 
+                          }}
                         />
                       )}
                     </Link>
@@ -149,14 +212,18 @@ const Header = () => {
                 whileTap="tap"
                 variants={buttonVariants}
               >
-                <Button className="bg-secondary hover:bg-secondary/90 text-white h-10 gap-1 group shadow-lg shadow-secondary/20">
-                  AI Readiness Assessment
+                <Button className="bg-secondary hover:bg-secondary text-white h-10 px-4 gap-1.5 group shadow-md shadow-secondary/20 dark:shadow-secondary/10 font-medium">
+                  Build Your AI CoE
                   <ChevronRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
                 </Button>
               </motion.div>
             </Link>
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-              <Button variant="ghost" size="icon" className="rounded-full">
+            <motion.div 
+              whileHover={{ scale: 1.1 }} 
+              whileTap={{ scale: 0.9 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              <Button variant="outline" size="icon" className="rounded-full border-border/60 dark:border-border/30">
                 <Search className="h-5 w-5" />
               </Button>
             </motion.div>
@@ -173,13 +240,16 @@ const Header = () => {
             <SheetContent side="right" className="border-l border-border">
               <SheetHeader className="mb-6">
                 <SheetTitle className="flex items-center gap-2">
-                  <BrainCircuit className="w-6 h-6 text-secondary" />
-                  <span className="text-2xl font-clash gradient-text">
-                    {COMPANY_INFO.name}
-                  </span>
+                  <Cpu className="w-6 h-6 text-secondary" />
+                  <div className="flex flex-col">
+                    <span className="text-xl font-clash font-bold">
+                      <span className="text-foreground">FrankX</span>
+                      <span className="text-secondary">.AI</span>
+                    </span>
+                  </div>
                 </SheetTitle>
                 <SheetDescription>
-                  {COMPANY_INFO.tagline}
+                  Enterprise AI Excellence
                 </SheetDescription>
               </SheetHeader>
               <div className="flex flex-col space-y-1">
@@ -194,7 +264,7 @@ const Header = () => {
                       href={link.path}
                       className={`px-3 py-2.5 rounded-md text-base font-medium hover:bg-secondary/10 flex items-center transition-colors ${
                         isActive(link.path) 
-                          ? "bg-secondary/20 text-secondary" 
+                          ? "bg-secondary/15 text-secondary" 
                           : "text-foreground"
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
@@ -213,17 +283,27 @@ const Header = () => {
                     </Link>
                   </motion.div>
                 ))}
-                <div className="pt-4 mt-2 border-t border-border">
+                
+                <div className="py-3 px-3 mt-4 rounded-md bg-muted/50">
+                  <Badge variant="outline" className="mb-2 bg-secondary/10 text-secondary border-secondary/20">
+                    Featured
+                  </Badge>
+                  <h4 className="text-sm font-medium mb-1">AI Center of Excellence</h4>
+                  <p className="text-xs text-muted-foreground mb-2">Establish your enterprise AI governance and strategy</p>
                   <Link 
                     href="/assessment"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Button 
-                      className="bg-secondary hover:bg-secondary/90 text-white w-full mb-4"
+                      className="bg-secondary hover:bg-secondary/90 text-white w-full"
+                      size="sm"
                     >
-                      AI Readiness Assessment
+                      Build Your AI CoE
                     </Button>
                   </Link>
+                </div>
+                
+                <div className="pt-4 mt-2 border-t border-border">
                   <div className="flex items-center justify-between">
                     <ThemeToggle />
                     <Button variant="outline" size="sm" onClick={() => setMobileMenuOpen(false)}>
