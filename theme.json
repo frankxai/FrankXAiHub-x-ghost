@@ -1,19 +1,19 @@
 {
-  "variant": "professional",
-  "primary": "#0056B3",
+  "variant": "vibrant",
+  "primary": "#171717",
   "appearance": "system",
-  "radius": 0.75,
+  "radius": 1.0,
   "colors": {
-    "primary": "#0056B3",
-    "secondary": "#00A6E0",
-    "accent": "#6A1B9A",
+    "primary": "#171717",
+    "secondary": "#00C2FF",
+    "accent": "#FF3366",
     "background": {
       "light": "#FFFFFF",
-      "dark": "#111827"
+      "dark": "#121620"
     },
     "text": {
       "light": "#1A202C",
-      "dark": "#F8FAFC"
+      "dark": "#F7FAFC"
     },
     "card": {
       "light": "#F8FAFC",

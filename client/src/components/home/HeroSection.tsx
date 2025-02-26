@@ -8,7 +8,7 @@ import {
   itemVariants 
 } from "@/lib/animations";
 import { Button } from "@/components/ui/button";
-import { Star, StarHalf } from "lucide-react";
+import { Sparkles, Brain, Code, Bot } from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -30,52 +30,56 @@ const HeroSection = () => {
             className="md:w-1/2 mb-12 md:mb-0"
             variants={itemVariants}
           >
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              className="mb-4 inline-block"
+            >
+              <span className="bg-secondary/10 text-secondary text-sm font-medium px-3 py-1 rounded-full">
+                <Sparkles className="inline-block w-4 h-4 mr-1" /> Frank's AI Journey
+              </span>
+            </motion.div>
+            
             <h1 className="text-4xl md:text-6xl font-clash font-bold leading-tight mb-6">
-              Enterprise <br />
+              My Personal <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">
-                AI Transformation
+                AI Experiments
               </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
-              Strategic AI implementation for Fortune 500 companies. Our Center of Excellence accelerates adoption, maximizes ROI, and builds sustainable competitive advantage through data-driven solutions.
+              Welcome to my digital AI laboratory where I share my personal projects, custom agents, and creative explorations with artificial intelligence.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/assessment">
-                <Button className="bg-primary hover:bg-primary/90 h-12 px-6">
-                  Start Assessment
-                </Button>
+              <Link href="/conversation">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button className="bg-primary hover:bg-primary/90 h-12 px-6 shadow-lg shadow-primary/20 group">
+                    Meet My AI Agents <Bot className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </motion.div>
               </Link>
-              <Link href="/resources">
-                <Button variant="outline" className="h-12 px-6">
-                  Explore Resources
-                </Button>
+              <Link href="/blog">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button variant="outline" className="h-12 px-6 group">
+                    Read My AI Blog <Code className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </motion.div>
               </Link>
             </div>
             
             <div className="mt-10 flex items-center">
-              <div className="flex -space-x-2">
-                {/* Mock client logos */}
-                {[1, 2, 3, 4].map((num) => (
-                  <div 
-                    key={num}
-                    className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs text-gray-500"
-                  >
-                    C{num}
-                  </div>
-                ))}
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-muted-foreground">"Strategic AI implementation expertise driving measurable business outcomes"</p>
-                <div className="flex items-center">
-                  <div className="flex text-yellow-400">
-                    <Star className="h-4 w-4 fill-current" />
-                    <Star className="h-4 w-4 fill-current" />
-                    <Star className="h-4 w-4 fill-current" />
-                    <Star className="h-4 w-4 fill-current" />
-                    <StarHalf className="h-4 w-4 fill-current" />
-                  </div>
-                  <span className="ml-1 text-sm font-medium text-muted-foreground">4.8/5 — Global 2000 Enterprises</span>
+              <div className="flex items-center bg-secondary/5 p-3 rounded-xl">
+                <Brain className="h-8 w-8 text-secondary mr-3" />
+                <div>
+                  <p className="text-sm font-medium">Creating & sharing innovative AI projects since 2022</p>
+                  <p className="text-xs text-muted-foreground">Join me on my journey of exploring AI's creative potential</p>
                 </div>
               </div>
             </div>
@@ -114,7 +118,7 @@ const HeroSection = () => {
                   transition={{ duration: 0.3 }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-clash font-bold text-lg">AI Transformation Dashboard</h3>
+                    <h3 className="font-clash font-bold text-lg">My AI Projects Dashboard</h3>
                     <div className="text-overlay">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
@@ -124,30 +128,30 @@ const HeroSection = () => {
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>AI Maturity Score</span>
-                        <span className="font-medium">72/100</span>
+                        <span>Agent Intelligence</span>
+                        <span className="font-medium">85/100</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-secondary h-2 rounded-full" style={{ width: "72%" }}></div>
+                        <div className="bg-secondary h-2 rounded-full" style={{ width: "85%" }}></div>
                       </div>
                     </div>
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Implementation Roadmap</span>
-                        <span className="font-medium">58%</span>
+                        <span>Project Progress</span>
+                        <span className="font-medium">67%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-accent h-2 rounded-full" style={{ width: "58%" }}></div>
+                        <div className="bg-accent h-2 rounded-full" style={{ width: "67%" }}></div>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3 mt-2">
                       <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="text-overlay text-xs">Projects</div>
-                        <div className="font-clash font-bold text-xl">12</div>
+                        <div className="text-overlay text-xs">AI Agents</div>
+                        <div className="font-clash font-bold text-xl">16</div>
                       </div>
                       <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="text-overlay text-xs">ROI</div>
-                        <div className="font-clash font-bold text-xl">317%</div>
+                        <div className="text-overlay text-xs">Experiments</div>
+                        <div className="font-clash font-bold text-xl">42</div>
                       </div>
                     </div>
                   </div>
@@ -159,17 +163,17 @@ const HeroSection = () => {
                   variants={floatVariantsDelay1}
                   initial="initial"
                   animate="animate"
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)" }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="bg-gray-100 rounded-lg h-20 mb-2 flex items-center justify-center">
+                  <div className="bg-gradient-to-br from-secondary/10 to-accent/10 rounded-lg h-20 mb-2 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                     </svg>
                   </div>
                   <div className="text-center">
-                    <h4 className="font-medium text-sm">Enterprise AI Assistant</h4>
-                    <p className="text-xs text-muted-foreground">Advanced Analytics</p>
+                    <h4 className="font-medium text-sm">Creative AI</h4>
+                    <p className="text-xs text-muted-foreground">Latest Project</p>
                   </div>
                 </motion.div>
                 
@@ -179,14 +183,14 @@ const HeroSection = () => {
                   variants={floatVariantsDelay2}
                   initial="initial"
                   animate="animate"
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)" }}
                   transition={{ duration: 0.3 }}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium">Weekly Report</span>
-                    <span className="text-secondary text-xs">Live</span>
+                    <span className="text-xs font-medium">Project Stats</span>
+                    <span className="text-secondary text-xs">New</span>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-2">
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-2">
                     <div className="h-10 relative overflow-hidden">
                       {/* Simple chart mockup */}
                       <div className="absolute bottom-0 left-0 w-2 h-6 bg-secondary rounded-sm opacity-30"></div>

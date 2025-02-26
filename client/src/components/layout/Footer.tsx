@@ -30,7 +30,7 @@ const Footer = () => {
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
-                <span className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-[#00C2FF]">
+                <span className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#00C2FF] to-[#FF3366]">
                   FrankX.AI
                 </span>
               </motion.div>
@@ -55,9 +55,9 @@ const Footer = () => {
           </div>
           
           <div>
-            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">Solutions</h4>
+            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">My Projects</h4>
             <ul className="space-y-4">
-              {FOOTER_LINKS.solutions.map((item) => (
+              {FOOTER_LINKS.projects.map((item) => (
                 <motion.li 
                   key={item.name}
                   whileHover={{ x: 4 }}
@@ -75,9 +75,9 @@ const Footer = () => {
           </div>
           
           <div>
-            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">Resources</h4>
+            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">My Content</h4>
             <ul className="space-y-4">
-              {FOOTER_LINKS.resources.map((item) => (
+              {FOOTER_LINKS.content.map((item) => (
                 <motion.li 
                   key={item.name}
                   whileHover={{ x: 4 }}
@@ -95,9 +95,9 @@ const Footer = () => {
           </div>
           
           <div>
-            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">Company</h4>
+            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">About</h4>
             <ul className="space-y-4">
-              {FOOTER_LINKS.company.map((item) => (
+              {FOOTER_LINKS.about.map((item) => (
                 <motion.li 
                   key={item.name}
                   whileHover={{ x: 4 }}
@@ -118,12 +118,12 @@ const Footer = () => {
         <div className="border-t border-gray-800 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <p className="text-gray-500 text-sm">© 2025 FrankX.AI. All rights reserved.</p>
+              <p className="text-gray-500 text-sm">© 2025 Frank's AI Laboratory. All rights reserved.</p>
             </div>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-500 hover:text-gray-300 text-sm">Privacy Policy</a>
               <a href="#" className="text-gray-500 hover:text-gray-300 text-sm">Terms of Service</a>
-              <a href="#" className="text-gray-500 hover:text-gray-300 text-sm">Cookies</a>
+              <a href="#" className="text-gray-500 hover:text-gray-300 text-sm">Contact</a>
             </div>
           </div>
         </div>
