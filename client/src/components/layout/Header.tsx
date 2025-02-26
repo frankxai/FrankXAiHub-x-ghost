@@ -26,13 +26,16 @@ const Header = () => {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <motion.span 
-                className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-[#00C2FF]"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                FrankX.AI
-              </motion.span>
+              <div className="flex flex-col">
+                <motion.span 
+                  className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-[#00C2FF]"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  FrankX.AI
+                </motion.span>
+                <span className="text-xs text-muted-foreground">AI that's frankly good™</span>
+              </div>
             </Link>
           </div>
           
@@ -54,7 +57,7 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/assessment">
               <Button className="bg-secondary hover:bg-secondary/90 text-white">
-                AI Assessment
+                Get Frank Advice
               </Button>
             </Link>
             <Button variant="ghost" size="icon">
@@ -76,7 +79,7 @@ const Header = () => {
                   FrankX.AI
                 </SheetTitle>
                 <SheetDescription>
-                  Your partner for AI transformation
+                  AI that's frankly good™
                 </SheetDescription>
               </SheetHeader>
               <div className="mt-6 flex flex-col space-y-3">
@@ -97,7 +100,7 @@ const Header = () => {
                   className="px-3 py-2 rounded-md text-base font-medium text-secondary hover:bg-accent"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  AI Assessment
+                  Get Frank Advice
                 </Link>
                 <div className="px-3 py-2">
                   <ThemeToggle />

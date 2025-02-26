@@ -10,44 +10,45 @@ export const COLORS = {
 // Navigation links
 export const NAV_LINKS = [
   { title: 'Home', path: '/' },
-  { title: 'Blog', path: '/blog' },
-  { title: 'AI Center of Excellence', path: '/resources' },
-  { title: 'AI Conversation', path: '/conversation' },
-  { title: 'AI Music', path: '/music' },
+  { title: 'Frankly Speaking', path: '/blog' },
+  { title: 'AI Excellence Hub', path: '/resources' },
+  { title: 'Chat with Frank-AI', path: '/conversation' },
+  { title: 'AI Music Lab', path: '/music' },
 ];
 
 // Feature sections
 export const FEATURES = [
   {
-    title: 'AI Center of Excellence',
-    description: 'Build organizational AI capabilities with our proven frameworks, governance models, and training programs.',
+    title: 'AI Excellence Hub',
+    description: 'Frankly, most AI strategies collect dust. Mine don\'t. Get frameworks that actually work for both Fortune 500s and your weekend projects.',
     icon: 'brain',
     iconColor: 'secondary',
     link: '/resources',
-    linkText: 'Explore Resources',
+    linkText: 'Get Frank Advice',
   },
   {
-    title: 'Agentic AI Implementation',
-    description: 'Deploy custom AI agents and copilots that transform business processes and enhance employee productivity.',
+    title: 'AI That\'s Frankly Good',
+    description: 'No AI buzzword bingo here. Build AI agents that deliver real value – whether you\'re an enterprise or just trying to automate your cat\'s Instagram.',
     icon: 'robot',
     iconColor: 'accent',
     link: '/conversation',
-    linkText: 'Try AI Conversation',
+    linkText: 'Chat with Frank-AI',
   },
   {
-    title: 'AI Music Generation',
-    description: 'Create custom brand soundscapes, product sounds, and marketing audio with our cutting-edge AI music tools.',
+    title: 'AI Music & Creativity',
+    description: 'From corporate sonic branding to your next shower concert – create music with AI that doesn\'t sound like it was made by, well, AI.',
     icon: 'music',
     iconColor: 'primary',
     link: '/music',
-    linkText: 'Explore AI Music',
+    linkText: 'Make Some Noise',
   },
 ];
 
 // Company info for footer
 export const COMPANY_INFO = {
   name: 'FrankX.AI',
-  description: 'Enterprise AI transformation and implementation experts. Building the future of business with intelligent solutions.',
+  description: 'Where enterprise AI meets human insight. I help both Fortune 500s and curious individuals build AI that\'s frankly good. No jargon, no BS, just results that matter.',
+  tagline: 'AI that\'s frankly good™',
   social: [
     { name: 'LinkedIn', icon: 'linkedin', url: '#' },
     { name: 'Twitter', icon: 'twitter', url: '#' },
@@ -59,25 +60,25 @@ export const COMPANY_INFO = {
 // Footer links
 export const FOOTER_LINKS = {
   solutions: [
-    { name: 'AI Center of Excellence', url: '/resources' },
+    { name: 'AI Excellence Hub', url: '/resources' },
     { name: 'AI Implementation', url: '/assessment' },
-    { name: 'AI Music Generation', url: '/music' },
-    { name: 'Enterprise Copilots', url: '/conversation' },
-    { name: 'AI Training Programs', url: '/resources' },
+    { name: 'AI Music Lab', url: '/music' },
+    { name: 'Chat with Frank-AI', url: '/conversation' },
+    { name: 'AI Training (No Fluff)', url: '/resources' },
   ],
   resources: [
-    { name: 'Blog', url: '/blog' },
-    { name: 'Case Studies', url: '/blog' },
-    { name: 'Webinars', url: '/resources' },
-    { name: 'Whitepapers', url: '/resources' },
-    { name: 'AI Maturity Assessment', url: '/assessment' },
+    { name: 'Frankly Speaking Blog', url: '/blog' },
+    { name: 'Real-World Success Stories', url: '/blog' },
+    { name: 'Frankly Useful Webinars', url: '/resources' },
+    { name: 'No-BS Whitepapers', url: '/resources' },
+    { name: 'AI Readiness Check', url: '/assessment' },
   ],
   company: [
-    { name: 'About Us', url: '#' },
-    { name: 'Leadership', url: '#' },
-    { name: 'Careers', url: '#' },
-    { name: 'Contact', url: '#' },
-    { name: 'Partners', url: '#' },
+    { name: 'Who is Frank?', url: '#' },
+    { name: 'AI Philosophy', url: '#' },
+    { name: 'Work With Me', url: '#' },
+    { name: 'Say Hello', url: '#' },
+    { name: 'Speaking Engagements', url: '#' },
   ],
 };
 
