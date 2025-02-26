@@ -39,10 +39,15 @@ export const resources = pgTable("resources", {
   type: text("type").notNull(),
   icon: text("icon").notNull(),
   link: text("link").notNull(),
+  isPremium: boolean("is_premium").default(false),
+  price: text("price"),
+  affiliateCode: text("affiliate_code"),
+  downloads: integer("downloads").default(0),
 });
 
 export const insertResourceSchema = createInsertSchema(resources).omit({
   id: true,
+  downloads: true,
 });
 
 // AI Characters

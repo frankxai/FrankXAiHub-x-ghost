@@ -45,6 +45,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error fetching resources" });
     }
   });
+  
+  app.post("/api/resources", async (req, res) => {
+    try {
+      const validatedData = insertResourceSchema.parse(req.body);
+      const resource = await storage.createResource(validatedData);
+      res.status(201).json(resource);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid input data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Error creating resource" });
+      }
+    }
+  });
+  
+  app.delete("/api/resources/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteResource(id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting resource" });
+    }
+  });
+  
+  // Affiliate tracking endpoint
+  app.post("/api/track-affiliate", async (req, res) => {
+    try {
+      const { resourceId, affiliateCode } = req.body;
+      
+      // In a real implementation, you would:
+      // 1. Record the affiliate click in the database
+      // 2. Associate with user session if available
+      
+      // For now, just log it
+      console.log(`Tracked affiliate click: ${resourceId}, code: ${affiliateCode}`);
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Error tracking affiliate" });
+    }
+  });
+  
+  // Download tracking endpoint
+  app.post("/api/track-download", async (req, res) => {
+    try {
+      const { resourceId } = req.body;
+      await storage.incrementResourceDownloads(resourceId);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Error tracking download" });
+    }
+  });
 
   // AI Characters endpoints
   app.get("/api/ai-characters", async (req, res) => {

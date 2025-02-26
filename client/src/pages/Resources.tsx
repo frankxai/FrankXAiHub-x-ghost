@@ -3,15 +3,19 @@ import { motion } from "framer-motion";
 import { pageVariants, containerVariants, itemVariants } from "@/lib/animations";
 import { Resource } from "@shared/schema";
 import ResourceCard from "@/components/resources/ResourceCard";
+import PremiumResourceCard from "@/components/resources/PremiumResourceCard";
+import ResourceManager from "@/components/resources/ResourceManager";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search } from "lucide-react";
+import { Search, Crown } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 
 const Resources = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeType, setActiveType] = useState("all");
+  const [isPremiumFilter, setIsPremiumFilter] = useState("all");
+  const [isAdmin, setIsAdmin] = useState(true); // Set this based on user role in a real app
   
   const { data: resources, isLoading } = useQuery<Resource[]>({
     queryKey: ['/api/resources'],
@@ -22,15 +26,20 @@ const Resources = () => {
     ? ["all", ...new Set(resources.map(resource => resource.type))]
     : ["all"];
   
-  // Filter resources by search term and type
+  // Filter resources by search term, type, and premium status
   const filteredResources = resources?.filter(resource => {
     const matchesSearch = searchTerm === "" || 
       resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       resource.description.toLowerCase().includes(searchTerm.toLowerCase());
       
     const matchesType = activeType === "all" || resource.type === activeType;
+    
+    const matchesPremium = 
+      isPremiumFilter === "all" || 
+      (isPremiumFilter === "premium" && resource.isPremium) ||
+      (isPremiumFilter === "free" && !resource.isPremium);
       
-    return matchesSearch && matchesType;
+    return matchesSearch && matchesType && matchesPremium;
   });
 
   return (
@@ -49,6 +58,13 @@ const Resources = () => {
           </p>
         </div>
         
+        {/* Admin Resource Manager */}
+        {isAdmin && (
+          <div className="mb-10">
+            <ResourceManager isAdmin={isAdmin} />
+          </div>
+        )}
+        
         {/* Search and filter */}
         <div className="max-w-4xl mx-auto mb-12">
           <div className="relative mb-6">
@@ -62,18 +78,35 @@ const Resources = () => {
             />
           </div>
           
-          <Tabs defaultValue="all" onValueChange={setActiveType}>
-            <TabsList className="flex overflow-x-auto pb-2 space-x-2">
-              {resourceTypes.map((type) => (
-                <TabsTrigger
-                  key={type}
-                  value={type}
-                  className="capitalize"
-                >
-                  {type === "all" ? "All Resources" : type}
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <Tabs defaultValue="all" onValueChange={setActiveType} className="flex-1">
+              <TabsList className="flex overflow-x-auto pb-2 space-x-2">
+                {resourceTypes.map((type) => (
+                  <TabsTrigger
+                    key={type}
+                    value={type}
+                    className="capitalize"
+                  >
+                    {type === "all" ? "All Resources" : type}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+            
+            <Tabs defaultValue="all" onValueChange={setIsPremiumFilter}>
+              <TabsList className="flex space-x-2">
+                <TabsTrigger value="all">
+                  All
                 </TabsTrigger>
-              ))}
-            </TabsList>
+                <TabsTrigger value="free">
+                  Free
+                </TabsTrigger>
+                <TabsTrigger value="premium" className="flex items-center">
+                  <Crown className="h-3 w-3 mr-1" /> Premium
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
           </Tabs>
         </div>
         
@@ -140,7 +173,11 @@ const Resources = () => {
             >
               {filteredResources.map((resource) => (
                 <motion.div key={resource.id} variants={itemVariants}>
-                  <ResourceCard resource={resource} />
+                  {resource.isPremium ? (
+                    <PremiumResourceCard resource={resource} />
+                  ) : (
+                    <ResourceCard resource={resource} />
+                  )}
                 </motion.div>
               ))}
             </motion.div>

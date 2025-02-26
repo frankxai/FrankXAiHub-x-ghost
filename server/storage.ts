@@ -32,6 +32,8 @@ export interface IStorage {
   getAllResources(): Promise<Resource[]>;
   getResource(id: number): Promise<Resource | undefined>;
   createResource(resource: InsertResource): Promise<Resource>;
+  deleteResource(id: number): Promise<void>;
+  incrementResourceDownloads(id: number): Promise<void>;
   
   // AI Characters methods
   getAllAICharacters(): Promise<AICharacter[]>;
@@ -134,9 +136,28 @@ export class MemStorage implements IStorage {
 
   async createResource(resource: InsertResource): Promise<Resource> {
     const id = this.resourceCurrentId++;
-    const newResource: Resource = { ...resource, id };
+    const newResource: Resource = { 
+      ...resource, 
+      id, 
+      downloads: 0 
+    };
     this.resources.set(id, newResource);
     return newResource;
+  }
+  
+  async deleteResource(id: number): Promise<void> {
+    this.resources.delete(id);
+  }
+  
+  async incrementResourceDownloads(id: number): Promise<void> {
+    const resource = this.resources.get(id);
+    if (resource) {
+      const updatedResource = { 
+        ...resource, 
+        downloads: (resource.downloads || 0) + 1 
+      };
+      this.resources.set(id, updatedResource);
+    }
   }
 
   // AI Character methods
