@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { COMPANY_INFO, FOOTER_LINKS } from "@/lib/constants";
 import { FaLinkedin, FaTwitter, FaYoutube, FaMedium } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const getSocialIcon = (icon: string) => {
   switch (icon) {
@@ -19,76 +20,96 @@ const getSocialIcon = (icon: string) => {
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white pt-16 pb-8">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-slate-900 text-white pt-16 pb-8">
+      <div className="enterprise-container">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           <div className="lg:col-span-2">
-            <div className="flex items-center mb-6">
-              <span className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#00C2FF] to-[#FF3366]">
-                {COMPANY_INFO.name}
-              </span>
-            </div>
+            <Link href="/">
+              <motion.div 
+                className="flex items-center mb-6"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <span className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-[#00C2FF]">
+                  FrankX.AI
+                </span>
+              </motion.div>
+            </Link>
             <p className="text-gray-400 mb-6 max-w-md">
               {COMPANY_INFO.description}
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-5">
               {COMPANY_INFO.social.map((item) => (
-                <a 
+                <motion.a 
                   key={item.name}
                   href={item.url} 
                   className="text-gray-400 hover:text-secondary transition-colors duration-300"
                   aria-label={item.name}
+                  whileHover={{ scale: 1.15, color: "#00C2FF" }}
+                  transition={{ duration: 0.2 }}
                 >
                   {getSocialIcon(item.icon)}
-                </a>
+                </motion.a>
               ))}
             </div>
           </div>
           
           <div>
-            <h4 className="font-clash font-bold text-lg mb-6">Solutions</h4>
+            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">Solutions</h4>
             <ul className="space-y-4">
               {FOOTER_LINKS.solutions.map((item) => (
-                <li key={item.name}>
+                <motion.li 
+                  key={item.name}
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <Link 
                     href={item.url}
                     className="text-gray-400 hover:text-secondary transition-colors duration-300"
                   >
                     {item.name}
                   </Link>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
           
           <div>
-            <h4 className="font-clash font-bold text-lg mb-6">Resources</h4>
+            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">Resources</h4>
             <ul className="space-y-4">
               {FOOTER_LINKS.resources.map((item) => (
-                <li key={item.name}>
+                <motion.li 
+                  key={item.name}
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <Link 
                     href={item.url}
                     className="text-gray-400 hover:text-secondary transition-colors duration-300"
                   >
                     {item.name}
                   </Link>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
           
           <div>
-            <h4 className="font-clash font-bold text-lg mb-6">Company</h4>
+            <h4 className="font-clash font-bold text-lg mb-6 text-gray-200">Company</h4>
             <ul className="space-y-4">
               {FOOTER_LINKS.company.map((item) => (
-                <li key={item.name}>
+                <motion.li 
+                  key={item.name}
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <Link 
                     href={item.url}
                     className="text-gray-400 hover:text-secondary transition-colors duration-300"
                   >
                     {item.name}
                   </Link>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
@@ -100,9 +121,9 @@ const Footer = () => {
               <p className="text-gray-500 text-sm">© 2025 FrankX.AI. All rights reserved.</p>
             </div>
             <div className="flex space-x-6">
-              <a href="#" className="text-gray-500 hover:text-gray-400 text-sm">Privacy Policy</a>
-              <a href="#" className="text-gray-500 hover:text-gray-400 text-sm">Terms of Service</a>
-              <a href="#" className="text-gray-500 hover:text-gray-400 text-sm">Cookies</a>
+              <a href="#" className="text-gray-500 hover:text-gray-300 text-sm">Privacy Policy</a>
+              <a href="#" className="text-gray-500 hover:text-gray-300 text-sm">Terms of Service</a>
+              <a href="#" className="text-gray-500 hover:text-gray-300 text-sm">Cookies</a>
             </div>
           </div>
         </div>

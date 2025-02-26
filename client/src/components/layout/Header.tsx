@@ -127,31 +127,14 @@ const Header = () => {
               whileHover="hover"
               variants={logoVariants}
             >
-              <motion.div
-                initial={{ rotateY: 0, scale: 1 }}
-                animate={{ 
-                  rotateY: [0, 10, 0, -10, 0],
-                  scale: [1, 1.1, 1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 6,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                  repeatType: "mirror"
-                }}
-                style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
-              >
-                <div className="relative">
-                  <BrainCircuit className="w-8 h-8 text-primary absolute opacity-40 blur-[1px]" style={{ transform: "translateX(2px) translateY(2px)" }} />
-                  <Network className="w-8 h-8 text-secondary/80 absolute opacity-60" style={{ transform: "translateX(1px) translateY(1px) scale(0.95)" }} />
-                  <Cpu className="w-8 h-8 text-secondary relative" />
-                </div>
-              </motion.div>
               <div className="flex flex-col">
-                <span className="text-2xl font-clash font-bold">
-                  <span className="text-foreground">FrankX</span>
-                  <span className="text-secondary">.AI</span>
-                </span>
+                <motion.span 
+                  className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-secondary"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2, type: "spring", stiffness: 400 }}
+                >
+                  FrankX.AI
+                </motion.span>
                 <span className="text-xs text-muted-foreground font-medium leading-tight">
                   Enterprise AI Excellence
                 </span>
@@ -240,11 +223,9 @@ const Header = () => {
             <SheetContent side="right" className="border-l border-border">
               <SheetHeader className="mb-6">
                 <SheetTitle className="flex items-center gap-2">
-                  <Cpu className="w-6 h-6 text-secondary" />
                   <div className="flex flex-col">
-                    <span className="text-xl font-clash font-bold">
-                      <span className="text-foreground">FrankX</span>
-                      <span className="text-secondary">.AI</span>
+                    <span className="text-xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-secondary">
+                      FrankX.AI
                     </span>
                   </div>
                 </SheetTitle>
