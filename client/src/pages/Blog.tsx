@@ -44,9 +44,9 @@ const Blog = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-clash font-bold mb-4">Thought Leadership</h1>
+          <h1 className="text-4xl md:text-5xl font-clash font-bold mb-4">AI Center of Excellence</h1>
           <p className="text-lg text-overlay">
-            Expert insights on enterprise AI transformation, implementation strategies, and emerging technologies.
+            Thought leadership on building enterprise AI capabilities, implementation roadmaps, and strategic transformation frameworks.
           </p>
         </div>
         

@@ -4,11 +4,12 @@ import { motion } from "framer-motion";
 import { pageVariants } from "@/lib/animations";
 import { BlogPost as BlogPostType } from "@shared/schema";
 import ProgressTracker from "@/components/blog/ProgressTracker";
+import EnhancedBlogContent from "@/components/blog/EnhancedBlogContent";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Headphones, Share2, Calendar, Clock } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import { Headphones, Share2, Calendar, Clock, Moon, Sun } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 
 const BlogPost = () => {
   const { id } = useParams();

@@ -11,7 +11,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const Header = () => {
   const [location] = useLocation();
@@ -59,6 +60,7 @@ const Header = () => {
             <Button variant="ghost" size="icon">
               <Search className="h-5 w-5" />
             </Button>
+            <ThemeToggle />
           </div>
           
           {/* Mobile menu button */}
