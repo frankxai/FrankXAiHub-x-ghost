@@ -13,46 +13,46 @@ export const COLORS = {
 // Navigation links with SEO-optimized labels
 export const NAV_LINKS = [
   { title: 'Home', path: '/' },
-  { title: 'AI Insights', path: '/blog' },
-  { title: 'Center of Excellence', path: '/resources' },
-  { title: 'Enterprise Strategy', path: '/conversation' },
-  { title: 'Generative AI', path: '/music' },
-  { title: 'AI Assessment', path: '/assessment' },
+  { title: 'Insights', path: '/blog' },
+  { title: 'AI Excellence', path: '/resources' },
+  { title: 'Strategy Lab', path: '/conversation' },
+  { title: 'Innovation', path: '/music' },
+  { title: 'Assessment', path: '/assessment' },
 ];
 
 // Feature sections with SEO-optimized keywords
 export const FEATURES = [
   {
     title: 'AI Center of Excellence',
-    description: 'Access enterprise-grade frameworks, governance models, and implementation playbooks to establish a strategic AI Center of Excellence within your organization.',
-    icon: 'brain',
+    description: 'Enterprise-grade frameworks, governance models, and implementation playbooks to establish strategic AI capabilities aligned with business objectives and regulatory requirements.',
+    icon: 'building',
     iconColor: 'secondary',
     link: '/resources',
-    linkText: 'Access CoE Resources',
+    linkText: 'Explore Excellence Framework',
   },
   {
-    title: 'Enterprise AI Strategy',
-    description: 'Develop comprehensive AI transformation strategies with our advanced AI assistants specialized in ROI analysis, implementation planning, and change management.',
-    icon: 'robot',
+    title: 'Strategic Implementation',
+    description: 'Comprehensive transformation roadmaps with specialized advisory services for ROI optimization, change management, and cross-functional adoption strategies.',
+    icon: 'network',
     iconColor: 'accent',
     link: '/conversation',
-    linkText: 'Strategic Planning Tools',
+    linkText: 'Implementation Roadmap',
   },
   {
-    title: 'Generative AI Applications',
-    description: 'Explore enterprise-ready generative AI solutions for content creation, data visualization, and creative business applications with measurable business outcomes.',
+    title: 'Generative AI Innovation',
+    description: 'Enterprise-ready generative AI solutions for content creation, predictive analytics, and business process automation with measurable performance metrics.',
     icon: 'sparkles',
     iconColor: 'primary',
     link: '/music',
-    linkText: 'Explore Generative AI',
+    linkText: 'Discover AI Capabilities',
   },
 ];
 
 // Company info for footer
 export const COMPANY_INFO = {
-  name: 'FrankX.AI',
-  description: 'Enterprise AI Center of Excellence delivering strategic implementation frameworks, governance models, and transformative business solutions for Fortune 500 companies worldwide.',
-  tagline: 'Enterprise AI Transformation Partner',
+  name: 'Nexus AI',
+  description: 'Enterprise AI excellence delivering strategic implementation frameworks, governance models, and transformative business solutions for Fortune 500 companies and rapid-growth organizations worldwide.',
+  tagline: 'Strategic AI Excellence',
   social: [
     { name: 'LinkedIn', icon: 'linkedin', url: '#' },
     { name: 'Twitter', icon: 'twitter', url: '#' },
@@ -65,24 +65,24 @@ export const COMPANY_INFO = {
 export const FOOTER_LINKS = {
   solutions: [
     { name: 'AI Center of Excellence', url: '/resources' },
-    { name: 'AI Implementation', url: '/assessment' },
-    { name: 'AI Media Generation', url: '/music' },
-    { name: 'Enterprise AI Assistants', url: '/conversation' },
-    { name: 'AI Leadership Training', url: '/resources' },
+    { name: 'Strategic Implementation', url: '/assessment' },
+    { name: 'AI Innovation Lab', url: '/music' },
+    { name: 'Enterprise Intelligence', url: '/conversation' },
+    { name: 'Executive AI Training', url: '/resources' },
   ],
   resources: [
-    { name: 'Insights & Research', url: '/blog' },
-    { name: 'Case Studies', url: '/blog' },
-    { name: 'Expert Webinars', url: '/resources' },
-    { name: 'Whitepapers', url: '/resources' },
-    { name: 'AI Maturity Assessment', url: '/assessment' },
+    { name: 'Industry Research', url: '/blog' },
+    { name: 'Enterprise Case Studies', url: '/blog' },
+    { name: 'Expert Insights', url: '/resources' },
+    { name: 'Technical Whitepapers', url: '/resources' },
+    { name: 'Transformation Roadmap', url: '/assessment' },
   ],
   company: [
-    { name: 'About FrankX.AI', url: '#' },
-    { name: 'Our Approach', url: '#' },
-    { name: 'Partnership Inquiries', url: '#' },
-    { name: 'Contact Us', url: '#' },
-    { name: 'Events & Speaking', url: '#' },
+    { name: 'About Us', url: '#' },
+    { name: 'Strategic Approach', url: '#' },
+    { name: 'Enterprise Partnerships', url: '#' },
+    { name: 'Contact', url: '#' },
+    { name: 'Leadership & Research', url: '#' },
   ],
 };
 
