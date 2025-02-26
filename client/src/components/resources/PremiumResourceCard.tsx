@@ -98,13 +98,13 @@ const PremiumResourceCard = ({ resource }: PremiumResourceCardProps) => {
       <Card className="h-full bg-white/5 backdrop-blur-sm border border-zinc-200/30 dark:border-zinc-700/30 hover:border-secondary/50 transition-all duration-300">
         <CardContent className="pt-6">
           <div className="relative mb-4">
-            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-[#00C2FF]/10 dark:bg-[#00C2FF]/20 flex items-center justify-center text-[#00C2FF] dark:text-[#00C2FF]">
               <IconComponent />
             </div>
             
             {resource.isPremium && !purchased && (
               <div className="absolute top-0 right-0">
-                <div className="bg-secondary text-white text-xs px-2 py-1 rounded-full font-medium flex items-center">
+                <div className="bg-[#00C2FF] dark:bg-[#00C2FF] text-white text-xs px-2 py-1 rounded-full font-medium flex items-center">
                   <Lock className="w-3 h-3 mr-1" />
                   Premium
                 </div>
@@ -113,11 +113,11 @@ const PremiumResourceCard = ({ resource }: PremiumResourceCardProps) => {
           </div>
           
           <div className="text-center pt-2">
-            <h3 className="font-clash font-bold text-lg mb-2">{resource.title}</h3>
-            <p className="text-muted-foreground text-sm mb-4">{resource.description}</p>
+            <h3 className="font-clash font-bold text-lg mb-2 dark:text-white">{resource.title}</h3>
+            <p className="text-muted-foreground dark:text-gray-300 text-sm mb-4">{resource.description}</p>
             
             {resource.isPremium && !purchased ? (
-              <div className="inline-block bg-secondary/10 text-secondary font-medium px-3 py-1 rounded-full text-sm">
+              <div className="inline-block bg-[#00C2FF]/10 dark:bg-[#00C2FF]/20 text-[#00C2FF] dark:text-[#00C2FF] font-medium px-3 py-1 rounded-full text-sm">
                 ${resource.price}
               </div>
             ) : purchased ? (

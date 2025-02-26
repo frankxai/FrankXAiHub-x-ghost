@@ -20,15 +20,15 @@ const ResourceCard = ({ resource }: ResourceCardProps) => {
   const getIcon = () => {
     switch (icon) {
       case 'file-pdf':
-        return <FileText className="text-2xl text-secondary" />;
+        return <FileText className="text-2xl text-[#00C2FF] dark:text-[#00C2FF]" />;
       case 'play-circle':
-        return <Play className="text-2xl text-accent" />;
+        return <Play className="text-2xl text-[#FF3366] dark:text-[#FF3366]" />;
       case 'table':
-        return <Table className="text-2xl text-secondary" />;
+        return <Table className="text-2xl text-[#00C2FF] dark:text-[#00C2FF]" />;
       case 'clipboard-list':
-        return <ClipboardList className="text-2xl text-accent" />;
+        return <ClipboardList className="text-2xl text-[#FF3366] dark:text-[#FF3366]" />;
       default:
-        return <FileText className="text-2xl text-secondary" />;
+        return <FileText className="text-2xl text-[#00C2FF] dark:text-[#00C2FF]" />;
     }
   };
   
@@ -58,16 +58,16 @@ const ResourceCard = ({ resource }: ResourceCardProps) => {
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="h-full">
+      <Card className="h-full border border-gray-100 dark:border-gray-700 dark:bg-gray-800">
         <CardContent className="p-6">
           <div className="mb-4">
             {getIcon()}
           </div>
-          <h3 className="font-clash font-bold text-lg mb-2">{title}</h3>
-          <p className="text-sm text-overlay mb-4">{description}</p>
+          <h3 className="font-clash font-bold text-lg mb-2 dark:text-white">{title}</h3>
+          <p className="text-sm text-overlay dark:text-gray-300 mb-4">{description}</p>
           <a 
             href={link} 
-            className="text-sm font-medium text-primary flex items-center hover:text-secondary transition-colors"
+            className="text-sm font-medium text-[#00C2FF] dark:text-[#00C2FF] flex items-center hover:text-[#0099CC] dark:hover:text-[#33CCFF] transition-colors"
             target="_blank" 
             rel="noopener noreferrer"
           >
