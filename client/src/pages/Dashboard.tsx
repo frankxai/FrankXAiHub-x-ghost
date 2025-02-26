@@ -1,17 +1,24 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { pageVariants } from "@/lib/animations";
-import { Resource } from "@shared/schema";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { pageVariants, containerVariants, itemVariants } from "@/lib/animations";
+import { Resource, BlogPost, MusicSample } from "@shared/schema";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { BarChart, LineChart, PieChart } from "@/components/ui/charts";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { 
   Download, Users, DollarSign, TrendingUp, Filter,
-  Calendar, ChevronDown, FileText, Share2, Tag
+  Calendar, ChevronDown, FileText, Share2, Tag, 
+  Music, Edit, ArrowUpRight, PlusCircle, GripVertical,
+  Image, PenTool, Video, BarChart3, Upload, Layers
 } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import MusicUploader from "@/components/music/MusicUploader";
+import BlogContentUploader from "@/components/blog/BlogContentUploader";
 
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState("7d");
@@ -149,11 +156,14 @@ const Dashboard = () => {
         
         {/* Tabs for different views */}
         <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList>
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:flex lg:flex-wrap">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="downloads">Downloads</TabsTrigger>
             <TabsTrigger value="sales">Sales</TabsTrigger>
             <TabsTrigger value="affiliate">Affiliate</TabsTrigger>
+            <TabsTrigger value="content" className="hidden md:flex">Content Creation</TabsTrigger>
+            <TabsTrigger value="music" className="hidden md:flex">Music Studio</TabsTrigger>
+            <TabsTrigger value="blog" className="hidden md:flex">Blog Editor</TabsTrigger>
           </TabsList>
           
           {/* Overview Tab */}
