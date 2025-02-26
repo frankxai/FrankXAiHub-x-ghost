@@ -21,13 +21,13 @@ const Header = () => {
   const isActive = (path: string) => location === path;
 
   return (
-    <header className="fixed w-full bg-white bg-opacity-90 backdrop-blur-sm z-50 border-b border-gray-100">
+    <header className="fixed w-full bg-background/80 backdrop-blur-sm z-50 border-b border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <motion.span 
-                className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#171717] to-[#00C2FF]"
+                className="text-2xl font-clash font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-[#00C2FF]"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
@@ -72,7 +72,7 @@ const Header = () => {
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>
-                <SheetTitle className="text-2xl font-clash bg-clip-text text-transparent bg-gradient-to-r from-[#171717] to-[#00C2FF]">
+                <SheetTitle className="text-2xl font-clash bg-clip-text text-transparent bg-gradient-to-r from-foreground to-[#00C2FF]">
                   FrankX.AI
                 </SheetTitle>
                 <SheetDescription>
@@ -84,8 +84,8 @@ const Header = () => {
                   <Link 
                     key={link.path} 
                     href={link.path}
-                    className={`px-3 py-2 rounded-md text-base font-medium hover:bg-gray-50 ${
-                      isActive(link.path) ? "bg-gray-50 text-secondary" : "text-primary"
+                    className={`px-3 py-2 rounded-md text-base font-medium hover:bg-accent ${
+                      isActive(link.path) ? "bg-accent text-secondary" : "text-primary"
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -94,11 +94,14 @@ const Header = () => {
                 ))}
                 <Link 
                   href="/assessment"
-                  className="px-3 py-2 rounded-md text-base font-medium text-secondary hover:bg-gray-50"
+                  className="px-3 py-2 rounded-md text-base font-medium text-secondary hover:bg-accent"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   AI Assessment
                 </Link>
+                <div className="px-3 py-2">
+                  <ThemeToggle />
+                </div>
               </div>
             </SheetContent>
           </Sheet>
