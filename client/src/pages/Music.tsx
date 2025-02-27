@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 interface SunoSong {
   id: string;
   title?: string;
+  isVideo?: boolean;
 }
 
 const Music = () => {
@@ -34,18 +35,35 @@ const Music = () => {
   const [currentSunoSong, setCurrentSunoSong] = useState<SunoSong | null>(null);
 
   // Extract Suno song ID from a URL
-  const extractSunoSongId = (url: string): string | null => {
+  const extractSunoSongId = (url: string): { id: string, isVideo: boolean } | null => {
     try {
       // Match patterns like https://suno.com/song/1cf7626c-1a71-41f0-a6c4-fd57d5ca2747
-      const regex = /suno\.com\/song\/([a-zA-Z0-9-]+)/;
-      const match = url.match(regex);
+      const songRegex = /suno\.com\/song\/([a-zA-Z0-9-]+)/;
+      const songMatch = url.match(songRegex);
       
-      if (match && match[1]) {
-        return match[1];
+      if (songMatch && songMatch[1]) {
+        return { id: songMatch[1], isVideo: false };
       }
+      
+      // Match patterns like https://suno.com/video/123456 (for video content)
+      const videoRegex = /suno\.com\/video\/([a-zA-Z0-9-]+)/;
+      const videoMatch = url.match(videoRegex);
+      
+      if (videoMatch && videoMatch[1]) {
+        return { id: videoMatch[1], isVideo: true };
+      }
+      
+      // Detect YouTube video links
+      const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+      const youtubeMatch = url.match(youtubeRegex);
+      
+      if (youtubeMatch && youtubeMatch[1]) {
+        return { id: youtubeMatch[1], isVideo: true };
+      }
+      
       return null;
     } catch (e) {
-      console.error("Error extracting Suno song ID:", e);
+      console.error("Error extracting media ID:", e);
       return null;
     }
   };
@@ -54,11 +72,14 @@ const Music = () => {
   const handleSunoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const songId = extractSunoSongId(sunoInput);
-    if (songId) {
-      setCurrentSunoSong({ id: songId });
+    const result = extractSunoSongId(sunoInput);
+    if (result) {
+      setCurrentSunoSong({ 
+        id: result.id, 
+        isVideo: result.isVideo 
+      });
     } else {
-      alert("Please enter a valid Suno song URL (e.g., https://suno.com/song/1cf7626c-1a71-41f0-a6c4-fd57d5ca2747)");
+      alert("Please enter a valid Suno song URL (e.g., https://suno.com/song/1cf7626c-1a71-41f0-a6c4-fd57d5ca2747) or a YouTube link");
     }
   };
 
@@ -91,7 +112,7 @@ const Music = () => {
                   type="text"
                   value={sunoInput}
                   onChange={(e) => setSunoInput(e.target.value)}
-                  placeholder="https://suno.com/song/1cf7626c-1a71-41f0-a6c4-fd57d5ca2747"
+                  placeholder="Paste Suno song or YouTube link (e.g., https://suno.com/song/...)"
                   className="flex-1 bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                 />
                 <Button 
@@ -102,7 +123,7 @@ const Music = () => {
                 </Button>
               </div>
               <p className="text-xs text-gray-400 text-left">
-                Paste a Suno song link to embed and share it in our community gallery
+                Paste a Suno song or YouTube AI music video link to embed and share in our gallery
               </p>
             </form>
           </div>
@@ -114,14 +135,17 @@ const Music = () => {
             <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 shadow-xl">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                 <h2 className="text-2xl md:text-3xl font-clash font-bold">
-                  Your Suno Creation
+                  {currentSunoSong.isVideo ? 'Your AI Music Video' : 'Your Suno Creation'}
                 </h2>
                 <div className="flex items-center space-x-4 mt-4 md:mt-0">
                   <Button 
                     variant="outline" 
                     className="border-gray-600 text-gray-300 hover:bg-gray-700"
                     onClick={() => {
-                      navigator.clipboard.writeText(`https://suno.com/song/${currentSunoSong.id}`);
+                      const url = currentSunoSong.isVideo
+                        ? `https://youtube.com/watch?v=${currentSunoSong.id}`
+                        : `https://suno.com/song/${currentSunoSong.id}`;
+                      navigator.clipboard.writeText(url);
                       alert("Link copied to clipboard!");
                     }}
                   >
@@ -130,22 +154,38 @@ const Music = () => {
                   <Button
                     variant="outline"
                     className="border-gray-600 text-gray-300 hover:bg-gray-700"
-                    onClick={() => window.open(`https://suno.com/song/${currentSunoSong.id}`, '_blank')}
+                    onClick={() => {
+                      const url = currentSunoSong.isVideo
+                        ? `https://youtube.com/watch?v=${currentSunoSong.id}`
+                        : `https://suno.com/song/${currentSunoSong.id}`;
+                      window.open(url, '_blank');
+                    }}
                   >
-                    <ExternalLink className="mr-2 h-4 w-4" /> Open in Suno
+                    <ExternalLink className="mr-2 h-4 w-4" /> {currentSunoSong.isVideo ? 'Open in YouTube' : 'Open in Suno'}
                   </Button>
                 </div>
               </div>
               
               <div className="aspect-video w-full bg-black/30 rounded-xl overflow-hidden">
-                <iframe 
-                  src={`https://suno.com/embed/song/${currentSunoSong.id}`}
-                  frameBorder="0"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                  title="Suno AI Song"
-                  className="w-full h-full"
-                ></iframe>
+                {currentSunoSong.isVideo ? (
+                  <iframe 
+                    src={`https://www.youtube.com/embed/${currentSunoSong.id}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title="AI Music Video"
+                    className="w-full h-full"
+                  ></iframe>
+                ) : (
+                  <iframe 
+                    src={`https://suno.com/embed/song/${currentSunoSong.id}`}
+                    frameBorder="0"
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                    title="Suno AI Song"
+                    className="w-full h-full"
+                  ></iframe>
+                )}
               </div>
               
               <div className="mt-6 flex flex-wrap gap-3">
