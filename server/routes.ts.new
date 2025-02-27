@@ -71,7 +71,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error fetching blog post" });
     }
   });
-  
+
   app.post("/api/blog-posts", async (req, res) => {
     try {
       const validatedData = insertBlogPostSchema.parse(req.body);
@@ -495,7 +495,7 @@ Format the response as JSON with this structure:
   } catch (error) {
     log(`Error initializing blog storage: ${error}`, "error");
   }
-  
+
   const httpServer = createServer(app);
   return httpServer;
 }

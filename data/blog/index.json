@@ -1,0 +1,44 @@
+{
+  "lastId": 3,
+  "posts": [
+    {
+      "id": 1,
+      "slug": "building-an-ai-center-of-excellence",
+      "title": "Building an AI Center of Excellence",
+      "excerpt": "A strategic framework for implementing enterprise-wide AI capabilities.",
+      "category": "Strategy",
+      "authorName": "Frank Venture",
+      "publishedAt": "2025-02-15T00:00:00.000Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1507146153580-69a1fe6d8aa1",
+      "tags": [],
+      "featured": false
+    },
+    {
+      "id": 2,
+      "slug": "the-roi-of-enterprise-ai-implementation",
+      "title": "The ROI of Enterprise AI Implementation",
+      "excerpt": "How to measure and maximize the return on investment from artificial intelligence initiatives.",
+      "category": "Technology",
+      "authorName": "Michael Chen",
+      "publishedAt": "2025-02-08T00:00:00.000Z",
+      "readTime": 9,
+      "imageUrl": "https://images.unsplash.com/photo-1676299081847-3e95d5848b6b",
+      "tags": [],
+      "featured": false
+    },
+    {
+      "id": 3,
+      "slug": "practical-guide-to-ai-model-selection",
+      "title": "Practical Guide to AI Model Selection",
+      "excerpt": "How to navigate the complex landscape of AI models and choose the right option for your specific use case.",
+      "category": "Technical",
+      "authorName": "Amanda Rodriguez",
+      "publishedAt": "2025-02-03T00:00:00.000Z",
+      "readTime": 12,
+      "imageUrl": "https://images.unsplash.com/photo-1680987082559-6b0f39a35412",
+      "tags": [],
+      "featured": false
+    }
+  ]
+}

@@ -25,6 +25,9 @@ export const blogPosts = pgTable("blog_posts", {
   authorName: text("author_name").notNull(),
   publishedAt: timestamp("published_at").notNull().defaultNow(),
   readTime: integer("read_time").notNull(),
+  tags: text("tags").array(),
+  featured: boolean("featured").default(false),
+  slug: text("slug"),
 });
 
 export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({
