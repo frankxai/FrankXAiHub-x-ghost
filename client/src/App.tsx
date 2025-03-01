@@ -12,6 +12,7 @@ import Music from "@/pages/Music";
 import Assessment from "@/pages/Assessment";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import FrankXAI from "@/components/ai/FrankXAI";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { AnimatePresence } from "framer-motion";
 
@@ -42,6 +43,7 @@ function App() {
             <Router />
           </main>
           <Footer />
+          <FrankXAI />
         </div>
         <Toaster />
       </ThemeProvider>

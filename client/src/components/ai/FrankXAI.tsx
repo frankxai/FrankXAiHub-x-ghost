@@ -135,21 +135,28 @@ const FrankXAI = () => {
       const pageContext = `The user is currently on ${getPageName()}. Their question is related to this context.`;
       
       // API request to our AI service
-      const response = await apiRequest({
-        url: '/api/ai/conversation',
+      const response = await fetch('/api/ai/conversation', {
         method: 'POST',
-        data: {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           characterName: 'FrankX.AI',
           message: userMessage.content,
           context: pageContext
-        }
+        }),
+        credentials: 'include'
       });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      
+      const responseData = await response.json();
       
       // Add AI response
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        content: response.message as string,
+        content: responseData.message || "I'm sorry, I couldn't generate a response. Please try again.",
         timestamp: new Date(),
       };
       
