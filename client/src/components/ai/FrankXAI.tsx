@@ -135,7 +135,7 @@ const FrankXAI = () => {
       const pageContext = `The user is currently on ${getPageName()}. Their question is related to this context.`;
       
       // API request to our AI service
-      const response = await apiRequest<{message: string}>({
+      const response = await apiRequest({
         url: '/api/ai/conversation',
         method: 'POST',
         data: {
@@ -149,7 +149,7 @@ const FrankXAI = () => {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        content: response.message,
+        content: response.message as string,
         timestamp: new Date(),
       };
       

@@ -450,7 +450,7 @@ Format the response as JSON with this structure:
   // Create conversation with AI character
   app.post("/api/ai/conversation", async (req, res) => {
     try {
-      const { characterName, message, conversationId } = req.body;
+      const { characterName, message, conversationId, context } = req.body;
       
       if (!characterName || !message) {
         return res.status(400).json({ message: "Character name and message are required" });
@@ -463,10 +463,16 @@ Format the response as JSON with this structure:
         provider: 'openai'
       };
       
+      // Build system prompt with context if provided
+      let systemPrompt = persona.systemPrompt;
+      if (context) {
+        systemPrompt = `${systemPrompt}\n\nAdditional context: ${context}`;
+      }
+      
       // Create the completion request
       const request: AICompletionRequest = {
         messages: [
-          { role: 'system', content: persona.systemPrompt },
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
         ],
         provider: persona.provider,
