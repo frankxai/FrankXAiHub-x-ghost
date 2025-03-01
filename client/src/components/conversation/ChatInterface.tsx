@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import type { AICharacter } from "@shared/schema";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { fadeIn } from "@/lib/animations";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Volume2, MoreHorizontal, Send, Bot, User, Code, Briefcase } from "lucide-react";
+import { Volume2, MoreHorizontal, Send, Bot, User, Code, Briefcase, Zap, RefreshCw } from "lucide-react";
 
 interface Message {
   id: string;

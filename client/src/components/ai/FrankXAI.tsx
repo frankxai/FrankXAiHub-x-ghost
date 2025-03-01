@@ -191,12 +191,14 @@ const FrankXAI = () => {
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         <Button 
-          className="w-14 h-14 rounded-full bg-[#00C2FF] hover:bg-[#00C2FF]/90 shadow-lg flex items-center justify-center"
+          className="w-14 h-14 rounded-full bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] hover:shadow-[0_0_15px_rgba(0,195,255,0.5)] shadow-lg flex items-center justify-center border-2 border-white/20"
           onClick={() => setIsOpen(true)}
         >
-          <Bot className="w-6 h-6 text-white" />
+          <Bot className="w-6 h-6 text-white drop-shadow-md" />
         </Button>
       </motion.div>
     );
@@ -213,25 +215,25 @@ const FrankXAI = () => {
       transition={{ duration: 0.3 }}
     >
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#00C2FF] to-[#00C2FF]/70 p-4 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] p-4 flex items-center justify-between">
         <div className="flex items-center">
-          <Avatar className="h-10 w-10 bg-white/20 border border-white/30">
-            <AvatarFallback className="text-white text-sm">
-              <Bot className="h-6 w-6" />
+          <Avatar className="h-10 w-10 bg-white/20 border-2 border-white/30 shadow-md">
+            <AvatarFallback className="text-white bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-sm">
+              <Bot className="h-6 w-6 drop-shadow-sm" />
             </AvatarFallback>
           </Avatar>
           <div className="ml-3">
-            <h3 className="text-white font-semibold">FrankX.AI</h3>
-            <p className="text-white/80 text-xs">Personal AI Companion</p>
+            <h3 className="text-white font-semibold text-lg tracking-tight">FrankX.AI</h3>
+            <p className="text-white/80 text-xs font-light">Personal AI Companion</p>
           </div>
         </div>
         <div className="flex space-x-2">
-          <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10 rounded-full"
+          <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors"
             onClick={() => setIsMinimized(!isMinimized)}
           >
             {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
           </Button>
-          <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10 rounded-full"
+          <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors"
             onClick={() => setIsOpen(false)}
           >
             <X className="h-4 w-4" />
@@ -256,31 +258,31 @@ const FrankXAI = () => {
                   transition={{ duration: 0.3 }}
                 >
                   {message.sender === 'ai' && (
-                    <Avatar className="h-8 w-8 flex-shrink-0">
-                      <AvatarFallback className="bg-[#00C2FF] text-white">
-                        <Bot className="h-4 w-4" />
+                    <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-white/20">
+                      <AvatarFallback className="bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-white">
+                        <Bot className="h-4 w-4 drop-shadow-sm" />
                       </AvatarFallback>
                     </Avatar>
                   )}
                   
                   <div 
-                    className={`mx-3 p-4 max-w-[80%] rounded-lg shadow-sm ${
+                    className={`mx-3 p-4 max-w-[80%] rounded-lg ${
                       message.sender === 'ai' 
-                        ? 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-tl-none border border-gray-100 dark:border-gray-600' 
-                        : 'bg-[#00C2FF] text-white rounded-tr-none'
+                        ? 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-tl-none border border-gray-100 dark:border-gray-600 shadow-sm' 
+                        : 'bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] text-white rounded-tr-none shadow-md'
                     }`}
                   >
                     {message.content.split('\n').map((line, i) => (
-                      <p key={i} className={i > 0 ? 'mt-2' : ''}>
+                      <p key={i} className={`${i > 0 ? 'mt-2' : ''} ${message.sender === 'user' ? 'drop-shadow-sm' : ''}`}>
                         {line}
                       </p>
                     ))}
                   </div>
                   
                   {message.sender === 'user' && (
-                    <Avatar className="h-8 w-8 flex-shrink-0">
-                      <AvatarFallback className="bg-[#171717] dark:bg-[#171717] text-white">
-                        <User className="h-4 w-4" />
+                    <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-white/20">
+                      <AvatarFallback className="bg-gradient-to-br from-[#151515] to-[#272727] text-white">
+                        <User className="h-4 w-4 drop-shadow-sm" />
                       </AvatarFallback>
                     </Avatar>
                   )}
@@ -293,16 +295,19 @@ const FrankXAI = () => {
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                 >
-                  <Avatar className="h-8 w-8 flex-shrink-0">
-                    <AvatarFallback className="bg-[#00C2FF] text-white">
-                      <Bot className="h-4 w-4" />
+                  <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-white/20">
+                    <AvatarFallback className="bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-white">
+                      <Bot className="h-4 w-4 drop-shadow-sm" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="ml-3 bg-white dark:bg-gray-700 rounded-lg p-4 shadow-sm">
-                    <div className="flex space-x-2">
-                      <div className="h-2 w-2 bg-[#00C2FF] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="h-2 w-2 bg-[#00C2FF] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                      <div className="h-2 w-2 bg-[#00C2FF] rounded-full animate-bounce" style={{ animationDelay: '600ms' }}></div>
+                  <div className="mx-3 bg-white dark:bg-gray-700 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-600 rounded-tl-none">
+                    <div className="flex space-x-3">
+                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse" 
+                           style={{ animationDelay: '0ms', animationDuration: '1.2s' }}></div>
+                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse" 
+                           style={{ animationDelay: '300ms', animationDuration: '1.2s' }}></div>
+                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse" 
+                           style={{ animationDelay: '600ms', animationDuration: '1.2s' }}></div>
                     </div>
                   </div>
                 </motion.div>
@@ -316,7 +321,8 @@ const FrankXAI = () => {
               <Input
                 type="text"
                 placeholder="Ask me anything..."
-                className="flex-grow rounded-full border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                className="flex-grow rounded-full border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white 
+                focus-visible:ring-[#00A3FF] focus-visible:ring-offset-0 shadow-sm"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 disabled={isLoading}
@@ -324,10 +330,11 @@ const FrankXAI = () => {
               <Button 
                 type="submit"
                 size="icon"
-                className="ml-2 w-10 h-10 rounded-full bg-[#00C2FF] hover:bg-[#00C2FF]/90 text-white"
+                className="ml-2 w-10 h-10 rounded-full bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] 
+                hover:shadow-[0_0_10px_rgba(0,195,255,0.4)] text-white transition-all duration-300"
                 disabled={isLoading || !input.trim()}
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-4 w-4 drop-shadow-sm" />
               </Button>
             </form>
           </div>
@@ -336,13 +343,17 @@ const FrankXAI = () => {
       
       {isMinimized && (
         <div className="p-4 bg-white dark:bg-gray-900">
-          <div className="flex items-center justify-between text-gray-800 dark:text-gray-200">
-            <p className="text-sm truncate">
-              {messages.length > 0 
-                ? `Last: ${messages[messages.length - 1].content.substring(0, 20)}...` 
-                : 'Ask me anything...'}
-            </p>
-            <ChevronRight className="h-4 w-4 text-gray-400" />
+          <div className="flex items-center justify-between text-gray-800 dark:text-gray-200 group cursor-pointer"
+               onClick={() => setIsMinimized(false)}>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse"></div>
+              <p className="text-sm font-medium truncate">
+                {messages.length > 0 
+                  ? `${messages[messages.length - 1].content.substring(0, 25)}...` 
+                  : 'Ask me anything...'}
+              </p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-[#00A3FF] group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
       )}
