@@ -58,8 +58,13 @@ export const aiCharacters = pgTable("ai_characters", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  icon: text("icon").notNull(),
-  type: text("type").notNull(),
+  persona: text("persona").notNull(),
+  avatarUrl: text("avatar_url").notNull(),
+  capabilities: text("capabilities").array(),
+  model: text("model").notNull(),
+  provider: text("provider").notNull(),
+  icon: text("icon").default("robot"),
+  featured: boolean("featured").default(false),
 });
 
 export const insertAiCharacterSchema = createInsertSchema(aiCharacters).omit({
@@ -70,9 +75,13 @@ export const insertAiCharacterSchema = createInsertSchema(aiCharacters).omit({
 export const musicSamples = pgTable("music_samples", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  tags: text("tags").notNull(),
-  duration: text("duration").notNull(),
+  description: text("description").notNull(),
   audioUrl: text("audio_url").notNull(),
+  imageUrl: text("image_url").notNull(),
+  type: text("type").notNull(),
+  duration: integer("duration").notNull(),
+  isVideo: boolean("is_video").default(false),
+  videoUrl: text("video_url"),
 });
 
 export const insertMusicSampleSchema = createInsertSchema(musicSamples).omit({
