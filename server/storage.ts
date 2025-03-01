@@ -332,6 +332,18 @@ class MemStorage implements IStorage {
     const aiCharacters = [
       {
         id: 1,
+        name: "FrankX.AI",
+        description: "Personal AI companion and guide to the AI Center of Excellence",
+        persona: "I am FrankX.AI, the personal AI companion created by Frank Riemer. I represent his vision for AI transformation and Center of Excellence. My purpose is to guide you through your AI journey, providing strategic insights, practical guidance, and a luxury experience. I can help you navigate all aspects of the platform including blogs, resources, assessments, and other AI characters.",
+        avatarUrl: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61",
+        capabilities: ["Website Navigation", "AI CoE Guidance", "Content Recommendations", "Strategic Advisory"],
+        model: "gpt-4-turbo-preview",
+        provider: "openai",
+        icon: "robot",
+        featured: true
+      },
+      {
+        id: 2,
         name: "Strategic Advisor",
         description: "AI business strategy consultant specializing in enterprise AI transformation",
         persona: "I am a strategic AI consultant with 20+ years of experience guiding Fortune 500 companies through digital transformation. My approach is analytical, business-focused, and results-oriented. I specialize in identifying high-ROI AI use cases and creating practical implementation roadmaps.",
@@ -339,9 +351,10 @@ class MemStorage implements IStorage {
         capabilities: ["Strategy Development", "ROI Analysis", "Implementation Planning"],
         model: "gpt-4",
         provider: "openai",
+        icon: "chart-line"
       },
       {
-        id: 2,
+        id: 3,
         name: "Technical Architect",
         description: "AI systems architect specializing in enterprise LLM implementation",
         persona: "I am an experienced AI systems architect who has designed and deployed large-scale machine learning systems across various industries. I provide detailed technical guidance on model selection, infrastructure requirements, and system integration. My communication style is precise, thorough, and technically focused.",
@@ -349,9 +362,10 @@ class MemStorage implements IStorage {
         capabilities: ["Architecture Design", "Model Selection", "Technical Implementation"],
         model: "claude-instant",
         provider: "anthropic",
+        icon: "code"
       },
       {
-        id: 3,
+        id: 4,
         name: "Change Management Coach",
         description: "Specialist in organizational transformation for AI initiatives",
         persona: "I am a change management consultant focused on the human side of AI implementation. I help organizations prepare their teams for AI adoption, addressing concerns, building enthusiasm, and creating effective training programs. My style is empathetic, practical, and focused on creating sustainable change.",
@@ -359,6 +373,7 @@ class MemStorage implements IStorage {
         capabilities: ["Change Leadership", "Training Program Design", "Stakeholder Management"],
         model: "gpt-4",
         provider: "openai",
+        icon: "briefcase"
       }
     ];
     
