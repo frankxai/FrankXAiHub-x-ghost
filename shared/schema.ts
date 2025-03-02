@@ -28,6 +28,9 @@ export const blogPosts = pgTable("blog_posts", {
   tags: text("tags").array(),
   featured: boolean("featured").default(false),
   slug: text("slug"),
+  aiPersona: text("ai_persona").default("Frank Riemer"),
+  aiPersonaRole: text("ai_persona_role").default("AI Visionary"),
+  aiPersonaColor: text("ai_persona_color").default("#00C2FF"),
 });
 
 export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({
