@@ -88,6 +88,26 @@ const FrankXAI = () => {
             description: "Please allow microphone access to use voice input.",
             variant: "destructive"
           });
+        } else if (event.error === 'network') {
+          toast({
+            title: "Network Error",
+            description: "Speech recognition requires a stable network connection. Using text input instead.",
+            variant: "destructive"
+          });
+          // Set speech as unsupported after network errors to prevent further attempts
+          setSpeechSupported(false);
+        } else if (event.error === 'no-speech') {
+          toast({
+            title: "No Speech Detected",
+            description: "I couldn't hear anything. Please try again or use text input.",
+            variant: "default"
+          });
+        } else {
+          toast({
+            title: "Speech Recognition Error",
+            description: "An error occurred with speech recognition. Using text input instead.",
+            variant: "destructive"
+          });
         }
       };
       
@@ -192,23 +212,56 @@ const FrankXAI = () => {
       }
     }
     
-    // Create a new utterance
-    const utterance = new SpeechSynthesisUtterance(message.content);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    utterance.onend = () => {
+    try {
+      // Create a new utterance
+      const utterance = new SpeechSynthesisUtterance(message.content);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+      
+      // Handle success/failure
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        setSpeakingMessageId(null);
+      };
+      
+      utterance.onerror = (event) => {
+        console.error('Speech synthesis error:', event);
+        toast({
+          title: "Text-to-Speech Error",
+          description: "There was an issue playing the audio. You can still read the message.",
+          variant: "destructive"
+        });
+        setIsSpeaking(false);
+        setSpeakingMessageId(null);
+      };
+      
+      // Store the utterance reference
+      synthesisRef.current = utterance;
+      
+      // Speak the message
+      window.speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+      setSpeakingMessageId(message.id);
+      
+      // Safety timeout (in case onend doesn't fire)
+      setTimeout(() => {
+        if (speakingMessageId === message.id) {
+          setIsSpeaking(false);
+          setSpeakingMessageId(null);
+        }
+      }, Math.max(15000, message.content.length * 90)); // ~90ms per character with a minimum of 15s
+      
+    } catch (error) {
+      console.error('Failed to initialize speech synthesis:', error);
+      toast({
+        title: "Text-to-Speech Error",
+        description: "Could not initialize the speech engine. Please try again later.",
+        variant: "destructive"
+      });
       setIsSpeaking(false);
       setSpeakingMessageId(null);
-    };
-    
-    // Store the utterance reference
-    synthesisRef.current = utterance;
-    
-    // Speak the message
-    window.speechSynthesis.speak(utterance);
-    setIsSpeaking(true);
-    setSpeakingMessageId(message.id);
+    }
   };
   
   // Auto-scroll to bottom when messages change
