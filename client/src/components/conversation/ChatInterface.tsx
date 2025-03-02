@@ -13,7 +13,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Volume2, MoreHorizontal, Send, Bot, User, Code, Briefcase, Zap, RefreshCw } from "lucide-react";
+import { 
+  Volume2, 
+  VolumeX, 
+  Mic, 
+  MicOff, 
+  MoreHorizontal, 
+  Send, 
+  Bot, 
+  User, 
+  Code, 
+  Briefcase, 
+  Zap, 
+  RefreshCw 
+} from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Message {
   id: string;
@@ -30,7 +44,10 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voicesLoaded, setVoicesLoaded] = useState(false);
   const messageContainerRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
   
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -38,6 +55,94 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
   }, [messages]);
+  
+  // Initialize speech synthesis voices when component mounts
+  useEffect(() => {
+    const loadVoices = () => {
+      // Check if speechSynthesis is available in the browser
+      if ('speechSynthesis' in window) {
+        // Wait for voices to be loaded
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          setVoicesLoaded(true);
+        }
+      }
+    };
+    
+    loadVoices();
+    
+    // Chrome loads voices asynchronously
+    if ('speechSynthesis' in window && 'onvoiceschanged' in window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    
+    // Clean up
+    return () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+  
+  // Handle text-to-speech for a message
+  const speakMessage = (text: string) => {
+    if (!('speechSynthesis' in window)) {
+      toast({
+        title: "Speech Synthesis Not Supported",
+        description: "Your browser does not support text-to-speech functionality.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Try to find a good voice - prefer English voices
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(voice => 
+      voice.name.includes('Google US English') || 
+      voice.name.includes('Microsoft David') ||
+      voice.name.includes('Microsoft Zira') ||
+      voice.lang === 'en-US'
+    );
+    
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+    
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    // Set flags for speaking state
+    setIsSpeaking(true);
+    
+    utterance.onend = () => {
+      setIsSpeaking(false);
+    };
+    
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      toast({
+        title: "Speech Error",
+        description: "There was an error playing the speech.",
+        variant: "destructive"
+      });
+    };
+    
+    window.speechSynthesis.speak(utterance);
+  };
+  
+  // Stop speaking
+  const stopSpeaking = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  };
   
   // Initial greeting message
   useEffect(() => {
@@ -72,8 +177,6 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
         return `Hello! I'm ${character.name}. How can I assist you today?`;
     }
   };
-  
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,6 +195,9 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
     setIsLoading(true);
     
     try {
+      // Stop any ongoing speech
+      stopSpeaking();
+      
       // Make real API request to get AI response
       const response = await fetch('/api/ai/conversation', {
         method: 'POST',
@@ -221,11 +327,35 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
                   : 'bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] text-white rounded-tr-none rounded-tl-lg rounded-bl-lg rounded-br-lg shadow-md'
               }`}
             >
-              {message.content.split('\n').map((line, i) => (
-                <p key={i} className={`${i > 0 ? 'mt-2' : ''} ${message.sender === 'user' ? 'drop-shadow-sm' : ''}`}>
-                  {line}
-                </p>
-              ))}
+              <div className="flex flex-col">
+                {message.content.split('\n').map((line, i) => (
+                  <p key={i} className={`${i > 0 ? 'mt-2' : ''} ${message.sender === 'user' ? 'drop-shadow-sm' : ''}`}>
+                    {line}
+                  </p>
+                ))}
+                
+                {message.sender === 'ai' && voicesLoaded && (
+                  <div className="flex mt-3 pt-2 border-t border-gray-100 dark:border-gray-600">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-7 w-7 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"
+                            onClick={() => isSpeaking ? stopSpeaking() : speakMessage(message.content)}
+                          >
+                            {isSpeaking ? <VolumeX className="h-4 w-4 text-red-500" /> : <Volume2 className="h-4 w-4 text-blue-600" />}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <p>{isSpeaking ? 'Stop speaking' : 'Speak message'}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                )}
+              </div>
             </div>
             
             {message.sender === 'user' && (
