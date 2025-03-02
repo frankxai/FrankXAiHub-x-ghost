@@ -629,10 +629,12 @@ const FrankXAI = () => {
       {/* Header */}
       <div className="bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] p-4 flex items-center justify-between">
         <div className="flex items-center">
-          <Avatar className="h-10 w-10 bg-white/20 border-2 border-white/30 shadow-md">
+          <Avatar className="h-12 w-12 ring-2 ring-white/30 shadow-lg overflow-hidden p-0">
             <AvatarImage src="/frankx-avatar.png" alt="FrankX.AI" className="object-cover" />
-            <AvatarFallback className="text-white bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-sm">
-              <Bot className="h-6 w-6 drop-shadow-sm" />
+            <AvatarFallback className="text-white bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-sm p-0">
+              <div className="w-full h-full flex items-center justify-center">
+                <Bot className="h-6 w-6 drop-shadow-sm" />
+              </div>
             </AvatarFallback>
           </Avatar>
           <div className="ml-3">
@@ -697,10 +699,12 @@ const FrankXAI = () => {
                   transition={{ duration: 0.3 }}
                 >
                   {message.sender === 'ai' && (
-                    <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-white/20">
+                    <Avatar className="h-9 w-9 flex-shrink-0 ring-2 ring-white/30 shadow-md overflow-hidden p-0">
                       <AvatarImage src="/frankx-avatar.png" alt="FrankX.AI" className="object-cover" />
-                      <AvatarFallback className="bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-white">
-                        <Bot className="h-4 w-4 drop-shadow-sm" />
+                      <AvatarFallback className="bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-white p-0">
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Bot className="h-4 w-4 drop-shadow-sm" />
+                        </div>
                       </AvatarFallback>
                     </Avatar>
                   )}
@@ -737,7 +741,7 @@ const FrankXAI = () => {
                                 {speakingMessageId === message.id ? (
                                   <div className="relative">
                                     <Volume2 className="h-3 w-3" />
-                                    <span className="absolute top-0 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#00A3FF] animate-pulse"></span>
+                                    <span className="absolute top-0 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></span>
                                   </div>
                                 ) : (
                                   <Volume2 className="h-3 w-3" />
@@ -844,9 +848,11 @@ const FrankXAI = () => {
                   </div>
                   
                   {message.sender === 'user' && (
-                    <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-white/20">
-                      <AvatarFallback className="bg-gradient-to-br from-[#151515] to-[#272727] text-white">
-                        <User className="h-4 w-4 drop-shadow-sm" />
+                    <Avatar className="h-9 w-9 flex-shrink-0 ring-2 ring-white/30 shadow-md overflow-hidden p-0">
+                      <AvatarFallback className="bg-gradient-to-br from-[#1a1a1a] to-[#333333] text-white p-0">
+                        <div className="w-full h-full flex items-center justify-center">
+                          <User className="h-4 w-4 drop-shadow-sm" />
+                        </div>
                       </AvatarFallback>
                     </Avatar>
                   )}
@@ -859,19 +865,21 @@ const FrankXAI = () => {
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                 >
-                  <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-white/20">
+                  <Avatar className="h-9 w-9 flex-shrink-0 ring-2 ring-white/30 shadow-md overflow-hidden p-0">
                     <AvatarImage src="/frankx-avatar.png" alt="FrankX.AI" className="object-cover" />
-                    <AvatarFallback className="bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-white">
-                      <Bot className="h-4 w-4 drop-shadow-sm" />
+                    <AvatarFallback className="bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-white p-0">
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Bot className="h-4 w-4 drop-shadow-sm" />
+                      </div>
                     </AvatarFallback>
                   </Avatar>
                   <div className="mx-3 bg-white dark:bg-gray-700 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-600 rounded-tl-none">
                     <div className="flex space-x-3">
-                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse" 
+                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.4)]" 
                            style={{ animationDelay: '0ms', animationDuration: '1.2s' }}></div>
-                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse" 
+                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.4)]" 
                            style={{ animationDelay: '300ms', animationDuration: '1.2s' }}></div>
-                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse" 
+                      <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.4)]" 
                            style={{ animationDelay: '600ms', animationDuration: '1.2s' }}></div>
                     </div>
                   </div>
@@ -910,7 +918,7 @@ const FrankXAI = () => {
                         {isListening ? (
                           <div className="relative">
                             <MicOff className="h-4 w-4" />
-                            <span className="absolute top-1 -right-1 h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                            <span className="absolute top-1 -right-1 h-2 w-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_5px_rgba(255,59,48,0.5)]"></span>
                           </div>
                         ) : (
                           <Mic className="h-4 w-4" />
@@ -943,9 +951,9 @@ const FrankXAI = () => {
           <div className="flex items-center justify-between text-gray-800 dark:text-gray-200 group cursor-pointer"
                onClick={() => setIsMinimized(false)}>
             <div className="flex items-center space-x-2">
-              <div className="relative w-5 h-5 rounded-full overflow-hidden">
+              <div className="relative w-6 h-6 rounded-full overflow-hidden ring-2 ring-[#00A3FF]/30 shadow-sm">
                 <img src="/frankx-avatar.png" alt="FrankX.AI" className="object-cover w-full h-full" />
-                <div className="absolute top-0 right-0 w-2 h-2 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse"></div>
+                <div className="absolute top-0 right-0 w-2 h-2 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></div>
               </div>
               <p className="text-sm font-medium truncate">
                 {messages.length > 0 
