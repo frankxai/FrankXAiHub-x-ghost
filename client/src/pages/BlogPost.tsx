@@ -22,10 +22,16 @@ import {
   Copy,
   Twitter,
   Linkedin,
-  ArrowRight
+  ArrowRight,
+  Users,
+  BarChart2,
+  Code,
+  Zap,
+  Lightbulb
 } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { useToast } from "@/hooks/use-toast";
+import { getPersonaById, AI_PERSONAS } from "@/lib/ai-personas";
 
 const BlogPost = () => {
   const { id } = useParams();
@@ -328,20 +334,74 @@ const BlogPost = () => {
             
             {/* Author bio */}
             <div className="bg-black/5 dark:bg-white/5 rounded-lg p-6 mb-10">
-              <div className="flex items-center">
-                <Avatar className="h-16 w-16">
-                  <AvatarFallback className="bg-secondary/10 text-secondary text-lg">
-                    {getInitials(post.authorName)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="ml-4">
-                  <p className="font-bold text-lg">About {post.authorName}</p>
-                  <p className="text-sm text-muted-foreground">AI Transformation Expert & Center of Excellence Lead</p>
-                </div>
-              </div>
-              <p className="mt-4 text-muted-foreground">
-                {post.authorName} is a renowned expert in AI implementation strategies, helping organizations build effective AI Centers of Excellence and enterprise-wide transformation initiatives. With over a decade of experience in strategic technology adoption, they specialize in aligning AI capabilities with business objectives.
-              </p>
+              {(() => {
+                // Get persona information
+                const persona = getPersonaById(post.aiPersona || 'default');
+                
+                // Get the icon component based on persona
+                let PersonaIcon = Zap;
+                if (persona.icon === 'users') PersonaIcon = Users;
+                if (persona.icon === 'bar-chart-2') PersonaIcon = BarChart2;
+                if (persona.icon === 'code') PersonaIcon = Code;
+                if (persona.icon === 'lightbulb') PersonaIcon = Lightbulb;
+                
+                return (
+                  <>
+                    <div className="flex items-center">
+                      <Avatar className="h-16 w-16 border-2" 
+                        style={{
+                          borderColor: post.aiPersonaColor || persona.color
+                        }}
+                      >
+                        <AvatarFallback 
+                          className="text-lg"
+                          style={{
+                            backgroundColor: `${persona.color}15`,
+                            color: persona.color
+                          }}
+                        >
+                          {getInitials(persona.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="ml-4">
+                        <div className="flex items-center">
+                          <p className="font-bold text-lg">{persona.name}</p>
+                          {persona.id !== 'default' && (
+                            <Badge 
+                              variant="outline" 
+                              className="ml-3 px-2 py-0"
+                              style={{
+                                borderColor: `${persona.color}40`,
+                                backgroundColor: `${persona.color}10`,
+                                color: persona.color
+                              }}
+                            >
+                              {persona.role}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex text-sm text-muted-foreground items-center mt-1">
+                          <PersonaIcon className="h-4 w-4 mr-2" style={{ color: persona.color }} />
+                          <span>{persona.description}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="mt-4 text-muted-foreground">
+                      {persona.id === 'default' ? (
+                        <>Frank Riemer is a renowned expert in AI implementation strategies, helping organizations build effective AI Centers of Excellence and enterprise-wide transformation initiatives. With over a decade of experience in strategic technology adoption, he specializes in aligning AI capabilities with business objectives.</>
+                      ) : persona.id === 'architect' ? (
+                        <>As Frank's AI Architecture persona, I focus on the technical implementation aspects of AI systems, exploring how different tools, frameworks, and approaches can be leveraged to build robust and scalable AI platforms. I provide technical insights, architecture patterns, and implementation guidance.</>
+                      ) : persona.id === 'strategist' ? (
+                        <>As Frank's Strategy Advisor persona, I address business transformation and strategic approaches to AI adoption. I explore the organizational changes, business cases, and leadership perspectives required for successful AI initiatives, helping businesses align technology with business outcomes.</>
+                      ) : persona.id === 'coach' ? (
+                        <>As Frank's Performance Coach persona, I guide teams and leaders through the challenges of AI adoption and organizational change. I focus on the human aspects of AI transformation, including talent development, change management, and building high-performing AI teams.</>
+                      ) : (
+                        <>As Frank's Innovation Guide persona, I explore emerging technologies and future trends in AI, identifying opportunities for innovation and competitive advantage. I examine creative applications of AI across industries and provide insights into what's next in the rapidly evolving AI landscape.</>
+                      )}
+                    </p>
+                  </>
+                );
+              })()}
             </div>
           </motion.article>
           

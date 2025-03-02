@@ -1,12 +1,13 @@
 import { Link } from "wouter";
 import type { BlogPost } from "@shared/schema";
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-import { Headphones, ArrowUpRight, Clock, BookOpen, Bookmark } from "lucide-react";
+import { Headphones, ArrowUpRight, Clock, BookOpen, Bookmark, Users, BarChart2, Code, Zap, Lightbulb } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
+import { getPersonaById, getPersonaByName, AI_PERSONAS } from "@/lib/ai-personas";
 
 interface BlogCardProps {
   post: BlogPost;
@@ -22,8 +23,14 @@ const BlogCard = ({ post, readingProgress = 0 }: BlogCardProps) => {
     category, 
     authorName, 
     publishedAt,
-    readTime 
+    readTime,
+    aiPersona = 'default',
+    aiPersonaRole,
+    aiPersonaColor
   } = post;
+  
+  // Get AI persona data
+  const persona = getPersonaById(aiPersona || 'default');
   
   const { theme } = useTheme();
   
@@ -171,16 +178,37 @@ const BlogCard = ({ post, readingProgress = 0 }: BlogCardProps) => {
           
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <Avatar className="h-8 w-8 border border-border/40">
+              <Avatar className="h-8 w-8 border border-border/40" style={{borderColor: aiPersonaColor || persona.color}}>
                 {imageUrl ? (
-                  <AvatarImage src={imageUrl.replace('blog', 'avatar')} alt={authorName} />
+                  <AvatarImage src={imageUrl.replace('blog', 'avatar')} alt={persona.name} />
                 ) : null}
-                <AvatarFallback className="bg-secondary/10 text-secondary text-xs font-medium">
-                  {getInitials(authorName)}
+                <AvatarFallback 
+                  className="text-xs font-medium"
+                  style={{
+                    backgroundColor: `${persona.color}15`,
+                    color: persona.color
+                  }}
+                >
+                  {getInitials(persona.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="ml-2">
-                <p className="text-sm font-medium">{authorName}</p>
+                <div className="flex items-center">
+                  <p className="text-sm font-medium">{persona.name}</p>
+                  {persona.id !== 'default' && (
+                    <Badge 
+                      variant="outline" 
+                      className="ml-2 text-[10px] px-1.5 py-0"
+                      style={{
+                        borderColor: `${persona.color}40`,
+                        backgroundColor: `${persona.color}10`,
+                        color: persona.color
+                      }}
+                    >
+                      {persona.role}
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-xs text-muted-foreground">{formatDate(publishedAt)}</p>
               </div>
             </div>
