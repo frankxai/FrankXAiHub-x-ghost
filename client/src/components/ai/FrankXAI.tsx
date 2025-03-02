@@ -290,6 +290,8 @@ const FrankXAI = () => {
     setIsMinimized(false);
   };
   
+  // Handle form submission for user messages
+  
   // Speak AI message
   const speakMessage = (message: Message) => {
     if (!('speechSynthesis' in window)) {
@@ -641,11 +643,11 @@ const FrankXAI = () => {
         <div className="flex items-center">
           <Avatar className="h-12 w-12 ring-2 ring-white/30 shadow-lg overflow-hidden p-0">
             <AvatarImage 
-              src="/frankx-avatar-updated.png" 
+              src={AVATAR_URL} 
               alt="FrankX.AI" 
               className="object-cover"
               onError={(e) => {
-                e.currentTarget.src = "/frankx-avatar.png";
+                e.currentTarget.src = AVATAR_FALLBACK;
               }} 
             />
             <AvatarFallback className="text-white bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-sm p-0">
@@ -718,11 +720,11 @@ const FrankXAI = () => {
                   {message.sender === 'ai' && (
                     <Avatar className="h-9 w-9 flex-shrink-0 ring-2 ring-white/30 shadow-md overflow-hidden p-0">
                       <AvatarImage 
-                        src="/frankx-avatar-updated.png" 
+                        src={AVATAR_URL} 
                         alt="FrankX.AI" 
                         className="object-cover"
                         onError={(e) => {
-                          e.currentTarget.src = "/frankx-avatar.png";
+                          e.currentTarget.src = AVATAR_FALLBACK;
                         }}
                       />
                       <AvatarFallback className="bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-white p-0">
@@ -891,11 +893,11 @@ const FrankXAI = () => {
                 >
                   <Avatar className="h-9 w-9 flex-shrink-0 ring-2 ring-white/30 shadow-md overflow-hidden p-0">
                     <AvatarImage 
-                      src="/frankx-avatar-updated.png" 
+                      src={AVATAR_URL} 
                       alt="FrankX.AI" 
                       className="object-cover" 
                       onError={(e) => {
-                        e.currentTarget.src = "/frankx-avatar.png";
+                        e.currentTarget.src = AVATAR_FALLBACK;
                       }} 
                     />
                     <AvatarFallback className="bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-white p-0">
@@ -984,11 +986,11 @@ const FrankXAI = () => {
             <div className="flex items-center space-x-2">
               <div className="relative w-6 h-6 rounded-full overflow-hidden ring-2 ring-[#00A3FF]/30 shadow-sm">
                 <img 
-                  src="/frankx-avatar-updated.png" 
+                  src={AVATAR_URL} 
                   alt="FrankX.AI" 
                   className="object-cover w-full h-full" 
                   onError={(e) => {
-                    e.currentTarget.src = "/frankx-avatar.png";
+                    e.currentTarget.src = AVATAR_FALLBACK;
                   }}
                 />
                 <div className="absolute top-0 right-0 w-2 h-2 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></div>
