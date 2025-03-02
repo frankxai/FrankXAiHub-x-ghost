@@ -611,7 +611,11 @@ const FrankXAI = () => {
   return (
     <motion.div
       className={`fixed z-50 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden ${
-        isMinimized ? 'bottom-6 right-6 w-72' : 'bottom-6 right-6 w-96 sm:w-[450px]'
+        isFullscreen 
+          ? 'inset-4 w-auto h-auto m-auto'
+          : isMinimized 
+            ? 'bottom-6 right-6 w-72' 
+            : 'bottom-6 right-6 w-96 sm:w-[450px]'
       }`}
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -632,12 +636,36 @@ const FrankXAI = () => {
           </div>
         </div>
         <div className="flex space-x-2">
-          <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+          {/* Fullscreen toggle */}
+          {!isMinimized && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+              onClick={toggleFullscreen}
+            >
+              {isFullscreen ? 
+                <Minimize2 className="h-4 w-4" /> : 
+                <Maximize className="h-4 w-4" />
+              }
+            </Button>
+          )}
+          
+          {/* Minimize/Maximize window */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors"
             onClick={() => setIsMinimized(!isMinimized)}
           >
             {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
           </Button>
-          <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+          
+          {/* Close button */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors"
             onClick={() => setIsOpen(false)}
           >
             <X className="h-4 w-4" />
@@ -649,7 +677,9 @@ const FrankXAI = () => {
         <>
           {/* Messages Area */}
           <div 
-            className="p-4 h-80 overflow-y-auto bg-gray-50 dark:bg-gray-800"
+            className={`p-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 ${
+              isFullscreen ? 'h-[calc(100vh-180px)]' : 'h-80'
+            }`}
             ref={messageContainerRef}
           >
             <AnimatePresence>
@@ -684,34 +714,126 @@ const FrankXAI = () => {
                     
                     {/* Text-to-speech button for AI messages */}
                     {message.sender === 'ai' && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              type="button"
-                              size="icon"
-                              variant="ghost"
-                              onClick={() => speakMessage(message)}
-                              className={`absolute -right-1 -top-1 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity
-                                ${speakingMessageId === message.id 
-                                  ? 'bg-[#00A3FF]/20 text-[#00A3FF] shadow-sm border border-[#00A3FF]/30' 
-                                  : 'bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-300 hover:text-[#00A3FF] hover:bg-[#00A3FF]/10'}`}
-                            >
-                              {speakingMessageId === message.id ? (
-                                <div className="relative">
+                      <>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => speakMessage(message)}
+                                className={`absolute -right-1 -top-1 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity
+                                  ${speakingMessageId === message.id 
+                                    ? 'bg-[#00A3FF]/20 text-[#00A3FF] shadow-sm border border-[#00A3FF]/30' 
+                                    : 'bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-300 hover:text-[#00A3FF] hover:bg-[#00A3FF]/10'}`}
+                              >
+                                {speakingMessageId === message.id ? (
+                                  <div className="relative">
+                                    <Volume2 className="h-3 w-3" />
+                                    <span className="absolute top-0 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#00A3FF] animate-pulse"></span>
+                                  </div>
+                                ) : (
                                   <Volume2 className="h-3 w-3" />
-                                  <span className="absolute top-0 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#00A3FF] animate-pulse"></span>
-                                </div>
-                              ) : (
-                                <Volume2 className="h-3 w-3" />
-                              )}
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent side="top">
-                            {speakingMessageId === message.id ? 'Stop speaking' : 'Speak message'}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                                )}
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top">
+                              {speakingMessageId === message.id ? 'Stop speaking' : 'Speak message'}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                        
+                        {/* Reaction buttons */}
+                        <div className="flex mt-3 space-x-1.5 opacity-80">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => addReaction(message.id, 'thumbsUp')}
+                                  className={`h-6 w-6 rounded p-0.5 ${
+                                    message.reactions?.thumbsUp 
+                                      ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400' 
+                                      : 'text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+                                  }`}
+                                >
+                                  <ThumbsUp className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">
+                                {message.reactions?.thumbsUp ? 'Remove helpful rating' : 'Mark as helpful'}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => addReaction(message.id, 'thumbsDown')}
+                                  className={`h-6 w-6 rounded p-0.5 ${
+                                    message.reactions?.thumbsDown 
+                                      ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400' 
+                                      : 'text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
+                                  }`}
+                                >
+                                  <ThumbsDown className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">
+                                {message.reactions?.thumbsDown ? 'Remove unhelpful rating' : 'Mark as unhelpful'}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => addReaction(message.id, 'heart')}
+                                  className={`h-6 w-6 rounded p-0.5 ${
+                                    message.reactions?.heart 
+                                      ? 'bg-pink-50 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400' 
+                                      : 'text-gray-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20'
+                                  }`}
+                                >
+                                  <Heart className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">
+                                {message.reactions?.heart ? 'Remove favorite' : 'Mark as favorite'}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                        
+                        {/* Suggestion chips */}
+                        {message.suggestions && message.suggestions.length > 0 && (
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {message.suggestions.map((suggestion, i) => (
+                              <Badge 
+                                key={i}
+                                variant="outline"
+                                className="px-3 py-1 rounded-full text-xs cursor-pointer bg-gray-50 dark:bg-gray-800 border-[#00A3FF]/30 hover:border-[#00A3FF] hover:bg-[#00A3FF]/5 transition-colors flex items-center gap-1.5 group"
+                                onClick={() => handleSuggestionClick(suggestion)}
+                              >
+                                <Lightbulb className="h-3 w-3 text-[#00A3FF]" />
+                                <span className="truncate max-w-[180px]">{suggestion}</span>
+                                <ArrowRight className="h-2.5 w-2.5 text-[#00A3FF] opacity-0 group-hover:opacity-100 transition-opacity -mr-1 ml-0.5" />
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                   
