@@ -1,10 +1,23 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, X, Minimize2, Maximize2, Send, User, ChevronRight } from "lucide-react";
+import { 
+  Bot, 
+  X, 
+  Minimize2, 
+  Maximize2, 
+  Send, 
+  User, 
+  ChevronRight,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 
@@ -28,6 +41,175 @@ const FrankXAI = () => {
   const [location] = useLocation();
   const messageContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  
+  // Speech recognition states
+  const [isListening, setIsListening] = useState<boolean>(false);
+  const [speechSupported, setSpeechSupported] = useState<boolean>(true);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  
+  // Text-to-speech states
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
+  const synthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
+  
+  // Initialize speech recognition when component mounts
+  useEffect(() => {
+    // Check if the browser supports speech recognition
+    if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+      setSpeechSupported(false);
+      return;
+    }
+
+    // Initialize speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognitionRef.current = new SpeechRecognition();
+    
+    if (recognitionRef.current) {
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+      
+      // Setup event handlers
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join('');
+        
+        setInput(transcript);
+      };
+      
+      recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+        
+        if (event.error === 'not-allowed') {
+          toast({
+            title: "Microphone Access Denied",
+            description: "Please allow microphone access to use voice input.",
+            variant: "destructive"
+          });
+        }
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
+    };
+  }, []);
+  
+  // Handle speech synthesis
+  useEffect(() => {
+    // Check if the browser supports speech synthesis
+    if (!('speechSynthesis' in window)) {
+      toast({
+        title: "Speech Not Supported",
+        description: "Your browser doesn't support text-to-speech functionality.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Setup speech synthesis events
+    const handleSpeechEnd = () => {
+      setIsSpeaking(false);
+      setSpeakingMessageId(null);
+    };
+    
+    // Initialize speech synthesis
+    if (synthesisRef.current) {
+      synthesisRef.current.onend = handleSpeechEnd;
+      synthesisRef.current.onerror = () => {
+        console.error('Speech synthesis error');
+        handleSpeechEnd();
+      };
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+  
+  // Toggle speech recognition
+  const toggleListening = () => {
+    if (!speechSupported) {
+      toast({
+        title: "Speech Not Supported",
+        description: "Your browser doesn't support speech recognition.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.abort();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current?.start();
+        setIsListening(true);
+      } catch (err) {
+        console.error('Failed to start speech recognition:', err);
+        setIsListening(false);
+        toast({
+          title: "Speech Recognition Error",
+          description: "Could not start the speech recognition service.",
+          variant: "destructive"
+        });
+      }
+    }
+  };
+  
+  // Speak AI message
+  const speakMessage = (message: Message) => {
+    if (!('speechSynthesis' in window)) {
+      toast({
+        title: "Speech Not Supported",
+        description: "Your browser doesn't support text-to-speech functionality.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Stop any current speech
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      
+      // If clicking on the same message, just stop playback
+      if (speakingMessageId === message.id) {
+        setSpeakingMessageId(null);
+        return;
+      }
+    }
+    
+    // Create a new utterance
+    const utterance = new SpeechSynthesisUtterance(message.content);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setSpeakingMessageId(null);
+    };
+    
+    // Store the utterance reference
+    synthesisRef.current = utterance;
+    
+    // Speak the message
+    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(true);
+    setSpeakingMessageId(message.id);
+  };
   
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -268,7 +450,7 @@ const FrankXAI = () => {
                   <div 
                     className={`mx-3 p-4 max-w-[80%] rounded-lg ${
                       message.sender === 'ai' 
-                        ? 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-tl-none border border-gray-100 dark:border-gray-600 shadow-sm' 
+                        ? 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-tl-none border border-gray-100 dark:border-gray-600 shadow-sm relative group' 
                         : 'bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] text-white rounded-tr-none shadow-md'
                     }`}
                   >
@@ -277,6 +459,38 @@ const FrankXAI = () => {
                         {line}
                       </p>
                     ))}
+                    
+                    {/* Text-to-speech button for AI messages */}
+                    {message.sender === 'ai' && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => speakMessage(message)}
+                              className={`absolute -right-1 -top-1 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity
+                                ${speakingMessageId === message.id 
+                                  ? 'bg-[#00A3FF]/20 text-[#00A3FF] shadow-sm border border-[#00A3FF]/30' 
+                                  : 'bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-300 hover:text-[#00A3FF] hover:bg-[#00A3FF]/10'}`}
+                            >
+                              {speakingMessageId === message.id ? (
+                                <div className="relative">
+                                  <Volume2 className="h-3 w-3" />
+                                  <span className="absolute top-0 -right-0.5 h-1.5 w-1.5 rounded-full bg-[#00A3FF] animate-pulse"></span>
+                                </div>
+                              ) : (
+                                <Volume2 className="h-3 w-3" />
+                              )}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top">
+                            {speakingMessageId === message.id ? 'Stop speaking' : 'Speak message'}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
                   </div>
                   
                   {message.sender === 'user' && (
@@ -318,21 +532,53 @@ const FrankXAI = () => {
           {/* Input Area */}
           <div className="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-900">
             <form onSubmit={handleSubmit} className="flex items-center">
-              <Input
-                type="text"
-                placeholder="Ask me anything..."
-                className="flex-grow rounded-full border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white 
-                focus-visible:ring-[#00A3FF] focus-visible:ring-offset-0 shadow-sm"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={isLoading}
-              />
+              <div className="relative flex-grow">
+                <Input
+                  type="text"
+                  placeholder="Ask me anything..."
+                  className="w-full rounded-full border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white 
+                  focus-visible:ring-[#00A3FF] focus-visible:ring-offset-0 shadow-sm pr-10"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={isLoading || isListening}
+                />
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        onClick={toggleListening}
+                        disabled={!speechSupported || isLoading}
+                        className={`absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 rounded-full
+                          ${isListening ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-600' : 
+                          'text-gray-400 hover:text-[#00A3FF] hover:bg-[#00A3FF]/10'}`}
+                      >
+                        {isListening ? (
+                          <div className="relative">
+                            <MicOff className="h-4 w-4" />
+                            <span className="absolute top-1 -right-1 h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                          </div>
+                        ) : (
+                          <Mic className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      {isListening ? 'Stop listening' : 'Start voice input'}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              
               <Button 
                 type="submit"
                 size="icon"
                 className="ml-2 w-10 h-10 rounded-full bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] 
                 hover:shadow-[0_0_10px_rgba(0,195,255,0.4)] text-white transition-all duration-300"
-                disabled={isLoading || !input.trim()}
+                disabled={isLoading || (!input.trim() && !isListening)}
               >
                 <Send className="h-4 w-4 drop-shadow-sm" />
               </Button>
