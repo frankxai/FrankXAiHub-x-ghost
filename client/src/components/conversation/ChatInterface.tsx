@@ -45,7 +45,9 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
   const messageContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
@@ -56,11 +58,21 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
     }
   }, [messages]);
   
-  // Initialize speech synthesis voices when component mounts
+  // Initialize speech synthesis voices and check browser support for speech features
   useEffect(() => {
+    // Check for speechSynthesis (TTS)
+    const isSpeechSynthesisSupported = 'speechSynthesis' in window;
+    
+    // Check for SpeechRecognition (STT)
+    const SpeechRecognition = window.SpeechRecognition || window['webkitSpeechRecognition'];
+    const isSpeechRecognitionSupported = !!SpeechRecognition;
+    
+    // Update speech support state
+    setSpeechSupported(isSpeechSynthesisSupported || isSpeechRecognitionSupported);
+    
     const loadVoices = () => {
       // Check if speechSynthesis is available in the browser
-      if ('speechSynthesis' in window) {
+      if (isSpeechSynthesisSupported) {
         // Wait for voices to be loaded
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
@@ -72,13 +84,13 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
     loadVoices();
     
     // Chrome loads voices asynchronously
-    if ('speechSynthesis' in window && 'onvoiceschanged' in window.speechSynthesis) {
+    if (isSpeechSynthesisSupported && 'onvoiceschanged' in window.speechSynthesis) {
       window.speechSynthesis.onvoiceschanged = loadVoices;
     }
     
     // Clean up
     return () => {
-      if ('speechSynthesis' in window) {
+      if (isSpeechSynthesisSupported) {
         window.speechSynthesis.cancel();
       }
     };
@@ -142,6 +154,63 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
     }
+  };
+  
+  // Start speech recognition
+  const startSpeechRecognition = () => {
+    // Check for browser support
+    const SpeechRecognition = window.SpeechRecognition || window['webkitSpeechRecognition'];
+    
+    if (!SpeechRecognition) {
+      toast({
+        title: "Speech Recognition Not Supported",
+        description: "Your browser does not support speech recognition.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Stop any ongoing speech
+    stopSpeaking();
+    
+    // Create a new speech recognition instance
+    const recognition = new SpeechRecognition();
+    
+    // Configure the recognition
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    recognition.maxAlternatives = 1;
+    
+    // Set listening state
+    setIsListening(true);
+    
+    // Start listening
+    recognition.start();
+    
+    // Handle results
+    recognition.onresult = (event) => {
+      const speechResult = event.results[0][0].transcript;
+      setInput(speechResult);
+      setIsListening(false);
+    };
+    
+    // Handle errors
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      setIsListening(false);
+      
+      toast({
+        title: "Speech Recognition Error",
+        description: `Error: ${event.error}. Please try again.`,
+        variant: "destructive"
+      });
+    };
+    
+    // Handle end
+    recognition.onend = () => {
+      setIsListening(false);
+    };
   };
   
   // Initial greeting message
@@ -395,21 +464,50 @@ const ChatInterface = ({ character }: ChatInterfaceProps) => {
       
       <CardFooter className="border-t border-gray-100 dark:border-gray-700 p-4 bg-white dark:bg-gray-900">
         <form onSubmit={handleSubmit} className="w-full flex items-center">
-          <Input
-            type="text"
-            placeholder="Type your message..."
-            className="flex-grow p-3 rounded-full border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white 
-            focus-visible:ring-[#00A3FF] focus-visible:ring-offset-0 shadow-sm"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={isLoading}
-          />
+          <div className="relative flex-grow flex items-center">
+            <Input
+              type="text"
+              placeholder="Type your message..."
+              className="w-full p-3 rounded-full border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white 
+              focus-visible:ring-[#00A3FF] focus-visible:ring-offset-0 shadow-sm"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={isLoading || isListening}
+            />
+            
+            {speechSupported && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="absolute right-2 h-8 w-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={startSpeechRecognition}
+                      disabled={isLoading || isListening}
+                    >
+                      {isListening ? (
+                        <Mic className="h-4 w-4 text-red-500 animate-pulse" />
+                      ) : (
+                        <Mic className="h-4 w-4 text-gray-400" />
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p>Speak your message</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+          
           <Button 
             type="submit"
             size="icon"
             className="ml-3 w-10 h-10 rounded-full bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] 
             hover:shadow-[0_0_10px_rgba(0,195,255,0.4)] text-white transition-all duration-300"
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || isListening || !input.trim()}
           >
             <Send className="h-4 w-4 drop-shadow-sm" />
           </Button>
