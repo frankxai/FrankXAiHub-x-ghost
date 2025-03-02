@@ -599,10 +599,14 @@ const FrankXAI = () => {
         whileTap={{ scale: 0.95 }}
       >
         <Button 
-          className="w-14 h-14 rounded-full bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] hover:shadow-[0_0_15px_rgba(0,195,255,0.5)] shadow-lg flex items-center justify-center border-2 border-white/20"
+          className="w-14 h-14 rounded-full hover:shadow-[0_0_15px_rgba(0,195,255,0.5)] shadow-lg flex items-center justify-center border-2 border-white/20 p-0 overflow-hidden"
           onClick={() => setIsOpen(true)}
         >
-          <Bot className="w-6 h-6 text-white drop-shadow-md" />
+          <img 
+            src="/frankx-avatar.png" 
+            alt="FrankX.AI" 
+            className="w-full h-full object-cover"
+          />
         </Button>
       </motion.div>
     );
