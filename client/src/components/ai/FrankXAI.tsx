@@ -29,8 +29,8 @@ import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 
-// Add timestamp to bust cache for avatar images
-const AVATAR_URL = "/frankx-avatar-updated.png?v=" + Date.now();
+// Add timestamp to bust cache for avatar images with randomized version number
+const AVATAR_URL = `/frankx-avatar-updated.png?v=${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
 const AVATAR_FALLBACK = "/frankx-avatar.png";
 
 interface Message {
