@@ -29,6 +29,10 @@ import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 
+// Add timestamp to bust cache for avatar images
+const AVATAR_URL = "/frankx-avatar-updated.png?v=" + Date.now();
+const AVATAR_FALLBACK = "/frankx-avatar.png";
+
 interface Message {
   id: string;
   sender: 'ai' | 'user';
@@ -604,11 +608,11 @@ const FrankXAI = () => {
         >
           <div className="w-full h-full relative">
             <img 
-              src="/frankx-avatar-updated.png" 
+              src={AVATAR_URL} 
               alt="FrankX.AI" 
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.currentTarget.src = "/frankx-avatar.png";
+                e.currentTarget.src = AVATAR_FALLBACK;
               }}
             />
             <div className="absolute top-1 right-1 w-3 h-3 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></div>
