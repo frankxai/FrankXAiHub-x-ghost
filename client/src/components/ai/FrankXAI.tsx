@@ -626,6 +626,7 @@ const FrankXAI = () => {
       <div className="bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] p-4 flex items-center justify-between">
         <div className="flex items-center">
           <Avatar className="h-10 w-10 bg-white/20 border-2 border-white/30 shadow-md">
+            <AvatarImage src="/frankx-avatar.png" alt="FrankX.AI" className="object-cover" />
             <AvatarFallback className="text-white bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-sm">
               <Bot className="h-6 w-6 drop-shadow-sm" />
             </AvatarFallback>
@@ -693,6 +694,7 @@ const FrankXAI = () => {
                 >
                   {message.sender === 'ai' && (
                     <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-white/20">
+                      <AvatarImage src="/frankx-avatar.png" alt="FrankX.AI" className="object-cover" />
                       <AvatarFallback className="bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-white">
                         <Bot className="h-4 w-4 drop-shadow-sm" />
                       </AvatarFallback>
@@ -854,6 +856,7 @@ const FrankXAI = () => {
                   animate={{ y: 0, opacity: 1 }}
                 >
                   <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-white/20">
+                    <AvatarImage src="/frankx-avatar.png" alt="FrankX.AI" className="object-cover" />
                     <AvatarFallback className="bg-gradient-to-br from-[#005CB2] to-[#00A3FF] text-white">
                       <Bot className="h-4 w-4 drop-shadow-sm" />
                     </AvatarFallback>
