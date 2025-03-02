@@ -11,13 +11,21 @@ import {
   Mic,
   MicOff,
   Volume2,
-  VolumeX
+  VolumeX,
+  Maximize,
+  ThumbsUp,
+  ThumbsDown,
+  Heart,
+  Lightbulb,
+  ArrowRight,
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 
@@ -26,6 +34,12 @@ interface Message {
   sender: 'ai' | 'user';
   content: string;
   timestamp: Date;
+  reactions?: {
+    thumbsUp?: boolean;
+    thumbsDown?: boolean;
+    heart?: boolean;
+  };
+  suggestions?: string[];
 }
 
 /**
@@ -35,6 +49,7 @@ interface Message {
 const FrankXAI = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -189,6 +204,88 @@ const FrankXAI = () => {
     }
   };
   
+  // Generate suggestions based on the last message
+  const generateSuggestions = (content: string): string[] => {
+    const suggestions: string[] = [];
+    
+    // Generate different types of suggestions based on content
+    if (content.toLowerCase().includes('blog') || content.toLowerCase().includes('article')) {
+      suggestions.push('Show me the latest blog posts');
+      suggestions.push('What topics does Frank write about?');
+    }
+    
+    if (content.toLowerCase().includes('ai') || content.toLowerCase().includes('artificial intelligence')) {
+      suggestions.push('Explain AI for beginners');
+      suggestions.push('What are the latest AI trends?');
+    }
+    
+    if (content.toLowerCase().includes('resource') || content.toLowerCase().includes('tool')) {
+      suggestions.push('Show me popular AI tools');
+      suggestions.push('What resources do you recommend for beginners?');
+    }
+    
+    // If we don't have context-specific suggestions, add general ones
+    if (suggestions.length < 2) {
+      suggestions.push('Tell me about Frank Riemer');
+      suggestions.push('What can this platform help me with?');
+    }
+    
+    // Add one exploratory question
+    suggestions.push("What's the Center of Excellence?");
+    
+    // Return 2-3 random suggestions to keep it fresh
+    return suggestions.sort(() => 0.5 - Math.random()).slice(0, 3);
+  };
+  
+  // Add a reaction to a message
+  const addReaction = (messageId: string, reactionType: 'thumbsUp' | 'thumbsDown' | 'heart') => {
+    setMessages(prev => prev.map(message => {
+      if (message.id === messageId) {
+        return {
+          ...message,
+          reactions: {
+            ...message.reactions,
+            [reactionType]: !(message.reactions?.[reactionType] ?? false)
+          }
+        };
+      }
+      return message;
+    }));
+    
+    // Show feedback toast
+    if (reactionType === 'thumbsUp') {
+      toast({
+        title: "Thanks for the feedback!",
+        description: "I'm glad that was helpful.",
+        variant: "default"
+      });
+    } else if (reactionType === 'heart') {
+      toast({
+        title: "Much appreciated!",
+        description: "I'm happy you loved that response!",
+        variant: "default"
+      });
+    }
+  };
+  
+  // Handle suggestion click
+  const handleSuggestionClick = (suggestion: string) => {
+    setInput(suggestion);
+    
+    // Auto submit if not loading
+    if (!isLoading) {
+      // Simulate form submission
+      const event = { preventDefault: () => {} } as React.FormEvent;
+      setTimeout(() => handleSubmit(event), 100);
+    }
+  };
+
+  // Toggle fullscreen mode
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+    setIsMinimized(false);
+  };
+  
   // Speak AI message
   const speakMessage = (message: Message) => {
     if (!('speechSynthesis' in window)) {
@@ -292,6 +389,16 @@ const FrankXAI = () => {
       sender: 'ai',
       content: getContextualGreeting(),
       timestamp: new Date(),
+      suggestions: [
+        "What can this platform help me with?",
+        "Tell me about Frank Riemer",
+        "What is the Center of Excellence?"
+      ],
+      reactions: {
+        thumbsUp: false,
+        thumbsDown: false,
+        heart: false
+      }
     };
     setMessages([greeting]);
   };
@@ -300,11 +407,57 @@ const FrankXAI = () => {
     // Only add navigation context if already chatting
     if (messages.length <= 1) return;
     
+    // Create navigation-specific suggestions
+    let pageSuggestions: string[] = [];
+    
+    switch (true) {
+      case location === '/':
+        pageSuggestions = [
+          "Show me the blog section",
+          "Tell me about the AI characters",
+          "What resources are available?"
+        ];
+        break;
+      case location.startsWith('/blog'):
+        pageSuggestions = [
+          "What blog topics are popular?",
+          "How do I find the latest articles?",
+          "Explain this blog section to me"
+        ];
+        break;
+      case location.startsWith('/conversation'):
+        pageSuggestions = [
+          "How do I use the AI characters?",
+          "What expertise do these characters have?",
+          "Which character is best for beginners?"
+        ];
+        break;
+      case location.startsWith('/resources'):
+        pageSuggestions = [
+          "What are the top AI tools?",
+          "Are there any free resources?",
+          "How do I download resources?"
+        ];
+        break;
+      default:
+        pageSuggestions = [
+          "What can I do in this section?",
+          "Take me back to the home page",
+          "What other sections are available?"
+        ];
+    }
+    
     const contextMsg: Message = {
       id: Date.now().toString(),
       sender: 'ai',
       content: `I see you've navigated to ${getPageName()}. Is there anything specific about this section you'd like help with?`,
       timestamp: new Date(),
+      suggestions: pageSuggestions,
+      reactions: {
+        thumbsUp: false,
+        thumbsDown: false,
+        heart: false
+      }
     };
     setMessages(prev => [...prev, contextMsg]);
   };
@@ -387,12 +540,18 @@ const FrankXAI = () => {
       
       const responseData = await response.json();
       
-      // Add AI response
+      // Add AI response with suggestions
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
         content: responseData.message || "I'm sorry, I couldn't generate a response. Please try again.",
         timestamp: new Date(),
+        suggestions: generateSuggestions(responseData.message || ""),
+        reactions: {
+          thumbsUp: false,
+          thumbsDown: false,
+          heart: false
+        }
       };
       
       setMessages(prev => [...prev, aiMessage]);
@@ -404,12 +563,22 @@ const FrankXAI = () => {
         variant: "destructive"
       });
       
-      // Fallback response
+      // Fallback response with suggestions
       const fallbackMessage: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
         content: "I'm having trouble connecting to my knowledge base right now. Can we try again in a moment?",
         timestamp: new Date(),
+        suggestions: [
+          "Tell me about Frank Riemer",
+          "What can this platform help me with?",
+          "What is the Center of Excellence?"
+        ],
+        reactions: {
+          thumbsUp: false,
+          thumbsDown: false,
+          heart: false
+        }
       };
       
       setMessages(prev => [...prev, fallbackMessage]);
