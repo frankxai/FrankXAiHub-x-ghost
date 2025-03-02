@@ -245,26 +245,64 @@ const BlogPost = () => {
               <p className="text-xl text-muted-foreground">{post.excerpt}</p>
               
               <div className="flex items-center justify-between border-b border-border pb-6">
-                <div className="flex items-center">
-                  <Avatar className="h-12 w-12">
-                    {post.imageUrl ? (
-                      <AvatarImage src={post.imageUrl.replace('blog', 'avatar')} alt={post.authorName} />
-                    ) : null}
-                    <AvatarFallback className="bg-secondary/10 text-secondary">
-                      {getInitials(post.authorName)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3">
-                    <p className="font-medium">{post.authorName}</p>
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      <span>{formatDate(post.publishedAt)}</span>
-                      <span className="mx-2">•</span>
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span>{post.readTime} min read</span>
+                {(() => {
+                  // Get persona information
+                  const persona = getPersonaById(post.aiPersona || 'default');
+                  
+                  // Get the icon component based on persona
+                  let PersonaIcon = Zap;
+                  if (persona.icon === 'users') PersonaIcon = Users;
+                  if (persona.icon === 'bar-chart-2') PersonaIcon = BarChart2;
+                  if (persona.icon === 'code') PersonaIcon = Code;
+                  if (persona.icon === 'lightbulb') PersonaIcon = Lightbulb;
+                  
+                  return (
+                    <div className="flex items-center">
+                      <Avatar className="h-12 w-12 border-2" 
+                        style={{
+                          borderColor: post.aiPersonaColor || persona.color
+                        }}
+                      >
+                        {post.imageUrl ? (
+                          <AvatarImage src={post.imageUrl.replace('blog', 'avatar')} alt={persona.name} />
+                        ) : null}
+                        <AvatarFallback 
+                          style={{
+                            backgroundColor: `${persona.color}15`,
+                            color: persona.color
+                          }}
+                        >
+                          {getInitials(persona.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="ml-3">
+                        <div className="flex items-center">
+                          <p className="font-medium" style={{color: persona.color}}>{persona.name}</p>
+                          {persona.id !== 'default' && (
+                            <Badge 
+                              variant="outline" 
+                              className="ml-3 px-2 py-0 text-xs"
+                              style={{
+                                borderColor: `${persona.color}40`,
+                                backgroundColor: `${persona.color}10`,
+                                color: persona.color
+                              }}
+                            >
+                              {persona.role}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Calendar className="h-4 w-4 mr-1" />
+                          <span>{formatDate(post.publishedAt)}</span>
+                          <span className="mx-2">•</span>
+                          <Clock className="h-4 w-4 mr-1" />
+                          <span>{post.readTime} min read</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  );
+                })()}
                 
                 <div className="flex space-x-2">
                   <Button variant="outline" size="sm">
@@ -529,16 +567,23 @@ const BlogPost = () => {
           </aside>
         </div>
         
-        {/* More from author */}
+        {/* More from this persona */}
         {allPosts && (
           <motion.section
             variants={containerVariants}
             className="mt-16 max-w-6xl mx-auto"
           >
-            <h2 className="text-2xl font-clash font-bold mb-8">More from {post.authorName}</h2>
+            {(() => {
+              const persona = getPersonaById(post.aiPersona || 'default');
+              return (
+                <h2 className="text-2xl font-clash font-bold mb-8">
+                  More from <span style={{color: persona.color}}>{persona.name}</span>
+                </h2>
+              );
+            })()}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {allPosts
-                .filter(p => p.authorName === post.authorName && p.id !== post.id)
+                .filter(p => p.aiPersona === post.aiPersona && p.id !== post.id)
                 .slice(0, 3)
                 .map(authorPost => (
                   <motion.div
