@@ -599,14 +599,17 @@ const FrankXAI = () => {
         whileTap={{ scale: 0.95 }}
       >
         <Button 
-          className="w-14 h-14 rounded-full hover:shadow-[0_0_15px_rgba(0,195,255,0.5)] shadow-lg flex items-center justify-center border-2 border-white/20 p-0 overflow-hidden"
+          className="w-14 h-14 rounded-full hover:shadow-[0_0_15px_rgba(0,195,255,0.5)] shadow-lg flex items-center justify-center p-0 overflow-hidden ring-2 ring-[#00A3FF]/30 bg-gradient-to-br from-[#003A75] to-[#00A3FF]"
           onClick={() => setIsOpen(true)}
         >
-          <img 
-            src="/frankx-avatar.png" 
-            alt="FrankX.AI" 
-            className="w-full h-full object-cover"
-          />
+          <div className="w-full h-full relative">
+            <img 
+              src="/frankx-avatar.png" 
+              alt="FrankX.AI" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-1 right-1 w-3 h-3 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></div>
+          </div>
         </Button>
       </motion.div>
     );
