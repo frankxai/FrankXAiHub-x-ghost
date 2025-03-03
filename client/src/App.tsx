@@ -7,6 +7,7 @@ import Home from "@/pages/Home";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
 import CollaborativeBlogPost from "@/pages/CollaborativeBlogPost";
+import CreatePromptEngineeringPost from "@/pages/CreatePromptEngineeringPost";
 import Resources from "@/pages/Resources";
 import Conversation from "@/pages/Conversation";
 import Music from "@/pages/Music";
@@ -25,6 +26,7 @@ function Router() {
         <Route path="/blog" component={Blog} />
         <Route path="/blog/:id" component={BlogPost} />
         <Route path="/collaborative-blog/:id" component={CollaborativeBlogPost} />
+        <Route path="/create-prompt-engineering-post" component={CreatePromptEngineeringPost} />
         <Route path="/resources" component={Resources} />
         <Route path="/conversation" component={Conversation} />
         <Route path="/music" component={Music} />
