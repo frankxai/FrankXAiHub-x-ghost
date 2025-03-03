@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, ArrowRight, TrendingUp, Star, BookOpen, Clock } from "lucide-react";
+import { Search, ArrowRight, TrendingUp, Star, BookOpen, Clock, Sparkles, Plus } from "lucide-react";
 
 const Blog = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -96,9 +96,26 @@ const Blog = () => {
         <div className="max-w-3xl mx-auto text-center mb-16">
           <Badge variant="outline" className="uppercase font-semibold mb-4">FrankX AI</Badge>
           <h1 className="text-4xl md:text-6xl font-clash font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">AI Center of Excellence</h1>
-          <p className="text-lg md:text-xl text-muted-foreground mx-auto max-w-2xl">
+          <p className="text-lg md:text-xl text-muted-foreground mx-auto max-w-2xl mb-6">
             Thought leadership on building enterprise AI capabilities, implementation roadmaps, and strategic transformation frameworks.
           </p>
+          
+          {/* Create Post Button */}
+          <div className="flex justify-center gap-4">
+            <Link href="/create-prompt-engineering-post">
+              <Button size="lg" className="group relative overflow-hidden bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary transition-all duration-300">
+                <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></div>
+                <Sparkles className="mr-2 h-5 w-5 animate-pulse" />
+                Create AI Collaborative Post
+              </Button>
+            </Link>
+            <Link href="/blog/create">
+              <Button size="lg" variant="outline" className="group">
+                <Plus className="mr-2 h-5 w-5" />
+                Create Standard Post
+              </Button>
+            </Link>
+          </div>
         </div>
         
         {/* Featured Posts Section */}
