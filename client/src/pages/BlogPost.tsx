@@ -331,7 +331,7 @@ const BlogPost = () => {
             <EnhancedBlogContent content={post.content} className="mb-10" />
             
             {/* Show interactive Prompt Engineering Guide for prompt engineering posts */}
-            {post.id === 5 && (
+            {(post.id === 5 || post.id === 6 || post.title.toLowerCase().includes('prompt engineering')) && (
               <div className="mb-10">
                 <h2 className="text-2xl font-bold mb-6">Interactive Prompt Engineering Guide</h2>
                 <PromptEngineeringGuide className="mt-4" />
