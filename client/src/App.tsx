@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
+import CollaborativeBlogPost from "@/pages/CollaborativeBlogPost";
 import Resources from "@/pages/Resources";
 import Conversation from "@/pages/Conversation";
 import Music from "@/pages/Music";
@@ -23,6 +24,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/blog" component={Blog} />
         <Route path="/blog/:id" component={BlogPost} />
+        <Route path="/collaborative-blog/:id" component={CollaborativeBlogPost} />
         <Route path="/resources" component={Resources} />
         <Route path="/conversation" component={Conversation} />
         <Route path="/music" component={Music} />
