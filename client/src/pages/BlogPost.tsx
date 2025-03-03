@@ -6,6 +6,7 @@ import { pageVariants, containerVariants, itemVariants } from "@/lib/animations"
 import { BlogPost as BlogPostType } from "@shared/schema";
 import ProgressTracker from "@/components/blog/ProgressTracker";
 import EnhancedBlogContent from "@/components/blog/EnhancedBlogContent";
+import PromptEngineeringGuide from "@/components/blog/PromptEngineeringGuide";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -328,6 +329,14 @@ const BlogPost = () => {
             )}
             
             <EnhancedBlogContent content={post.content} className="mb-10" />
+            
+            {/* Show interactive Prompt Engineering Guide for prompt engineering posts */}
+            {post.id === 5 && (
+              <div className="mb-10">
+                <h2 className="text-2xl font-bold mb-6">Interactive Prompt Engineering Guide</h2>
+                <PromptEngineeringGuide className="mt-4" />
+              </div>
+            )}
             
             {/* Article actions */}
             <div className="flex flex-col sm:flex-row items-center justify-between bg-muted/30 rounded-lg p-6 mb-10">
