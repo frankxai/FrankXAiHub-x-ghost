@@ -1,59 +1,80 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
-import { useTheme } from '@/hooks/use-theme';
-
-// We'll initialize mermaid in the component to handle theme changes
+import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface MermaidDiagramProps {
   chart: string;
   className?: string;
 }
 
-const MermaidDiagram = ({ chart, className = '' }: MermaidDiagramProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { theme } = useTheme();
-  
+const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart, className = '' }) => {
+  const [svg, setSvg] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const mermaidRef = useRef<HTMLDivElement>(null);
+  const uniqueId = useRef(`mermaid-${Math.random().toString(36).substring(2, 11)}`);
+
   useEffect(() => {
-    // Initialize with theme-specific configuration
     mermaid.initialize({
       startOnLoad: true,
-      theme: theme === 'dark' ? 'dark' : 'neutral',
+      theme: 'default',
       securityLevel: 'loose',
-      fontFamily: 'Inter, sans-serif',
-      darkMode: theme === 'dark',
+      themeVariables: {
+        primaryColor: '#00C2FF',
+        primaryTextColor: '#fff',
+        primaryBorderColor: '#00C2FF',
+        lineColor: '#999',
+        secondaryColor: '#7026E3',
+        tertiaryColor: '#f4f4f4'
+      },
     });
-    
-    if (containerRef.current) {
+
+    const renderChart = async () => {
+      if (!chart) return;
+      
+      setLoading(true);
+      setError(null);
+      
       try {
-        // Clear existing content to prevent duplicates
-        containerRef.current.innerHTML = '';
-        
-        // Create unique ID to prevent mermaid rendering issues
-        const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
-        containerRef.current.id = id;
-        
-        // Render the mermaid diagram
-        mermaid.render(id, chart).then(({ svg }) => {
-          if (containerRef.current) {
-            containerRef.current.innerHTML = svg;
-          }
-        });
-      } catch (error) {
-        console.error('Error rendering mermaid diagram:', error);
-        if (containerRef.current) {
-          containerRef.current.innerHTML = `<div class="text-red-500 bg-red-50 p-4 rounded-md">
-            <p class="font-medium">Error rendering diagram</p>
-            <pre class="text-sm mt-2 overflow-auto">${chart}</pre>
-          </div>`;
-        }
+        const { svg } = await mermaid.render(uniqueId.current, chart.trim());
+        setSvg(svg);
+        setLoading(false);
+      } catch (err) {
+        console.error('Mermaid diagram error:', err);
+        setError('Failed to render diagram. Please check the syntax.');
+        setLoading(false);
       }
-    }
-  }, [chart, theme]);
+    };
+
+    renderChart();
+  }, [chart]);
+
+  if (loading) {
+    return (
+      <Card className={cn("p-4", className)}>
+        <Skeleton className="h-40 w-full" />
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className={cn("p-4 border-red-300 bg-red-50 dark:bg-red-900/10", className)}>
+        <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
+        <pre className="mt-2 text-xs p-2 bg-muted rounded overflow-x-auto">
+          {chart}
+        </pre>
+      </Card>
+    );
+  }
 
   return (
     <div 
-      ref={containerRef} 
-      className={`my-8 overflow-auto rounded-lg dark:bg-black/20 bg-gray-50 p-4 ${className}`}
+      className={cn("overflow-auto my-8", className)}
+      dangerouslySetInnerHTML={{ __html: svg }}
+      ref={mermaidRef}
     />
   );
 };

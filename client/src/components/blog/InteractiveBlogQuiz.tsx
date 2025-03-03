@@ -1,28 +1,21 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { jsPDF } from 'jspdf';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  RadioGroup, 
-  RadioGroupItem 
-} from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Progress } from '@/components/ui/progress';
-import { Download, Send, Mail, CheckCircle } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import jsPDF from 'jspdf';
+import { cn } from '@/lib/utils';
+import { fadeIn } from '@/lib/animations';
+import { CheckCircle, Download, Mail, Send } from 'lucide-react';
 
-// Question types
 export type QuizQuestionType = 'multiple-choice' | 'text' | 'checkbox' | 'rating';
 
 export interface QuizQuestion {
@@ -51,323 +44,385 @@ const InteractiveBlogQuiz: React.FC<InteractiveBlogQuizProps> = ({
   description,
   questions,
   onComplete,
-  primaryColor = '#00C2FF',
+  primaryColor = 'hsl(var(--primary))',
   className = '',
 }) => {
   const { toast } = useToast();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState<QuizAnswers>({});
-  const [email, setEmail] = useState('');
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
   
-  // Calculate progress percentage
-  const progress = (currentStep / (questions.length + 1)) * 100;
+  const form = useForm<QuizAnswers>({
+    defaultValues: questions.reduce((acc, question) => {
+      if (question.type === 'checkbox') {
+        acc[question.id] = [];
+      } else if (question.type === 'rating') {
+        acc[question.id] = 5;
+      } else {
+        acc[question.id] = '';
+      }
+      return acc;
+    }, {} as QuizAnswers),
+  });
   
-  const handleNext = () => {
-    const currentQuestion = questions[currentStep];
+  const handleSubmit = (data: QuizAnswers) => {
+    setSubmitLoading(true);
     
-    // Check if the current question is required and has an answer
-    if (currentQuestion?.isRequired && !answers[currentQuestion.id]) {
+    // Simulate API call
+    setTimeout(() => {
+      if (onComplete) {
+        onComplete(data);
+      }
+      
+      setSubmitted(true);
+      setSubmitLoading(false);
+      
       toast({
-        title: "Required Field",
-        description: "Please answer this question before continuing.",
-        variant: "destructive"
+        title: 'Quiz submitted successfully',
+        description: 'Thank you for your feedback',
       });
-      return;
-    }
-    
-    if (currentStep < questions.length) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      completeQuiz();
-    }
+    }, 1000);
   };
   
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-  
-  const handleAnswer = (questionId: string, answer: string | string[] | number) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionId]: answer
-    }));
-  };
-  
-  const completeQuiz = () => {
-    setQuizCompleted(true);
-    if (onComplete) {
-      onComplete(answers);
-    }
-  };
-  
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleSendEmail = (e: React.FormEvent) => {
     e.preventDefault();
+    setEmailLoading(true);
     
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    // Simulate API call
+    setTimeout(() => {
+      setEmailLoading(false);
+      setShowEmailForm(false);
+      
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
-        variant: "destructive"
+        title: 'Results sent to your email',
+        description: 'Check your inbox for your results and personalized recommendations',
       });
-      return;
-    }
-    
-    // In a real app, you would send the email + answers to a backend
-    setEmailSubmitted(true);
-    toast({
-      title: "Results Sent!",
-      description: "Check your inbox for the results of your assessment.",
-    });
+    }, 1500);
   };
   
   const generatePDF = () => {
     const doc = new jsPDF();
+    const answers = form.getValues();
+    const logoUrl = '/logo.png'; // Placeholder for your logo
     
-    // Add title
-    doc.setFontSize(20);
+    // Add header
+    doc.setFontSize(22);
+    doc.setTextColor(0, 44, 82);
     doc.text(title, 20, 20);
     
-    // Add description
-    doc.setFontSize(12);
-    doc.text(description, 20, 30, { maxWidth: 170 });
-    
-    // Add answers
+    // Add subtitle
     doc.setFontSize(14);
-    doc.text("Your Answers:", 20, 50);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Your Personalized Results', 20, 30);
     
-    let yPosition = 60;
+    // Add date
+    const today = new Date().toLocaleDateString();
+    doc.setFontSize(10);
+    doc.text(`Generated on ${today}`, 20, 38);
+    
+    let yPos = 50;
+    
+    // Add content
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    
     questions.forEach((question, index) => {
-      doc.setFontSize(12);
-      doc.text(`${index + 1}. ${question.question}`, 20, yPosition);
-      yPosition += 7;
+      // Add question
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${index + 1}. ${question.question}`, 20, yPos);
+      yPos += 7;
       
-      doc.setFontSize(10);
-      const answer = answers[question.id];
+      // Add answer
+      doc.setFont('helvetica', 'normal');
+      let answerText = '';
       
-      if (Array.isArray(answer)) {
-        answer.forEach(a => {
-          doc.text(`• ${a}`, 25, yPosition);
-          yPosition += 5;
-        });
-      } else if (typeof answer === 'number') {
-        doc.text(`Rating: ${answer}/5`, 25, yPosition);
-        yPosition += 5;
+      if (question.type === 'multiple-choice') {
+        const selectedOption = question.options?.find((_, i) => answers[question.id] === String(i));
+        answerText = `Your answer: ${selectedOption || answers[question.id]}`;
+      } else if (question.type === 'checkbox' && Array.isArray(answers[question.id])) {
+        const selectedOptions = (answers[question.id] as string[])
+          .map(optionIndex => question.options?.[parseInt(optionIndex)])
+          .filter(Boolean);
+        answerText = `Your selections: ${selectedOptions.join(', ')}`;
+      } else if (question.type === 'rating') {
+        answerText = `Your rating: ${answers[question.id]}/10`;
       } else {
-        doc.text(`${answer || "Not answered"}`, 25, yPosition);
-        yPosition += 5;
+        answerText = `Your answer: ${answers[question.id]}`;
       }
       
-      yPosition += 5;
+      doc.text(answerText, 25, yPos);
+      yPos += 15;
+      
+      // Add page if needed
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 20;
+      }
     });
     
-    // Add current date
-    const date = new Date().toLocaleDateString();
+    // Add footer
+    const lastPage = doc.getNumberOfPages();
+    doc.setPage(lastPage);
+    yPos = 280;
     doc.setFontSize(10);
-    doc.text(`Generated on ${date}`, 20, 270);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Thank you for completing this assessment.', 20, yPos);
+    doc.text('© FrankX.AI - Center of Excellence', 20, yPos + 5);
     
     // Save PDF
-    doc.save(`${title.replace(/\s+/g, '-').toLowerCase()}-results.pdf`);
-    
-    toast({
-      title: "PDF Generated!",
-      description: "Your answers have been saved as a PDF.",
-    });
+    doc.save(`frankx-ai-${title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
   };
   
-  // Render current question or final step
-  const renderStep = () => {
-    // Final step
-    if (currentStep >= questions.length) {
-      return (
-        <div className="space-y-6">
-          <div className="text-center mb-8">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-block p-3 rounded-full bg-primary/10 mb-4"
-            >
-              <CheckCircle size={48} className="text-primary" />
-            </motion.div>
-            <h3 className="text-xl font-bold">Assessment Complete!</h3>
-            <p className="text-muted-foreground mt-2">
-              Thank you for taking the time to complete this assessment. Your insights will help improve your AI Center of Excellence journey.
-            </p>
-          </div>
-          
-          <div className="space-y-4">
-            <Button 
-              onClick={generatePDF} 
-              variant="outline" 
-              className="w-full" 
-              style={{ borderColor: `${primaryColor}40`, color: primaryColor }}
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Download Your Results as PDF
-            </Button>
-            
-            {!emailSubmitted ? (
-              <form onSubmit={handleEmailSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Get your results by email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full"
-                  style={{ backgroundColor: primaryColor }}
-                >
-                  <Mail className="mr-2 h-4 w-4" />
-                  Send to My Email
-                </Button>
-              </form>
-            ) : (
-              <div className="text-center p-4 border rounded-md bg-primary/5 border-primary/20">
-                <p className="text-sm font-medium">Results sent to {email}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
-    
-    // Current question
-    const currentQuestion = questions[currentStep];
-    
+  if (submitted) {
     return (
-      <div>
-        <h3 className="text-lg font-medium mb-4">{currentQuestion.question}</h3>
-        
-        {currentQuestion.type === 'multiple-choice' && (
-          <RadioGroup
-            value={answers[currentQuestion.id] as string}
-            onValueChange={(value) => handleAnswer(currentQuestion.id, value)}
-            className="space-y-3"
-          >
-            {currentQuestion.options?.map((option, i) => (
-              <div key={i} className="flex items-center space-x-2">
-                <RadioGroupItem value={option} id={`option-${currentQuestion.id}-${i}`} />
-                <Label htmlFor={`option-${currentQuestion.id}-${i}`}>{option}</Label>
-              </div>
-            ))}
-          </RadioGroup>
-        )}
-        
-        {currentQuestion.type === 'checkbox' && (
-          <div className="space-y-3">
-            {currentQuestion.options?.map((option, i) => {
-              const currentAnswers = (answers[currentQuestion.id] as string[]) || [];
-              return (
-                <div key={i} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`option-${currentQuestion.id}-${i}`}
-                    checked={currentAnswers.includes(option)}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        handleAnswer(currentQuestion.id, [...currentAnswers, option]);
-                      } else {
-                        handleAnswer(
-                          currentQuestion.id,
-                          currentAnswers.filter(item => item !== option)
-                        );
-                      }
-                    }}
+      <motion.div
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+        className={className}
+      >
+        <Card className="border-t-4" style={{ borderTopColor: primaryColor }}>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <CheckCircle className="mr-2 h-6 w-6 text-green-500" />
+              Thank you for completing the quiz!
+            </CardTitle>
+            <CardDescription>
+              Your responses have been recorded and will help personalize your experience.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              Would you like to receive your results and personalized recommendations via email or download them as a PDF?
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-3 mt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowEmailForm(true)} 
+                className="flex-1"
+                disabled={showEmailForm}
+              >
+                <Mail className="mr-2 h-4 w-4" />
+                Receive by Email
+              </Button>
+              <Button 
+                onClick={generatePDF} 
+                className="flex-1" 
+                style={{ backgroundColor: primaryColor }}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download PDF
+              </Button>
+            </div>
+            
+            {showEmailForm && (
+              <motion.form 
+                initial={{ height: 0, opacity: 0 }} 
+                animate={{ height: 'auto', opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                onSubmit={handleSendEmail}
+                className="mt-4 border rounded-md p-4"
+              >
+                <Label htmlFor="email">Email address</Label>
+                <div className="flex items-center gap-2 mt-2">
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="your@email.com" 
+                    value={userEmail} 
+                    onChange={(e) => setUserEmail(e.target.value)} 
+                    required 
                   />
-                  <Label htmlFor={`option-${currentQuestion.id}-${i}`}>{option}</Label>
+                  <Button type="submit" disabled={emailLoading} size="sm">
+                    {emailLoading ? 'Sending...' : 'Send'}
+                  </Button>
                 </div>
-              );
-            })}
-          </div>
-        )}
-        
-        {currentQuestion.type === 'text' && (
-          <Textarea
-            placeholder="Your answer here..."
-            value={answers[currentQuestion.id] as string || ''}
-            onChange={(e) => handleAnswer(currentQuestion.id, e.target.value)}
-            className="min-h-[120px]"
-          />
-        )}
-        
-        {currentQuestion.type === 'rating' && (
-          <div className="space-y-3">
-            <div className="flex justify-between px-2">
-              <span className="text-sm text-muted-foreground">Not at all</span>
-              <span className="text-sm text-muted-foreground">Very much</span>
-            </div>
-            <div className="flex space-x-2 justify-between">
-              {[1, 2, 3, 4, 5].map((rating) => (
-                <Button
-                  key={rating}
-                  variant="outline"
-                  className={`flex-1 h-12 ${answers[currentQuestion.id] === rating ? 'bg-primary/20 border-primary' : ''}`}
-                  onClick={() => handleAnswer(currentQuestion.id, rating)}
-                >
-                  {rating}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  We'll email you the results and custom recommendations based on your answers.
+                </p>
+              </motion.form>
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
     );
-  };
+  }
   
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      variants={fadeIn}
+      initial="hidden"
+      animate="visible"
       className={className}
     >
-      <Card className="overflow-hidden">
-        <CardHeader className="pb-4" style={{ borderBottom: `1px solid ${primaryColor}20` }}>
+      <Card className="border-t-4" style={{ borderTopColor: primaryColor }}>
+        <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        
-        <div className="px-6 py-2">
-          <Progress value={progress} className="h-2" style={{ backgroundColor: `${primaryColor}20` }}>
-            <div className="h-full" style={{ backgroundColor: primaryColor }} />
-          </Progress>
-          <p className="text-xs text-muted-foreground mt-1">
-            Question {Math.min(currentStep + 1, questions.length)} of {questions.length}
-          </p>
-        </div>
-        
-        <CardContent className="pt-6 pb-4">
-          {renderStep()}
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+              {questions.map((question, index) => (
+                <div key={question.id} className="border-b pb-6 last:border-0">
+                  <h3 className="text-lg font-medium mb-3 flex">
+                    <span className="w-7 h-7 rounded-full bg-muted flex items-center justify-center mr-2 text-sm font-semibold flex-shrink-0">
+                      {index + 1}
+                    </span>
+                    <span>{question.question}</span>
+                    {question.isRequired && <span className="text-red-500 ml-1">*</span>}
+                  </h3>
+                  
+                  {/* Multiple Choice Question */}
+                  {question.type === 'multiple-choice' && (
+                    <FormField
+                      control={form.control}
+                      name={question.id}
+                      rules={{ required: question.isRequired ? 'This field is required' : false }}
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              defaultValue={field.value as string}
+                              className="space-y-1"
+                            >
+                              {question.options?.map((option, i) => (
+                                <div key={i} className="flex items-center space-x-2">
+                                  <RadioGroupItem value={String(i)} id={`${question.id}-${i}`} />
+                                  <Label 
+                                    htmlFor={`${question.id}-${i}`}
+                                    className="text-sm"
+                                  >
+                                    {option}
+                                  </Label>
+                                </div>
+                              ))}
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  
+                  {/* Checkbox Question */}
+                  {question.type === 'checkbox' && (
+                    <FormField
+                      control={form.control}
+                      name={question.id}
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="space-y-2">
+                            {question.options?.map((option, i) => (
+                              <div key={i} className="flex items-start space-x-2">
+                                <Checkbox
+                                  id={`${question.id}-${i}`}
+                                  checked={(field.value as string[]).includes(String(i))}
+                                  onCheckedChange={(checked) => {
+                                    const currentValue = [...(field.value as string[] || [])];
+                                    if (checked) {
+                                      field.onChange([...currentValue, String(i)]);
+                                    } else {
+                                      field.onChange(
+                                        currentValue.filter(value => value !== String(i))
+                                      );
+                                    }
+                                  }}
+                                />
+                                <Label
+                                  htmlFor={`${question.id}-${i}`}
+                                  className="text-sm leading-tight pt-0.5"
+                                >
+                                  {option}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  
+                  {/* Text Question */}
+                  {question.type === 'text' && (
+                    <FormField
+                      control={form.control}
+                      name={question.id}
+                      rules={{ required: question.isRequired ? 'This field is required' : false }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Type your answer here..."
+                              className="resize-none"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Please provide as much detail as possible.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  
+                  {/* Rating Question */}
+                  {question.type === 'rating' && (
+                    <FormField
+                      control={form.control}
+                      name={question.id}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <div className="space-y-3">
+                              <Slider
+                                min={1}
+                                max={10}
+                                step={1}
+                                defaultValue={[field.value as number]}
+                                onValueChange={(vals) => field.onChange(vals[0])}
+                              />
+                              <div className="flex justify-between text-xs text-muted-foreground px-1">
+                                <span>Not important</span>
+                                <span>Very important</span>
+                              </div>
+                              <div className="text-center font-medium">
+                                Rating: {field.value}/10
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              ))}
+              
+              <Button 
+                type="submit" 
+                disabled={submitLoading}
+                className="w-full sm:w-auto"
+                style={{ backgroundColor: primaryColor }}
+              >
+                <Send className="mr-2 h-4 w-4" />
+                {submitLoading ? 'Submitting...' : 'Submit Answers'}
+              </Button>
+            </form>
+          </Form>
         </CardContent>
-        
-        <CardFooter className="flex justify-between border-t py-4 px-6">
-          <Button
-            variant="ghost"
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-          >
-            Previous
-          </Button>
-          
-          {currentStep < questions.length && (
-            <Button 
-              onClick={handleNext}
-              style={{ backgroundColor: primaryColor }}
-            >
-              {currentStep === questions.length - 1 ? 'Complete' : 'Next'}
-              <Send className="ml-2 h-4 w-4" />
-            </Button>
-          )}
+        <CardFooter className="flex flex-col items-start border-t pt-6">
+          <p className="text-xs text-muted-foreground">
+            Your responses will be used to provide you with personalized recommendations and insights.
+            After submitting, you'll have the option to download your results or receive them via email.
+          </p>
         </CardFooter>
       </Card>
     </motion.div>
