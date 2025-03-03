@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Spinner } from '@/components/ui/spinner';
 import { apiRequest } from '@/lib/queryClient';
 import { toast } from '@/hooks/use-toast';
+import type { BlogPost } from '@shared/schema';
 
 const CreatePromptEngineeringPost: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,8 +18,10 @@ const CreatePromptEngineeringPost: React.FC = () => {
     setIsLoading(true);
     
     try {
-      const response = await apiRequest('/api/collaborative-blog-posts/create-prompt-engineering', {
+      const response = await apiRequest<BlogPost>({
+        url: '/api/collaborative-blog-posts/create-prompt-engineering',
         method: 'POST',
+        body: {}
       });
       
       setCreatedPostId(response.id);

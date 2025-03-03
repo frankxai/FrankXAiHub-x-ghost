@@ -53,6 +53,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id: 0, // Will be assigned by storage
         title: "The Art of Prompt Engineering: Creating AI Communication Excellence",
         slug: "art-of-prompt-engineering-ai-communication-excellence",
+        aiPersona: "AIArchitect",
+        aiPersonaRole: "AI Systems Architect",
+        aiPersonaColor: "#4a90e2",
         content: `# The Art of Prompt Engineering: Creating AI Communication Excellence
 
 ## Introduction: Why Prompt Engineering Matters
