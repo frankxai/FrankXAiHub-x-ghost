@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { createPromptEngineeringPost } from "./create-prompt-engineering-post";
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,14 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Create the prompt engineering blog post
+  try {
+    await createPromptEngineeringPost();
+    log("Prompt engineering blog post created successfully", "server");
+  } catch (error) {
+    log("Failed to create prompt engineering blog post: " + error, "server");
+  }
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
