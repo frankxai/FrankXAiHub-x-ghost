@@ -594,6 +594,62 @@ Format the response as JSON with this structure:
       res.status(500).json({ message: "Error fetching AI personas" });
     }
   });
+  
+  // Get available AI models
+  app.get("/api/ai/models", (req, res) => {
+    try {
+      const openAIModels = [
+        { id: 'openai/gpt-4o', name: 'GPT-4o', provider: 'openai' },
+        { id: 'openai/gpt-4-turbo', name: 'GPT-4 Turbo', provider: 'openai' },
+        { id: 'openai/gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'openai' },
+      ];
+      
+      const openRouterModels = [
+        // Anthropic models via OpenRouter
+        { id: 'anthropic/claude-3-opus', name: 'Claude 3 Opus', provider: 'openrouter' },
+        { id: 'anthropic/claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'openrouter' },
+        { id: 'anthropic/claude-3-haiku', name: 'Claude 3 Haiku', provider: 'openrouter' },
+        
+        // Meta models via OpenRouter
+        { id: 'meta-llama/llama-3-70b-instruct', name: 'Llama 3 70B', provider: 'openrouter' },
+        { id: 'meta-llama/llama-3-8b-instruct', name: 'Llama 3 8B', provider: 'openrouter' },
+        
+        // Mistral models via OpenRouter
+        { id: 'mistralai/mistral-large-latest', name: 'Mistral Large', provider: 'openrouter' },
+        { id: 'mistralai/mistral-medium', name: 'Mistral Medium', provider: 'openrouter' },
+        { id: 'mistralai/mistral-small-latest', name: 'Mistral Small', provider: 'openrouter' },
+        
+        // Google models via OpenRouter
+        { id: 'google/gemini-pro', name: 'Gemini Pro', provider: 'openrouter' },
+        
+        // More open source models via OpenRouter
+        { id: 'nousresearch/nous-hermes-2-mixtral-8x7b-dpo', name: 'Nous Hermes 2', provider: 'openrouter' },
+        { id: 'openchat/openchat-7b', name: 'OpenChat 7B', provider: 'openrouter' },
+        { id: 'gryphe/mythomist-7b', name: 'MythoMist 7B', provider: 'openrouter' },
+        { id: 'phind/phind-codellama-34b', name: 'Phind CodeLlama 34B', provider: 'openrouter' },
+      ];
+      
+      // Return both or filter based on API keys availability
+      const models = [];
+      
+      if (process.env.OPENAI_API_KEY) {
+        models.push(...openAIModels);
+      }
+      
+      if (process.env.OPENROUTER_API_KEY) {
+        models.push(...openRouterModels);
+      }
+      
+      if (models.length === 0) {
+        // If no API keys are configured, return mock models
+        models.push({ id: 'mock/gpt', name: 'Mock GPT (No API keys configured)', provider: 'mock' });
+      }
+      
+      res.json(models);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching AI models" });
+    }
+  });
 
   // Get Prompt Templates
   app.get("/api/ai/prompt-templates", (req, res) => {

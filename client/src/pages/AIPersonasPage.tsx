@@ -42,16 +42,28 @@ const availableModels = [
   { id: 'openai/gpt-4-turbo', name: 'GPT-4 Turbo', provider: 'openai' },
   { id: 'openai/gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'openai' },
   
-  // Anthropic models
+  // Anthropic models via OpenRouter
   { id: 'anthropic/claude-3-opus', name: 'Claude 3 Opus', provider: 'openrouter' },
   { id: 'anthropic/claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'openrouter' },
   { id: 'anthropic/claude-3-haiku', name: 'Claude 3 Haiku', provider: 'openrouter' },
   
-  // Meta models
+  // Meta models via OpenRouter
   { id: 'meta-llama/llama-3-70b-instruct', name: 'Llama 3 70B', provider: 'openrouter' },
+  { id: 'meta-llama/llama-3-8b-instruct', name: 'Llama 3 8B', provider: 'openrouter' },
   
-  // Mistral models
-  { id: 'mistralai/mistral-large', name: 'Mistral Large', provider: 'openrouter' },
+  // Mistral models via OpenRouter
+  { id: 'mistralai/mistral-large-latest', name: 'Mistral Large', provider: 'openrouter' },
+  { id: 'mistralai/mistral-medium', name: 'Mistral Medium', provider: 'openrouter' },
+  { id: 'mistralai/mistral-small-latest', name: 'Mistral Small', provider: 'openrouter' },
+  
+  // Google models via OpenRouter
+  { id: 'google/gemini-pro', name: 'Gemini Pro', provider: 'openrouter' },
+  
+  // More open source models via OpenRouter
+  { id: 'nousresearch/nous-hermes-2-mixtral-8x7b-dpo', name: 'Nous Hermes 2', provider: 'openrouter' },
+  { id: 'openchat/openchat-7b', name: 'OpenChat 7B', provider: 'openrouter' },
+  { id: 'gryphe/mythomist-7b', name: 'MythoMist 7B', provider: 'openrouter' },
+  { id: 'phind/phind-codellama-34b', name: 'Phind CodeLlama 34B', provider: 'openrouter' },
 ];
 
 const AIPersonasPage: React.FC = () => {
