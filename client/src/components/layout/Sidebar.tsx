@@ -55,3 +55,26 @@ const navigation = [
 ];
 
 // ... (rest of the code)
+
+// Assuming NavItem component exists and is correctly imported.  This is a placeholder and needs to be replaced with your actual component.
+const NavItem = ({icon, href, label}) => (
+    <li>
+        <a href={href}>{icon} {label}</a>
+    </li>
+);
+
+
+// Example of how to use NavItem in a sidebar (replace with your actual sidebar component)
+const Sidebar = () => {
+    return (
+        <ul>
+            {navigation.map((item) => (
+              <NavItem key={item.name} icon={item.icon} href={item.href} label={item.name} />
+            ))}
+            <NavItem icon="file" href="/file-converter" label="File Converter" />
+            <NavItem icon="robot" href="/agents" label="AI Agents" /> {/* Added AI Agents */}
+        </ul>
+    );
+};
+
+// ...rest of the code

@@ -17,7 +17,9 @@ import Footer from "@/components/layout/Footer";
 import FrankXAI from "@/components/ai/FrankXAI";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { AnimatePresence } from "framer-motion";
-import FileConversionPage from "@/pages/FileConversionPage"; // Added import
+import FileConversionPage from "@/pages/FileConversionPage";
+import AgentManagementPage from '@/pages/AgentManagementPage';
+import ChatWithAgentPage from '@/pages/ChatWithAgentPage';
 
 
 function Router() {
@@ -33,7 +35,9 @@ function Router() {
         <Route path="/conversation" component={Conversation} />
         <Route path="/music" component={Music} />
         <Route path="/assessment" component={Assessment} />
-        <Route path="/tools/file-converter" component={FileConversionPage} /> {/* Added route */}
+        <Route path="/tools/file-converter" component={FileConversionPage} />
+          <Route path="/agents" element={<AgentManagementPage />} />
+          <Route path="/chat/:agentId" element={<ChatWithAgentPage />} />
         <Route component={NotFound} />
       </Switch>
     </AnimatePresence>
