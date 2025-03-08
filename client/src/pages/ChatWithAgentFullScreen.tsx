@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useRoute, useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { AICharacter } from '@shared/schema';
@@ -45,8 +45,9 @@ interface ConversationThread {
 }
 
 const ChatWithAgentFullScreen: React.FC = () => {
-  const { agentId } = useParams<{ agentId: string }>();
-  const navigate = useNavigate();
+  const [, params] = useRoute('/chat-fullscreen/:agentId');
+  const agentId = params?.agentId;
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   
   // State
