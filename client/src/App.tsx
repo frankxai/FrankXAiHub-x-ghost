@@ -25,6 +25,7 @@ import AgentConversationPage from '@/pages/AgentConversationPage';
 import Dashboard from '@/pages/Dashboard';
 import AIPersonasPage from './pages/AIPersonasPage';
 import AIFrameworkAgents from './pages/AIFrameworkAgents';
+import OpenWebUIPage from './pages/OpenWebUIPage';
 
 
 function Router() {
@@ -53,6 +54,7 @@ function Router() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/ai-personas" component={AIPersonasPage} />
         <Route path="/framework-agents" component={AIFrameworkAgents} />
+        <Route path="/openwebui" component={OpenWebUIPage} />
         <Route component={NotFound} />
       </Switch>
     </AnimatePresence>

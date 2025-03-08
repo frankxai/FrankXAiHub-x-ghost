@@ -22,6 +22,7 @@ import agentManagementRouter from "./routes/agent-management";
 import conversationRouter from "./routes/conversation";
 import agentPersonasRouter from "./routes/agent-personas";
 import { registerAgentRoutes } from "./routes/agent-routes";
+import { registerAIConfigRoutes } from "./routes/ai-config-routes";
 import { advancedAgentPersonas } from './agent-framework/advanced-agent-personas';
 import { AI_MODELS } from '../shared/ai-models-config';
 
@@ -745,6 +746,9 @@ Format the response as JSON with this structure:
 
   // Register agent routes directly on Express app
   registerAgentRoutes(app);
+  
+  // Register AI configuration routes
+  registerAIConfigRoutes(app);
 
   app.use("/api", router);
 

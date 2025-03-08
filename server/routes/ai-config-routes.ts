@@ -1,201 +1,128 @@
-/**
- * AI Configuration Routes
- * 
- * These routes provide access to AI model configurations, personalities, 
- * and other AI-related settings.
- */
-
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
+import { loadAllPersonalities, getPersonalityById } from '../config/personality-manager';
 import { OPENROUTER_MODELS, getFreeOpenRouterModels } from '../config/openrouter-models';
-import { loadAllPersonalities, getPersonalityById, savePersonality, deletePersonality } from '../config/personality-manager';
-import { loadAllTeams, getTeamById, saveTeam, deleteTeam } from '../config/agent-teams';
+import { loadAllTeams, getTeamById } from '../config/agent-teams';
 
 /**
  * Register AI Configuration Routes
  */
 export function registerAIConfigRoutes(app: Express) {
-  // Get all available models
-  app.get('/api/models', (req, res) => {
+  // Get all available models from OpenRouter
+  app.get('/api/ai/models', (req: Request, res: Response) => {
     try {
-      const models = OPENROUTER_MODELS;
+      const showAll = req.query.all === 'true';
+      const models = showAll ? OPENROUTER_MODELS : getFreeOpenRouterModels();
       res.json(models);
     } catch (error) {
       console.error('Error fetching models:', error);
-      res.status(500).json({ error: 'Failed to fetch models' });
+      res.status(500).json({ error: 'Failed to retrieve models' });
     }
   });
 
-  // Get only free models
-  app.get('/api/models/free', (req, res) => {
+  // Get a specific model by ID
+  app.get('/api/ai/models/:modelId', (req: Request, res: Response) => {
     try {
-      const freeModels = getFreeOpenRouterModels();
-      res.json(freeModels);
+      const modelId = req.params.modelId;
+      const model = OPENROUTER_MODELS.find(m => m.id === modelId);
+      
+      if (!model) {
+        return res.status(404).json({ error: 'Model not found' });
+      }
+      
+      res.json(model);
     } catch (error) {
-      console.error('Error fetching free models:', error);
-      res.status(500).json({ error: 'Failed to fetch free models' });
+      console.error('Error fetching model:', error);
+      res.status(500).json({ error: 'Failed to retrieve model' });
     }
   });
 
-  // Get models by capability
-  app.get('/api/models/capability/:capability', (req, res) => {
-    try {
-      const { capability } = req.params;
-      const models = OPENROUTER_MODELS.filter(model => 
-        model.capabilities.includes(capability)
-      );
-      res.json(models);
-    } catch (error) {
-      console.error(`Error fetching models with capability ${req.params.capability}:`, error);
-      res.status(500).json({ error: 'Failed to fetch models by capability' });
-    }
-  });
-
-  // Get models by provider
-  app.get('/api/models/provider/:provider', (req, res) => {
-    try {
-      const { provider } = req.params;
-      const models = OPENROUTER_MODELS.filter(model => 
-        model.provider.toLowerCase() === provider.toLowerCase()
-      );
-      res.json(models);
-    } catch (error) {
-      console.error(`Error fetching models from provider ${req.params.provider}:`, error);
-      res.status(500).json({ error: 'Failed to fetch models by provider' });
-    }
-  });
-
-  // Get all personalities
-  app.get('/api/personalities', (req, res) => {
+  // Get all available personalities
+  app.get('/api/ai/personalities', (req: Request, res: Response) => {
     try {
       const personalities = loadAllPersonalities();
-      res.json(personalities);
+      
+      // Map to a public-facing structure that doesn't expose full system prompts
+      const publicPersonalities = personalities.map(p => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        traits: p.traits,
+        tone: p.tone,
+        strengths: p.strengths,
+        limitations: p.limitations,
+        recommendedModels: p.recommendedModels
+      }));
+      
+      res.json(publicPersonalities);
     } catch (error) {
       console.error('Error fetching personalities:', error);
-      res.status(500).json({ error: 'Failed to fetch personalities' });
+      res.status(500).json({ error: 'Failed to retrieve personalities' });
     }
   });
 
-  // Get personality by ID
-  app.get('/api/personalities/:id', (req, res) => {
+  // Get a specific personality by ID
+  app.get('/api/ai/personalities/:personalityId', (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
-      const personality = getPersonalityById(id);
+      const personalityId = req.params.personalityId;
+      const personality = getPersonalityById(personalityId);
       
       if (!personality) {
         return res.status(404).json({ error: 'Personality not found' });
       }
       
-      res.json(personality);
+      // Don't expose the full system prompt to the client
+      const { systemPrompt, ...publicPersonality } = personality;
+      
+      res.json(publicPersonality);
     } catch (error) {
-      console.error(`Error fetching personality ${req.params.id}:`, error);
-      res.status(500).json({ error: 'Failed to fetch personality' });
+      console.error('Error fetching personality:', error);
+      res.status(500).json({ error: 'Failed to retrieve personality' });
     }
   });
 
-  // Create or update a personality
-  app.post('/api/personalities', (req, res) => {
-    try {
-      const personality = req.body;
-      
-      if (!personality.id || !personality.name || !personality.systemPrompt) {
-        return res.status(400).json({ error: 'Invalid personality data' });
-      }
-      
-      const success = savePersonality(personality);
-      
-      if (!success) {
-        return res.status(500).json({ error: 'Failed to save personality' });
-      }
-      
-      res.json(personality);
-    } catch (error) {
-      console.error('Error saving personality:', error);
-      res.status(500).json({ error: 'Failed to save personality' });
-    }
-  });
-
-  // Delete a personality
-  app.delete('/api/personalities/:id', (req, res) => {
-    try {
-      const { id } = req.params;
-      const success = deletePersonality(id);
-      
-      if (!success) {
-        return res.status(404).json({ error: 'Personality not found or could not be deleted' });
-      }
-      
-      res.json({ success: true });
-    } catch (error) {
-      console.error(`Error deleting personality ${req.params.id}:`, error);
-      res.status(500).json({ error: 'Failed to delete personality' });
-    }
-  });
-
-  // Get all agent teams
-  app.get('/api/agent-teams', (req, res) => {
+  // Get all available teams
+  app.get('/api/ai/teams', (req: Request, res: Response) => {
     try {
       const teams = loadAllTeams();
-      res.json(teams);
+      
+      // Map to a public-facing structure
+      const publicTeams = teams.map(t => ({
+        id: t.id,
+        name: t.name,
+        description: t.description,
+        agents: t.agents.map(a => ({
+          id: a.id,
+          role: a.role,
+          description: a.description,
+          isCoordinator: a.isCoordinator,
+          capabilities: a.capabilities
+        })),
+        isActive: t.isActive,
+        created: t.created,
+        updated: t.updated
+      }));
+      
+      res.json(publicTeams);
     } catch (error) {
-      console.error('Error fetching agent teams:', error);
-      res.status(500).json({ error: 'Failed to fetch agent teams' });
+      console.error('Error fetching teams:', error);
+      res.status(500).json({ error: 'Failed to retrieve teams' });
     }
   });
 
-  // Get agent team by ID
-  app.get('/api/agent-teams/:id', (req, res) => {
+  // Get a specific team by ID
+  app.get('/api/ai/teams/:teamId', (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
-      const team = getTeamById(id);
+      const teamId = req.params.teamId;
+      const team = getTeamById(teamId);
       
       if (!team) {
-        return res.status(404).json({ error: 'Agent team not found' });
+        return res.status(404).json({ error: 'Team not found' });
       }
       
       res.json(team);
     } catch (error) {
-      console.error(`Error fetching agent team ${req.params.id}:`, error);
-      res.status(500).json({ error: 'Failed to fetch agent team' });
-    }
-  });
-
-  // Create or update an agent team
-  app.post('/api/agent-teams', (req, res) => {
-    try {
-      const team = req.body;
-      
-      if (!team.name || !team.agents || !team.workflow) {
-        return res.status(400).json({ error: 'Invalid agent team data' });
-      }
-      
-      const success = saveTeam(team);
-      
-      if (!success) {
-        return res.status(500).json({ error: 'Failed to save agent team' });
-      }
-      
-      res.json(team);
-    } catch (error) {
-      console.error('Error saving agent team:', error);
-      res.status(500).json({ error: 'Failed to save agent team' });
-    }
-  });
-
-  // Delete an agent team
-  app.delete('/api/agent-teams/:id', (req, res) => {
-    try {
-      const { id } = req.params;
-      const { hardDelete } = req.query;
-      const success = deleteTeam(id, hardDelete === 'true');
-      
-      if (!success) {
-        return res.status(404).json({ error: 'Agent team not found or could not be deleted' });
-      }
-      
-      res.json({ success: true });
-    } catch (error) {
-      console.error(`Error deleting agent team ${req.params.id}:`, error);
-      res.status(500).json({ error: 'Failed to delete agent team' });
+      console.error('Error fetching team:', error);
+      res.status(500).json({ error: 'Failed to retrieve team' });
     }
   });
 }
