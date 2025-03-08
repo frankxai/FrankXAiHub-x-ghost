@@ -20,6 +20,7 @@ import AICompletion from "./routes/completion";
 import convertRouter from "./routes/convert";
 import agentManagementRouter from "./routes/agent-management";
 import conversationRouter from "./routes/conversation";
+import agentPersonasRouter from "./routes/agent-personas";
 import { registerAgentRoutes } from "./routes/agent-routes";
 
 
@@ -684,6 +685,7 @@ Format the response as JSON with this structure:
   router.use("/convert", convertRouter);
   router.use("/agent-management", agentManagementRouter);
   router.use("/ai/conversation", conversationRouter);
+  router.use("/ai/personas", agentPersonasRouter);
 
   const httpServer = createServer(app);
   return httpServer;

@@ -60,12 +60,30 @@ const ChatWithAgentFullScreen: React.FC = () => {
   const [threads, setThreads] = useState<ConversationThread[]>([]);
   const [activeThread, setActiveThread] = useState<string | null>(null);
   const [models, setModels] = useState([
-    { id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI' },
-    { id: 'claude-3-haiku', name: 'Claude 3 Haiku', provider: 'Anthropic' },
-    { id: 'claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic' },
-    { id: 'claude-3-opus', name: 'Claude 3 Opus', provider: 'Anthropic' },
-    { id: 'llama3-70b', name: 'Llama 3 70B', provider: 'Meta' },
-    { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google' },
+    // OpenAI models
+    { id: 'openai/gpt-4o', name: 'GPT-4o', provider: 'OpenAI' },
+    { id: 'openai/gpt-4-turbo', name: 'GPT-4 Turbo', provider: 'OpenAI' },
+    { id: 'openai/gpt-4-vision', name: 'GPT-4 Vision', provider: 'OpenAI' },
+    { id: 'openai/gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'OpenAI' },
+    
+    // Anthropic models
+    { id: 'anthropic/claude-3-opus', name: 'Claude 3 Opus', provider: 'Anthropic' },
+    { id: 'anthropic/claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic' },
+    { id: 'anthropic/claude-3-haiku', name: 'Claude 3 Haiku', provider: 'Anthropic' },
+    { id: 'anthropic/claude-2', name: 'Claude 2', provider: 'Anthropic' },
+    
+    // Meta models
+    { id: 'meta-llama/llama-3-70b-instruct', name: 'Llama 3 70B', provider: 'Meta' },
+    { id: 'meta-llama/llama-3-8b-instruct', name: 'Llama 3 8B', provider: 'Meta' },
+    
+    // Mistral models
+    { id: 'mistralai/mistral-large', name: 'Mistral Large', provider: 'Mistral AI' },
+    { id: 'mistralai/mistral-medium', name: 'Mistral Medium', provider: 'Mistral AI' },
+    { id: 'mistralai/mistral-small', name: 'Mistral Small', provider: 'Mistral AI' },
+    
+    // Google models
+    { id: 'google/gemini-pro', name: 'Gemini Pro', provider: 'Google' },
+    { id: 'google/gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google' },
   ]);
   const [selectedModel, setSelectedModel] = useState('gpt-4o');
   const [toneOptions, setToneOptions] = useState([
