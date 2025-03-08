@@ -6,9 +6,9 @@ import { AICharacter } from '@shared/schema';
 import { motion } from 'framer-motion';
 import { fadeIn } from '@/lib/animations';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  Volume2, VolumeX, Mic, MicOff, Send, Bot, User, 
-  Settings, ChevronLeft, Menu, RefreshCw, Download, 
+import {
+  Volume2, VolumeX, Mic, MicOff, Send, Bot, User,
+  Settings, ChevronLeft, Menu, RefreshCw, Download,
   Share2, MoreVertical, Zap
 } from 'lucide-react';
 
@@ -44,12 +44,42 @@ interface ConversationThread {
   messages: Message[];
 }
 
+// Placeholder components -  These would need actual implementations
+const ModelSelectionDropdown = ({ selectedModel, onModelSelect }: { selectedModel: string; onModelSelect: (model: string) => void }) => {
+  const models = [
+    { id: 'openai/gpt-4o', name: 'GPT-4o' },
+    { id: 'openai/gpt-3.5-turbo', name: 'GPT-3.5 Turbo' },
+    // Add more models here...
+  ];
+  return (
+    <select value={selectedModel} onChange={(e) => onModelSelect(e.target.value)}>
+      {models.map(model => <option key={model.id} value={model.id}>{model.name}</option>)}
+    </select>
+  );
+};
+
+const AgentSelector = ({ onAgentSelect, selectedAgentId }: { onAgentSelect: (agentId: string) => void; selectedAgentId: string | undefined }) => {
+  const agents = [
+    { id: '1', name: 'Agent 1' },
+    { id: '2', name: 'Agent 2' },
+    // Add more agents here...
+  ];
+  return (
+    <div>
+      {agents.map(agent => (
+        <button key={agent.id} onClick={() => onAgentSelect(agent.id)}>{agent.name}</button>
+      ))}
+    </div>
+  );
+};
+
+
 const ChatWithAgentFullScreen: React.FC = () => {
   const [, params] = useRoute('/chat-fullscreen/:agentId');
   const agentId = params?.agentId;
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  
+
   // State
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -59,63 +89,57 @@ const ChatWithAgentFullScreen: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [threads, setThreads] = useState<ConversationThread[]>([]);
   const [activeThread, setActiveThread] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState('openai/gpt-4o'); // Default model
+  const [showAgentSelector, setShowAgentSelector] = useState(false);
   const [models, setModels] = useState([
     // OpenAI models
     { id: 'openai/gpt-4o', name: 'GPT-4o', provider: 'OpenAI' },
     { id: 'openai/gpt-4-turbo', name: 'GPT-4 Turbo', provider: 'OpenAI' },
-    { id: 'openai/gpt-4-vision', name: 'GPT-4 Vision', provider: 'OpenAI' },
     { id: 'openai/gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'OpenAI' },
-    
+
     // Anthropic models
     { id: 'anthropic/claude-3-opus', name: 'Claude 3 Opus', provider: 'Anthropic' },
-    { id: 'anthropic/claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic' },
-    { id: 'anthropic/claude-3-haiku', name: 'Claude 3 Haiku', provider: 'Anthropic' },
     { id: 'anthropic/claude-2', name: 'Claude 2', provider: 'Anthropic' },
-    
+
     // Meta models
     { id: 'meta-llama/llama-3-70b-instruct', name: 'Llama 3 70B', provider: 'Meta' },
-    { id: 'meta-llama/llama-3-8b-instruct', name: 'Llama 3 8B', provider: 'Meta' },
-    
+
     // Mistral models
     { id: 'mistralai/mistral-large', name: 'Mistral Large', provider: 'Mistral AI' },
-    { id: 'mistralai/mistral-medium', name: 'Mistral Medium', provider: 'Mistral AI' },
-    { id: 'mistralai/mistral-small', name: 'Mistral Small', provider: 'Mistral AI' },
-    
+
     // Google models
     { id: 'google/gemini-pro', name: 'Gemini Pro', provider: 'Google' },
-    { id: 'google/gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google' },
   ]);
-  const [selectedModel, setSelectedModel] = useState('gpt-4o');
   const [toneOptions, setToneOptions] = useState([
-    { id: 'professional', name: 'Professional'},
-    { id: 'friendly', name: 'Friendly'},
-    { id: 'enthusiastic', name: 'Enthusiastic'},
-    { id: 'expert', name: 'Expert'},
-    { id: 'creative', name: 'Creative'},
+    { id: 'professional', name: 'Professional' },
+    { id: 'friendly', name: 'Friendly' },
+    { id: 'enthusiastic', name: 'Enthusiastic' },
+    { id: 'expert', name: 'Expert' },
+    { id: 'creative', name: 'Creative' },
   ]);
   const [selectedTone, setSelectedTone] = useState('professional');
   const [temperature, setTemperature] = useState(0.7);
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   // Fetch agent data
   const { data: agents, isLoading: isLoadingAgents } = useQuery<AICharacter[]>({
     queryKey: ['/api/ai-characters'],
   });
-  
+
   const agent = agents?.find(a => a.id === Number(agentId));
-  
+
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-  
+
   // Focus input on load
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
-  
+
   // Initialize with default thread
   useEffect(() => {
     if (agent) {
@@ -126,10 +150,10 @@ const ChatWithAgentFullScreen: React.FC = () => {
         timestamp: new Date(),
         messages: []
       };
-      
+
       setThreads([defaultThread]);
       setActiveThread('default');
-      
+
       // Add greeting message
       const greeting: Message = {
         id: Date.now().toString(),
@@ -137,25 +161,25 @@ const ChatWithAgentFullScreen: React.FC = () => {
         content: `Hello! I'm ${agent.name}. I can help you achieve financial freedom using AI agents. What would you like to know about generating wealth with AI?`,
         timestamp: new Date()
       };
-      
+
       setMessages([greeting]);
-      
+
       // Update thread with greeting
-      setThreads(prevThreads => 
-        prevThreads.map(thread => 
-          thread.id === 'default' 
-            ? {...thread, lastMessage: greeting.content, messages: [greeting]} 
+      setThreads(prevThreads =>
+        prevThreads.map(thread =>
+          thread.id === 'default'
+            ? { ...thread, lastMessage: greeting.content, messages: [greeting] }
             : thread
         )
       );
     }
   }, [agent]);
-  
+
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading || !agent) return;
-    
+
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -163,9 +187,9 @@ const ChatWithAgentFullScreen: React.FC = () => {
       content: input.trim(),
       timestamp: new Date()
     };
-    
+
     setMessages(prev => [...prev, userMessage]);
-    
+
     // Add thinking message
     const thinkingMessage: Message = {
       id: (Date.now() + 1).toString(),
@@ -174,27 +198,27 @@ const ChatWithAgentFullScreen: React.FC = () => {
       timestamp: new Date(),
       isThinking: true
     };
-    
+
     setMessages(prev => [...prev, thinkingMessage]);
     setInput('');
     setIsLoading(true);
-    
+
     // Update thread
     if (activeThread) {
-      setThreads(prevThreads => 
-        prevThreads.map(thread => 
-          thread.id === activeThread 
+      setThreads(prevThreads =>
+        prevThreads.map(thread =>
+          thread.id === activeThread
             ? {
-                ...thread, 
-                lastMessage: userMessage.content,
-                timestamp: new Date(),
-                messages: [...thread.messages, userMessage]
-              } 
+              ...thread,
+              lastMessage: userMessage.content,
+              timestamp: new Date(),
+              messages: [...thread.messages, userMessage]
+            }
             : thread
         )
       );
     }
-    
+
     try {
       // Make API request
       const response = await fetch('/api/ai/conversation', {
@@ -209,16 +233,16 @@ const ChatWithAgentFullScreen: React.FC = () => {
           context: `You are ${agent.name}, an AI agent focusing on helping people achieve financial freedom using AI technologies. You provide expert guidance on building passive income streams, automating tasks, and leveraging AI to create wealth.`
         })
       });
-      
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-      
+
       const responseData = await response.json();
-      
+
       // Remove thinking message
       setMessages(prev => prev.filter(msg => !msg.isThinking));
-      
+
       // Add AI response
       const aiMessage: Message = {
         id: (Date.now() + 2).toString(),
@@ -226,30 +250,30 @@ const ChatWithAgentFullScreen: React.FC = () => {
         content: responseData.message || `I'd be happy to discuss how AI can help you build wealth through passive income streams. There are several approaches we could explore based on your skills and interests. Would you like to focus on creating AI agents for others, developing automated systems, or investing in AI-driven opportunities?`,
         timestamp: new Date()
       };
-      
+
       setMessages(prev => [...prev, aiMessage]);
-      
+
       // Update thread
       if (activeThread) {
-        setThreads(prevThreads => 
-          prevThreads.map(thread => 
-            thread.id === activeThread 
+        setThreads(prevThreads =>
+          prevThreads.map(thread =>
+            thread.id === activeThread
               ? {
-                  ...thread,
-                  lastMessage: aiMessage.content,
-                  timestamp: new Date(),
-                  messages: [...thread.messages.filter(msg => !msg.isThinking), userMessage, aiMessage]
-                } 
+                ...thread,
+                lastMessage: aiMessage.content,
+                timestamp: new Date(),
+                messages: [...thread.messages.filter(msg => !msg.isThinking), userMessage, aiMessage]
+              }
               : thread
           )
         );
       }
     } catch (error) {
       console.error('Error getting AI response:', error);
-      
+
       // Remove thinking message
       setMessages(prev => prev.filter(msg => !msg.isThinking));
-      
+
       // Add fallback response
       const aiMessage: Message = {
         id: (Date.now() + 2).toString(),
@@ -257,25 +281,25 @@ const ChatWithAgentFullScreen: React.FC = () => {
         content: `I understand you're interested in ${userMessage.content.substring(0, 30)}${userMessage.content.length > 30 ? '...' : ''}. As your financial freedom AI coach, I recommend focusing on creating scalable passive income systems using AI. Would you like me to explain some profitable strategies that have worked for others?`,
         timestamp: new Date()
       };
-      
+
       setMessages(prev => [...prev, aiMessage]);
-      
+
       // Update thread
       if (activeThread) {
-        setThreads(prevThreads => 
-          prevThreads.map(thread => 
-            thread.id === activeThread 
+        setThreads(prevThreads =>
+          prevThreads.map(thread =>
+            thread.id === activeThread
               ? {
-                  ...thread, 
-                  lastMessage: aiMessage.content,
-                  timestamp: new Date(),
-                  messages: [...thread.messages.filter(msg => !msg.isThinking), userMessage, aiMessage]
-                } 
+                ...thread,
+                lastMessage: aiMessage.content,
+                timestamp: new Date(),
+                messages: [...thread.messages.filter(msg => !msg.isThinking), userMessage, aiMessage]
+              }
               : thread
           )
         );
       }
-      
+
       toast({
         title: "Connection Error",
         description: "Using fallback response. Please check your connection.",
@@ -285,7 +309,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
       setIsLoading(false);
     }
   };
-  
+
   // Create new thread
   const createNewThread = () => {
     const newThread: ConversationThread = {
@@ -295,11 +319,11 @@ const ChatWithAgentFullScreen: React.FC = () => {
       timestamp: new Date(),
       messages: []
     };
-    
+
     setThreads(prev => [newThread, ...prev]);
     setActiveThread(newThread.id);
     setMessages([]);
-    
+
     // Add greeting
     if (agent) {
       const greeting: Message = {
@@ -308,20 +332,20 @@ const ChatWithAgentFullScreen: React.FC = () => {
         content: `Hello! I'm ${agent.name}. How can I help you achieve financial freedom using AI today?`,
         timestamp: new Date()
       };
-      
+
       setMessages([greeting]);
-      
+
       // Update thread
-      setThreads(prevThreads => 
-        prevThreads.map(thread => 
-          thread.id === newThread.id 
-            ? {...thread, lastMessage: greeting.content, messages: [greeting]} 
+      setThreads(prevThreads =>
+        prevThreads.map(thread =>
+          thread.id === newThread.id
+            ? { ...thread, lastMessage: greeting.content, messages: [greeting] }
             : thread
         )
       );
     }
   };
-  
+
   // Switch thread
   const switchThread = (threadId: string) => {
     const thread = threads.find(t => t.id === threadId);
@@ -330,7 +354,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
       setMessages(thread.messages);
     }
   };
-  
+
   // Format time
   const formatTime = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -339,13 +363,13 @@ const ChatWithAgentFullScreen: React.FC = () => {
       hour12: true
     }).format(date);
   };
-  
+
   // Format date
   const formatDate = (date: Date) => {
     const now = new Date();
     const yesterday = new Date(now);
     yesterday.setDate(yesterday.getDate() - 1);
-    
+
     if (date.toDateString() === now.toDateString()) {
       return 'Today';
     } else if (date.toDateString() === yesterday.toDateString()) {
@@ -357,7 +381,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
       }).format(date);
     }
   };
-  
+
   return (
     <div className="flex h-screen overflow-hidden bg-background dark:bg-background">
       {/* Sidebar */}
@@ -377,18 +401,18 @@ const ChatWithAgentFullScreen: React.FC = () => {
             <ChevronLeft className="h-5 w-5" />
           </Button>
         </div>
-        
+
         {/* New chat button */}
         <div className="p-4">
-          <Button 
-            className="w-full justify-start gap-2" 
+          <Button
+            className="w-full justify-start gap-2"
             onClick={createNewThread}
           >
             <Zap className="h-4 w-4" />
             New conversation
           </Button>
         </div>
-        
+
         {/* Conversation threads */}
         <div className="flex-1 overflow-y-auto p-2">
           {threads.map(thread => (
@@ -412,7 +436,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
             </button>
           ))}
         </div>
-        
+
         {/* Sidebar footer */}
         <div className="p-4 border-t border-border">
           <Drawer>
@@ -432,13 +456,13 @@ const ChatWithAgentFullScreen: React.FC = () => {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="temperature">Temperature: {temperature}</Label>
-                    <Slider 
-                      id="temperature" 
-                      min={0} 
-                      max={1} 
-                      step={0.1} 
-                      value={[temperature]} 
-                      onValueChange={(values) => setTemperature(values[0])} 
+                    <Slider
+                      id="temperature"
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      value={[temperature]}
+                      onValueChange={(values) => setTemperature(values[0])}
                     />
                     <p className="text-xs text-muted-foreground">
                       Higher values produce more creative responses, lower values more predictable ones.
@@ -455,16 +479,16 @@ const ChatWithAgentFullScreen: React.FC = () => {
           </Drawer>
         </div>
       </div>
-      
+
       {/* Main chat area */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Chat header */}
         <header className="flex items-center justify-between p-4 border-b border-border bg-card">
           <div className="flex items-center">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="mr-2 md:hidden" 
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mr-2 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <Menu className="h-5 w-5" />
@@ -483,7 +507,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
               </div>
             )}
           </div>
-          
+
           <div className="flex items-center gap-2">
             <TooltipProvider>
               <Tooltip>
@@ -495,7 +519,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
                 <TooltipContent>Share conversation</TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -506,27 +530,12 @@ const ChatWithAgentFullScreen: React.FC = () => {
                 <TooltipContent>Export conversation</TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select model" />
-              </SelectTrigger>
-              <SelectContent>
-                {models.map(model => (
-                  <SelectItem key={model.id} value={model.id}>
-                    <div className="flex items-center justify-between w-full">
-                      <span>{model.name}</span>
-                      <Badge variant="outline" className="ml-2 text-xs">
-                        {model.provider}
-                      </Badge>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
+            <ModelSelectionDropdown selectedModel={selectedModel} onModelSelect={setSelectedModel} /> {/* Integrated model selection */}
           </div>
         </header>
-        
+
+
         {/* Messages area */}
         <div className="flex-1 overflow-y-auto p-4 bg-background">
           <div className="max-w-3xl mx-auto">
@@ -548,12 +557,12 @@ const ChatWithAgentFullScreen: React.FC = () => {
                     </AvatarFallback>
                   </Avatar>
                 )}
-                
-                <div 
+
+                <div
                   className={cn(
                     "max-w-[80%] rounded-lg p-4",
-                    message.sender === 'user' 
-                      ? "bg-primary text-primary-foreground" 
+                    message.sender === 'user'
+                      ? "bg-primary text-primary-foreground"
                       : message.isThinking
                         ? "bg-muted text-muted-foreground animate-pulse"
                         : "bg-card border border-border"
@@ -574,10 +583,10 @@ const ChatWithAgentFullScreen: React.FC = () => {
                           </p>
                         ))}
                       </div>
-                      
+
                       <div className="flex items-center justify-between mt-2 pt-2 text-xs text-muted-foreground border-t border-border/30">
                         <span>{formatTime(message.timestamp)}</span>
-                        
+
                         {message.sender === 'ai' && (
                           <div className="flex gap-2">
                             <button className="hover:text-foreground transition-colors">
@@ -595,7 +604,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
                     </>
                   )}
                 </div>
-                
+
                 {message.sender === 'user' && (
                   <Avatar className="h-8 w-8 ml-3 mt-1">
                     <AvatarFallback className="bg-accent text-accent-foreground">
@@ -608,7 +617,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
             <div ref={messagesEndRef} />
           </div>
         </div>
-        
+
         {/* Input area */}
         <footer className="border-t border-border p-4 bg-background">
           <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
@@ -625,10 +634,10 @@ const ChatWithAgentFullScreen: React.FC = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button 
-                        type="button" 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
                         disabled={isLoading || isListening}
                         className="text-muted-foreground"
                       >
@@ -638,10 +647,10 @@ const ChatWithAgentFullScreen: React.FC = () => {
                     <TooltipContent>Use voice input</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                
-                <Button 
-                  type="submit" 
-                  variant="default" 
+
+                <Button
+                  type="submit"
+                  variant="default"
                   size="icon"
                   disabled={!input.trim() || isLoading}
                   className="rounded-full"
@@ -666,7 +675,22 @@ const ChatWithAgentFullScreen: React.FC = () => {
           </form>
         </footer>
       </div>
-      
+
+      {/* Agent Selector Modal */}
+      {showAgentSelector && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-96 max-w-full">
+            <h2 className="text-xl font-bold mb-4">Select an Agent</h2>
+            <AgentSelector onAgentSelect={(agentId) => {
+              setLocation(`/chat-fullscreen/${agentId}`);
+              setShowAgentSelector(false);
+            }} selectedAgentId={agentId} />
+            <Button variant="ghost" onClick={() => setShowAgentSelector(false)} className="mt-4">Close</Button>
+          </div>
+        </div>
+      )}
+
+
       {/* Settings Drawer is already included inside the sidebar footer */}
     </div>
   );
