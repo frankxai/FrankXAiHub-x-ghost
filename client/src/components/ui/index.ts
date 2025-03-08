@@ -1,3 +1,5 @@
+// Re-export components for convenience
+export * from './badge';
 export * from './spinner';
 export * from './button';
 export * from './toast';
@@ -16,7 +18,6 @@ export * from './slider';
 export * from './alert-dialog';
 export * from './alert';
 export * from './avatar';
-export * from './badge';
 export * from './calendar';
 export * from './carousel';
 export * from './command';
