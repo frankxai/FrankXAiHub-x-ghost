@@ -21,6 +21,7 @@ import FileConversionPage from "@/pages/FileConversionPage";
 import AgentManagementPage from '@/pages/AgentManagementPage';
 import ChatWithAgentPage from '@/pages/ChatWithAgentPage';
 import ChatWithAgentFullScreen from '@/pages/ChatWithAgentFullScreen';
+import AgentConversationPage from '@/pages/AgentConversationPage';
 import Dashboard from '@/pages/Dashboard';
 
 
@@ -46,6 +47,7 @@ function Router() {
         <Route path="/agents" component={AgentManagementPage} />
         <Route path="/chat/:agentId" component={ChatWithAgentPage} />
         <Route path="/chat-fullscreen/:agentId" component={ChatWithAgentFullScreen} />
+        <Route path="/agent-conversation/:agentId?" component={AgentConversationPage} />
         <Route path="/dashboard" component={Dashboard} />
         <Route component={NotFound} />
       </Switch>

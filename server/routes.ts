@@ -20,6 +20,7 @@ import AICompletion from "./routes/completion";
 import convertRouter from "./routes/convert";
 import agentManagementRouter from "./routes/agent-management";
 import conversationRouter from "./routes/conversation";
+import { registerAgentRoutes } from "./routes/agent-routes";
 
 
 export async function registerRoutes(app: Express): Promise<HTTPServer> {
@@ -673,6 +674,9 @@ Format the response as JSON with this structure:
     log(`Error initializing blog storage: ${error}`, "error");
   }
 
+  // Register agent routes directly on Express app
+  registerAgentRoutes(app);
+  
   app.use("/api", router);
 
   router.use("/embeddings", AIEmbeddings);
