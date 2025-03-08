@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import { pageVariants } from "@/lib/animations";
 import { AICharacter } from "@shared/schema";
 import CharacterSelector from "@/components/conversation/CharacterSelector";
@@ -10,14 +11,15 @@ const Conversation = () => {
   const [selectedCharacter, setSelectedCharacter] = useState<AICharacter | null>(null);
   
   const { data: characters, isLoading } = useQuery<AICharacter[]>({
-    queryKey: ['/api/ai-characters'],
-    onSuccess: (data) => {
-      // Set the first character as default if none is selected
-      if (data.length > 0 && !selectedCharacter) {
-        setSelectedCharacter(data[0]);
-      }
-    }
+    queryKey: ['/api/ai-characters']
   });
+  
+  // Set the first character as default if none is selected
+  useEffect(() => {
+    if (characters && characters.length > 0 && !selectedCharacter) {
+      setSelectedCharacter(characters[0]);
+    }
+  }, [characters, selectedCharacter]);
 
   return (
     <motion.div
@@ -39,15 +41,15 @@ const Conversation = () => {
             Powerful AI agents to help you achieve financial freedom through passive income, content creation, and AI-powered business.
           </p>
           <div className="flex justify-center space-x-4">
-            <a 
-              href="/chat-fullscreen/1" 
+            <Link 
+              to="/chat-fullscreen/1" 
               className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] text-white font-medium hover:shadow-lg transition-all duration-300"
             >
               Try Full-Screen Experience
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
         
