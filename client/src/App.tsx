@@ -1,4 +1,4 @@
-import { Switch, Route, Navigate } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -20,9 +20,16 @@ import { AnimatePresence } from "framer-motion";
 import FileConversionPage from "@/pages/FileConversionPage";
 import AgentManagementPage from '@/pages/AgentManagementPage';
 import ChatWithAgentPage from '@/pages/ChatWithAgentPage';
+import ChatWithAgentFullScreen from '@/pages/ChatWithAgentFullScreen';
+import Dashboard from '@/pages/Dashboard';
 
 
 function Router() {
+  const [location] = useLocation();
+  
+  // Check if current route is full screen chat (to hide header/footer)
+  const isFullScreenChat = location.startsWith('/chat-fullscreen/');
+  
   return (
     <AnimatePresence mode="wait">
       <Switch>
@@ -36,8 +43,10 @@ function Router() {
         <Route path="/music" component={Music} />
         <Route path="/assessment" component={Assessment} />
         <Route path="/tools/file-converter" component={FileConversionPage} />
-          <Route path="/agents" element={<AgentManagementPage />} />
-          <Route path="/chat/:agentId" element={<ChatWithAgentPage />} />
+        <Route path="/agents" component={AgentManagementPage} />
+        <Route path="/chat/:agentId" component={ChatWithAgentPage} />
+        <Route path="/chat-fullscreen/:agentId" component={ChatWithAgentFullScreen} />
+        <Route path="/dashboard" component={Dashboard} />
         <Route component={NotFound} />
       </Switch>
     </AnimatePresence>
@@ -45,16 +54,21 @@ function Router() {
 }
 
 function App() {
+  const [location] = useLocation();
+  
+  // Check if current route is full screen chat (to hide header/footer)
+  const isFullScreenChat = location.startsWith('/chat-fullscreen/');
+  
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="frankx-theme">
         <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
+          {!isFullScreenChat && <Header />}
+          <main className={`flex-grow ${isFullScreenChat ? 'h-screen' : ''}`}>
             <Router />
           </main>
-          <Footer />
-          <FrankXAI />
+          {!isFullScreenChat && <Footer />}
+          {!isFullScreenChat && <FrankXAI />}
         </div>
         <Toaster />
       </ThemeProvider>
