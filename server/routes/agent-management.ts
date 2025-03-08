@@ -137,11 +137,7 @@ By creating or using an Agent, you acknowledge that you have read, understood, a
   res.json(legalInfo);
 });
 
-export default router;
-import { Router } from "express";
-
-const router = Router();
-
+// Add root route for agent management
 router.get("/", async (req, res) => {
   try {
     // Placeholder for agent management functionality

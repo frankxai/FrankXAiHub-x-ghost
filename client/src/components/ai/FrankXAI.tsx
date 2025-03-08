@@ -1,3 +1,6 @@
+import React, { useEffect } from 'react';
+import { cn } from '@/lib/utils';
+
 // Avatar URLs - prioritized fallback chain for maximum reliability
 const AVATAR_URLS = [
   '/frankx-chat-avatar.png',      // Optimized specifically for chat
@@ -57,42 +60,79 @@ const preloadAvatarImages = () => {
   }
 };
 
-// Call preload on module load
-preloadAvatarImages();
+interface FrankXAIProps {
+  className?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  showStatusIndicator?: boolean;
+  variant?: 'circle' | 'rounded' | 'square';
+}
 
+const FrankXAI: React.FC<FrankXAIProps> = ({
+  className,
+  size = 'md',
+  showStatusIndicator = true,
+  variant = 'circle'
+}) => {
+  // Run preload on component mount
+  useEffect(() => {
+    preloadAvatarImages();
+  }, []);
 
-// ... (rest of the component code) ...
+  // Determine size class
+  const sizeClasses = {
+    sm: 'w-8 h-8',
+    md: 'w-12 h-12',
+    lg: 'w-16 h-16',
+    xl: 'w-24 h-24'
+  };
 
-//Example usage within the component
-<>
-            <img
-              alt="FrankX.AI" 
-              className="w-full h-full object-cover transition-opacity duration-300"
-              onLoad={(e) => {
-                // Fade in when loaded
-                e.currentTarget.classList.add('opacity-100');
-              }}
-              style={{ opacity: 0.3 }} // Start slightly faded and fade in when loaded
-              onError={(e) => {
-                // Progressive fallback chain
-                console.log("Avatar load failed, trying fallback");
-                let currentIndex = AVATAR_URLS.findIndex(url => url === e.currentTarget.src.split('/').pop());
+  // Determine shape class
+  const shapeClasses = {
+    circle: 'rounded-full',
+    rounded: 'rounded-lg',
+    square: 'rounded-none'
+  };
 
-                // Try the next fallback if available
-                if (currentIndex < AVATAR_URLS.length - 1) {
-                  e.currentTarget.src = AVATAR_URLS[currentIndex + 1];
-                } else {
-                  // If all images fail, use CSS fallback
-                  console.log("All avatar images failed to load, using CSS fallback");
-                  const parent = e.currentTarget.parentElement;
-                  if (parent) {
-                    parent.classList.add('frankx-avatar-fallback');
-                    e.currentTarget.style.display = 'none';
-                  }
-                }
-              }}
-              srcSet={`${AVATAR_URLS[0]} 1x, ${AVATAR_URLS[0]} 2x`}
-              src={AVATAR_URLS[0]}
-            />
-            <div className="absolute top-1 right-1 w-3 h-3 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></div>
-          </>
+  return (
+    <div className={cn('relative overflow-hidden', 
+      sizeClasses[size], 
+      shapeClasses[variant],
+      className
+    )}>
+      <img
+        alt="FrankX.AI" 
+        className="w-full h-full object-cover transition-opacity duration-300"
+        onLoad={(e) => {
+          // Fade in when loaded
+          e.currentTarget.classList.add('opacity-100');
+        }}
+        style={{ opacity: 0.3 }} // Start slightly faded and fade in when loaded
+        onError={(e) => {
+          // Progressive fallback chain
+          console.log("Avatar load failed, trying fallback");
+          let currentIndex = AVATAR_URLS.findIndex(url => url === e.currentTarget.src.split('/').pop());
+
+          // Try the next fallback if available
+          if (currentIndex < AVATAR_URLS.length - 1) {
+            e.currentTarget.src = AVATAR_URLS[currentIndex + 1];
+          } else {
+            // If all images fail, use CSS fallback
+            console.log("All avatar images failed to load, using CSS fallback");
+            const parent = e.currentTarget.parentElement;
+            if (parent) {
+              parent.classList.add('frankx-avatar-fallback');
+              e.currentTarget.style.display = 'none';
+            }
+          }
+        }}
+        srcSet={`${AVATAR_URLS[0]} 1x, ${AVATAR_URLS[0]} 2x`}
+        src={AVATAR_URLS[0]}
+      />
+      {showStatusIndicator && (
+        <div className="absolute top-1 right-1 w-3 h-3 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></div>
+      )}
+    </div>
+  );
+};
+
+export default FrankXAI;
