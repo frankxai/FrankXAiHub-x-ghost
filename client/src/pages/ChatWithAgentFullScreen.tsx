@@ -397,12 +397,44 @@ const ChatWithAgentFullScreen: React.FC = () => {
         
         {/* Sidebar footer */}
         <div className="p-4 border-t border-border">
-          <DrawerTrigger asChild>
-            <Button variant="outline" className="w-full justify-start gap-2">
-              <Settings className="h-4 w-4" />
-              Settings
-            </Button>
-          </DrawerTrigger>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="outline" className="w-full justify-start gap-2">
+                <Settings className="h-4 w-4" />
+                Settings
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Settings</DrawerTitle>
+                <DrawerDescription>Customize your AI experience</DrawerDescription>
+              </DrawerHeader>
+              <div className="p-4">
+                <h3 className="text-sm font-medium mb-2">Model Settings</h3>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="temperature">Temperature: {temperature}</Label>
+                    <Slider 
+                      id="temperature" 
+                      min={0} 
+                      max={1} 
+                      step={0.1} 
+                      value={[temperature]} 
+                      onValueChange={(values) => setTemperature(values[0])} 
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Higher values produce more creative responses, lower values more predictable ones.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <DrawerFooter>
+                <DrawerClose asChild>
+                  <Button variant="outline">Close</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
       </div>
       
@@ -435,23 +467,27 @@ const ChatWithAgentFullScreen: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Share conversation</TooltipContent>
-            </Tooltip>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Share2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Share conversation</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Download className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Export conversation</TooltipContent>
-            </Tooltip>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Export conversation</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             
             <Select value={selectedModel} onValueChange={setSelectedModel}>
               <SelectTrigger className="w-[180px]">
@@ -568,20 +604,22 @@ const ChatWithAgentFullScreen: React.FC = () => {
                 className="pr-28 py-6 rounded-full bg-card border-border"
               />
               <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button 
-                      type="button" 
-                      variant="ghost" 
-                      size="icon" 
-                      disabled={isLoading || isListening}
-                      className="text-muted-foreground"
-                    >
-                      <Mic className="h-5 w-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Use voice input</TooltipContent>
-                </Tooltip>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="icon" 
+                        disabled={isLoading || isListening}
+                        className="text-muted-foreground"
+                      >
+                        <Mic className="h-5 w-5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Use voice input</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 
                 <Button 
                   type="submit" 
@@ -611,165 +649,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
         </footer>
       </div>
       
-      {/* Settings drawer */}
-      <DrawerContent>
-        <div className="max-w-md mx-auto">
-          <DrawerHeader>
-            <DrawerTitle>Agent Settings</DrawerTitle>
-            <DrawerDescription>
-              Customize how this AI agent works for you
-            </DrawerDescription>
-          </DrawerHeader>
-          
-          <div className="p-4">
-            <Tabs defaultValue="model">
-              <TabsList className="w-full grid grid-cols-3">
-                <TabsTrigger value="model">Model</TabsTrigger>
-                <TabsTrigger value="appearance">Appearance</TabsTrigger>
-                <TabsTrigger value="behavior">Behavior</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="model" className="space-y-4 mt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="model-select">AI Model</Label>
-                  <Select value={selectedModel} onValueChange={setSelectedModel}>
-                    <SelectTrigger id="model-select">
-                      <SelectValue placeholder="Select model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {models.map(model => (
-                        <SelectItem key={model.id} value={model.id}>
-                          <div className="flex items-center justify-between w-full">
-                            <span>{model.name}</span>
-                            <Badge variant="outline" className="ml-2 text-xs">
-                              {model.provider}
-                            </Badge>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <Label htmlFor="temperature">Temperature: {temperature.toFixed(1)}</Label>
-                  </div>
-                  <Slider 
-                    id="temperature"
-                    min={0} 
-                    max={1} 
-                    step={0.1} 
-                    value={[temperature]} 
-                    onValueChange={(values) => setTemperature(values[0])}
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Precise</span>
-                    <span>Balanced</span>
-                    <span>Creative</span>
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="streaming" className="block">Streaming responses</Label>
-                      <span className="text-xs text-muted-foreground">See responses as they're generated</span>
-                    </div>
-                    <Switch id="streaming" defaultChecked />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="memory" className="block">Long-term memory</Label>
-                      <span className="text-xs text-muted-foreground">Remember context across conversations</span>
-                    </div>
-                    <Switch id="memory" defaultChecked />
-                  </div>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="appearance" className="space-y-4 mt-4">
-                <div className="space-y-2">
-                  <Label>Theme</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button variant="outline" className="justify-start">
-                      <span className="w-4 h-4 rounded-full bg-white border border-gray-200 mr-2"></span>
-                      Light
-                    </Button>
-                    <Button variant="outline" className="justify-start">
-                      <span className="w-4 h-4 rounded-full bg-gray-900 mr-2"></span>
-                      Dark
-                    </Button>
-                    <Button variant="outline" className="justify-start">
-                      <span className="w-4 h-4 rounded-full bg-gradient-to-r from-gray-200 to-gray-900 mr-2"></span>
-                      System
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Message density</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button variant="outline" className="justify-start">Compact</Button>
-                    <Button variant="outline" className="justify-start bg-accent">Default</Button>
-                    <Button variant="outline" className="justify-start">Relaxed</Button>
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="timestamps" className="block">Show timestamps</Label>
-                    <span className="text-xs text-muted-foreground">Display message time</span>
-                  </div>
-                  <Switch id="timestamps" defaultChecked />
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="behavior" className="space-y-4 mt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="tone-select">Conversation tone</Label>
-                  <Select value={selectedTone} onValueChange={setSelectedTone}>
-                    <SelectTrigger id="tone-select">
-                      <SelectValue placeholder="Select tone" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {toneOptions.map(tone => (
-                        <SelectItem key={tone.id} value={tone.id}>
-                          {tone.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="system-prompt">System prompt</Label>
-                  <Textarea 
-                    id="system-prompt"
-                    className="min-h-32"
-                    defaultValue={`You are ${agent?.name || 'an AI assistant'}, focusing on helping people achieve financial freedom using AI technologies. You provide expert guidance on building passive income streams, automating tasks, and leveraging AI to create wealth.`}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    This is the instruction given to the AI to determine how it behaves
-                  </p>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-          
-          <DrawerFooter>
-            <Button>Save changes</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </div>
-      </DrawerContent>
+      {/* Settings Drawer is already included inside the sidebar footer */}
     </div>
   );
 };
