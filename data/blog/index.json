@@ -1,5 +1,5 @@
 {
-  "lastId": 4,
+  "lastId": 11,
   "posts": [
     {
       "id": 1,
@@ -38,6 +38,125 @@
       "readTime": 12,
       "imageUrl": "https://images.unsplash.com/photo-1680987082559-6b0f39a35412",
       "tags": [],
+      "featured": true
+    },
+    {
+      "id": 5,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-08T10:14:03.373Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
+      "featured": true
+    },
+    {
+      "id": 6,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-08T10:24:05.594Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
+      "featured": true
+    },
+    {
+      "id": 7,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-08T10:25:54.222Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
+      "featured": true
+    },
+    {
+      "id": 8,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-08T10:26:40.142Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
+      "featured": true
+    },
+    {
+      "id": 9,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-08T10:28:03.428Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
+      "featured": true
+    },
+    {
+      "id": 10,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-08T10:29:50.549Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
+      "featured": true
+    },
+    {
+      "id": 11,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-08T10:30:42.651Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
       "featured": true
     }
   ]

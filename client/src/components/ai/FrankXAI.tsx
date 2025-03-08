@@ -30,8 +30,11 @@ import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 
 // Add timestamp to bust cache for avatar images with randomized version number
-const AVATAR_URL = `/frankx-avatar-updated.png?v=${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-const AVATAR_FALLBACK = "/frankx-avatar.png";
+const AVATAR_URL = `/frankx-avatar-new.png?v=${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+const AVATAR_FALLBACK = "/frankx-avatar-new.svg";
+
+// Define responsive styles to improve mobile experience
+const MOBILE_BREAKPOINT = 640; // Corresponds to sm in Tailwind
 
 interface Message {
   id: string;
@@ -628,10 +631,10 @@ const FrankXAI = () => {
     <motion.div
       className={`fixed z-50 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden ${
         isFullscreen 
-          ? 'inset-4 w-auto h-auto m-auto'
+          ? 'inset-2 md:inset-4 w-auto h-auto m-auto' // More space on mobile in fullscreen
           : isMinimized 
-            ? 'bottom-6 right-6 w-72' 
-            : 'bottom-6 right-6 w-96 sm:w-[450px]'
+            ? 'bottom-4 right-4 md:bottom-6 md:right-6 w-64 sm:w-72' // Adjusted for mobile
+            : 'bottom-4 right-4 md:bottom-6 md:right-6 w-[90%] max-w-[360px] sm:w-[450px] sm:max-w-[450px]' // Responsive width with max constraints
       }`}
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -712,7 +715,7 @@ const FrankXAI = () => {
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
-                  className={`flex mb-6 ${message.sender === 'user' ? 'justify-end' : ''}`}
+                  className={`flex mb-5 sm:mb-6 ${message.sender === 'user' ? 'justify-end' : ''}`}
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.3 }}
@@ -736,7 +739,7 @@ const FrankXAI = () => {
                   )}
                   
                   <div 
-                    className={`mx-3 p-4 max-w-[80%] rounded-lg ${
+                    className={`mx-2 sm:mx-3 p-3 sm:p-4 max-w-[85%] sm:max-w-[80%] rounded-lg ${
                       message.sender === 'ai' 
                         ? 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-tl-none border border-gray-100 dark:border-gray-600 shadow-sm relative group' 
                         : 'bg-gradient-to-r from-[#005CB2] via-[#00A3FF] to-[#1CD3FF] text-white rounded-tr-none shadow-md'
@@ -859,11 +862,11 @@ const FrankXAI = () => {
                               <Badge 
                                 key={i}
                                 variant="outline"
-                                className="px-3 py-1 rounded-full text-xs cursor-pointer bg-gray-50 dark:bg-gray-800 border-[#00A3FF]/30 hover:border-[#00A3FF] hover:bg-[#00A3FF]/5 transition-colors flex items-center gap-1.5 group"
+                                className="px-3 py-1.5 sm:py-1 rounded-full text-xs cursor-pointer bg-gray-50 dark:bg-gray-800 border-[#00A3FF]/30 hover:border-[#00A3FF] hover:bg-[#00A3FF]/5 transition-colors flex items-center gap-1.5 group"
                                 onClick={() => handleSuggestionClick(suggestion)}
                               >
                                 <Lightbulb className="h-3 w-3 text-[#00A3FF]" />
-                                <span className="truncate max-w-[180px]">{suggestion}</span>
+                                <span className="truncate max-w-[120px] sm:max-w-[180px]">{suggestion}</span>
                                 <ArrowRight className="h-2.5 w-2.5 text-[#00A3FF] opacity-0 group-hover:opacity-100 transition-opacity -mr-1 ml-0.5" />
                               </Badge>
                             ))}
@@ -887,7 +890,7 @@ const FrankXAI = () => {
               
               {isLoading && (
                 <motion.div
-                  className="flex mb-6"
+                  className="flex mb-5 sm:mb-6"
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                 >
@@ -906,7 +909,7 @@ const FrankXAI = () => {
                       </div>
                     </AvatarFallback>
                   </Avatar>
-                  <div className="mx-3 bg-white dark:bg-gray-700 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-600 rounded-tl-none">
+                  <div className="mx-2 sm:mx-3 bg-white dark:bg-gray-700 rounded-lg p-3 sm:p-4 shadow-sm border border-gray-100 dark:border-gray-600 rounded-tl-none">
                     <div className="flex space-x-3">
                       <div className="h-2.5 w-2.5 bg-gradient-to-r from-[#005CB2] to-[#00A3FF] rounded-full animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.4)]" 
                            style={{ animationDelay: '0ms', animationDuration: '1.2s' }}></div>
@@ -922,14 +925,14 @@ const FrankXAI = () => {
           </div>
           
           {/* Input Area */}
-          <div className="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-900">
-            <form onSubmit={handleSubmit} className="flex items-center">
+          <div className="border-t border-gray-200 dark:border-gray-700 px-3 py-3 sm:p-4 bg-white dark:bg-gray-900">
+            <form onSubmit={handleSubmit} className="flex items-center gap-2">
               <div className="relative flex-grow">
                 <Input
                   type="text"
                   placeholder="Ask me anything..."
                   className="w-full rounded-full border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white 
-                  focus-visible:ring-[#00A3FF] focus-visible:ring-offset-0 shadow-sm pr-10"
+                  focus-visible:ring-[#00A3FF] focus-visible:ring-offset-0 shadow-sm pr-10 pl-4 h-10 sm:h-auto"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading || isListening}

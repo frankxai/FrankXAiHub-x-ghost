@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient background -->
+  <rect width="512" height="512" rx="256" fill="url(#paint0_radial)" />
+  
+  <!-- Brain circuit pattern -->
+  <g opacity="0.7">
+    <path d="M256 128C194.9 128 145 177.9 145 239C145 300.1 194.9 350 256 350C317.1 350 367 300.1 367 239C367 177.9 317.1 128 256 128Z" stroke="white" stroke-width="4" stroke-dasharray="4 6"/>
+    <circle cx="209" cy="192" r="8" fill="#00E5FF" filter="url(#glow)"/>
+    <circle cx="289" cy="212" r="8" fill="#00E5FF" filter="url(#glow)"/>
+    <circle cx="248" cy="278" r="8" fill="#00E5FF" filter="url(#glow)"/>
+    <circle cx="309" cy="268" r="8" fill="#00E5FF" filter="url(#glow)"/>
+    <circle cx="194" cy="248" r="8" fill="#00E5FF" filter="url(#glow)"/>
+    
+    <!-- Connection lines -->
+    <path d="M209 192L248 278" stroke="#00E5FF" stroke-width="2.5"/>
+    <path d="M248 278L309 268" stroke="#00E5FF" stroke-width="2.5"/>
+    <path d="M309 268L289 212" stroke="#00E5FF" stroke-width="2.5"/>
+    <path d="M289 212L209 192" stroke="#00E5FF" stroke-width="2.5"/>
+    <path d="M194 248L248 278" stroke="#00E5FF" stroke-width="2.5"/>
+    <path d="M194 248L209 192" stroke="#00E5FF" stroke-width="2.5"/>
+  </g>
+  
+  <!-- Main logo element -->
+  <g filter="url(#shadow)">
+    <path d="M238 354H274V310H318V274H274V238H238V274H194V310H238V354Z" fill="white"/>
+    <path d="M160 128H192V160H160V128Z" fill="white"/>
+    <path d="M320 128H352V160H320V128Z" fill="white"/>
+    <path d="M160 352H192V384H160V352Z" fill="white"/>
+    <path d="M320 352H192V384H320V352Z" fill="white"/>
+    <path d="M144 176H176V336H144V176Z" fill="white"/>
+    <path d="M336 176H368V336H336V176Z" fill="white"/>
+  </g>
+  
+  <!-- Sparkle elements -->
+  <circle cx="146" cy="166" r="4" fill="white" filter="url(#glow)"/>
+  <circle cx="366" cy="166" r="4" fill="white" filter="url(#glow)"/>
+  <circle cx="346" cy="346" r="4" fill="white" filter="url(#glow)"/>
+  <circle cx="166" cy="346" r="4" fill="white" filter="url(#glow)"/>
+  <circle cx="256" cy="128" r="6" fill="white" filter="url(#glow)"/>
+  <circle cx="256" cy="384" r="6" fill="white" filter="url(#glow)"/>
+  
+  <!-- Definitions for gradients and filters -->
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(256 256) rotate(90) scale(256)">
+      <stop offset="0" stop-color="#005CB2"/>
+      <stop offset="0.5" stop-color="#0078E7"/>
+      <stop offset="1" stop-color="#00A3FF"/>
+    </radialGradient>
+    
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+</svg>
