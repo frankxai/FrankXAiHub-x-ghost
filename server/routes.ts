@@ -19,6 +19,7 @@ import AIEmbeddings from "./routes/embeddings";
 import AICompletion from "./routes/completion";
 import convertRouter from "./routes/convert";
 import agentManagementRouter from "./routes/agent-management";
+import conversationRouter from "./routes/conversation";
 
 
 export async function registerRoutes(app: Express): Promise<HTTPServer> {
@@ -678,6 +679,7 @@ Format the response as JSON with this structure:
   router.use("/completion", AICompletion);
   router.use("/convert", convertRouter);
   router.use("/agent-management", agentManagementRouter);
+  router.use("/ai/conversation", conversationRouter);
 
   const httpServer = createServer(app);
   return httpServer;
