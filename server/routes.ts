@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
+import { createServer, type Server as HTTPServer } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
 import {
@@ -14,15 +14,22 @@ import { getCompletion, streamCompletion, createSystemPrompt } from "./ai-servic
 import { AICompletionRequest, AICompletionResponse, AIPersona, AI_PERSONAS, PROMPT_TEMPLATES } from "@shared/ai-services";
 import { log } from "./vite";
 import * as blogStorage from "./blog-storage";
+import { Router } from "express";
+import AIEmbeddings from "./routes/embeddings";
+import AICompletion from "./routes/completion";
+import convertRouter from "./routes/convert";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+
+export async function registerRoutes(app: Express): Promise<HTTPServer> {
+  const router = Router();
+
   // API routes with /api prefix
-  
+
   // Blog Posts endpoints - Using file-based storage
   app.get("/api/blog-posts", async (req, res) => {
     try {
       const category = req.query.category as string | undefined;
-      
+
       if (category) {
         const posts = await blogStorage.getBlogPostsByCategory(category);
         res.json(posts);
@@ -43,12 +50,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error fetching featured blog posts" });
     }
   });
-  
+
   // Create a prompt engineering collaborative blog post
   app.post("/api/collaborative-blog-posts/create-prompt-engineering", async (req, res) => {
     try {
       const now = new Date();
-      
+
       const newPost = {
         id: 0, // Will be assigned by storage
         title: "The Art of Prompt Engineering: Creating AI Communication Excellence",
@@ -197,7 +204,7 @@ By understanding the principles outlined in this guide and deliberately practici
         featured: true,
         imageUrl: "https://images.unsplash.com/photo-1655720033654-a4239dd42d10?q=80&w=1932&auto=format&fit=crop"
       };
-      
+
       const createdPost = await blogStorage.createBlogPost(newPost);
       res.status(201).json(createdPost);
     } catch (error) {
@@ -210,12 +217,12 @@ By understanding the principles outlined in this guide and deliberately practici
     try {
       const slug = req.params.slug;
       const post = await blogStorage.getBlogPostBySlug(slug);
-      
+
       if (!post) {
         res.status(404).json({ message: "Blog post not found" });
         return;
       }
-      
+
       res.json(post);
     } catch (error) {
       res.status(500).json({ message: "Error fetching blog post" });
@@ -233,7 +240,7 @@ By understanding the principles outlined in this guide and deliberately practici
       res.status(500).json({ message: "Error fetching blog post" });
     }
   });
-  
+
   app.post("/api/blog-posts", async (req, res) => {
     try {
       const validatedData = insertBlogPostSchema.parse(req.body);
@@ -247,17 +254,17 @@ By understanding the principles outlined in this guide and deliberately practici
       }
     }
   });
-  
+
   app.patch("/api/blog-posts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = insertBlogPostSchema.partial().parse(req.body);
       const updatedPost = await blogStorage.updateBlogPost(id, validatedData);
-      
+
       if (!updatedPost) {
         return res.status(404).json({ message: "Blog post not found" });
       }
-      
+
       res.json(updatedPost);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -267,16 +274,16 @@ By understanding the principles outlined in this guide and deliberately practici
       }
     }
   });
-  
+
   app.delete("/api/blog-posts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const success = await blogStorage.deleteBlogPost(id);
-      
+
       if (!success) {
         return res.status(404).json({ message: "Blog post not found" });
       }
-      
+
       res.status(204).end();
     } catch (error) {
       res.status(500).json({ message: "Error deleting blog post" });
@@ -292,7 +299,7 @@ By understanding the principles outlined in this guide and deliberately practici
       res.status(500).json({ message: "Error fetching resources" });
     }
   });
-  
+
   app.post("/api/resources", async (req, res) => {
     try {
       const validatedData = insertResourceSchema.parse(req.body);
@@ -306,7 +313,7 @@ By understanding the principles outlined in this guide and deliberately practici
       }
     }
   });
-  
+
   app.delete("/api/resources/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -316,25 +323,25 @@ By understanding the principles outlined in this guide and deliberately practici
       res.status(500).json({ message: "Error deleting resource" });
     }
   });
-  
+
   // Affiliate tracking endpoint
   app.post("/api/track-affiliate", async (req, res) => {
     try {
       const { resourceId, affiliateCode } = req.body;
-      
+
       // In a real implementation, you would:
       // 1. Record the affiliate click in the database
       // 2. Associate with user session if available
-      
+
       // For now, just log it
       console.log(`Tracked affiliate click: ${resourceId}, code: ${affiliateCode}`);
-      
+
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ message: "Error tracking affiliate" });
     }
   });
-  
+
   // Download tracking endpoint
   app.post("/api/track-download", async (req, res) => {
     try {
@@ -397,7 +404,7 @@ By understanding the principles outlined in this guide and deliberately practici
     try {
       const validatedData = insertAssessmentSchema.parse(req.body);
       const assessment = await storage.createAssessment(validatedData);
-      
+
       // Calculate a mock maturity score and recommendations
       const maturityScore = Math.floor(Math.random() * 41) + 60; // 60-100 range
       const recommendations = [
@@ -407,13 +414,13 @@ By understanding the principles outlined in this guide and deliberately practici
         "Implement a structured AI project prioritization process",
         "Develop AI skills training programs for employees"
       ];
-      
+
       const updatedAssessment = {
         ...assessment,
         maturityScore,
         recommendations
       };
-      
+
       res.json(updatedAssessment);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -428,7 +435,7 @@ By understanding the principles outlined in this guide and deliberately practici
   app.post("/api/generate-roadmap", async (req, res) => {
     try {
       const { industry, objectives, organizationName, size } = req.body;
-      
+
       // Try to use AI to generate a more tailored roadmap if API keys are available
       try {
         // Create a detailed prompt for the AI
@@ -468,7 +475,7 @@ Format the response as JSON with this structure:
           max_tokens: 1000,
           provider: 'openai'
         });
-        
+
         // Try to parse the JSON response
         try {
           const aiRoadmap = JSON.parse(completion.text);
@@ -479,7 +486,7 @@ Format the response as JSON with this structure:
         }
       } catch (aiError) {
         log(`AI roadmap generation failed, falling back to template: ${aiError}`, 'warn');
-        
+
         // Fallback to the template response if AI fails
         const roadmap = {
           phases: [
@@ -514,25 +521,25 @@ Format the response as JSON with this structure:
           industry: industry,
           tailoredFor: objectives
         };
-        
+
         res.json(roadmap);
       }
     } catch (error) {
       res.status(500).json({ message: "Error generating roadmap" });
     }
   });
-  
+
   // AI Services endpoints
-  
+
   // Get AI completion
   app.post("/api/ai/completion", async (req, res) => {
     try {
       const request: AICompletionRequest = req.body;
-      
+
       if (!request.messages || request.messages.length === 0) {
         return res.status(400).json({ message: "Messages are required" });
       }
-      
+
       // Generate a completion
       const completion = await getCompletion(request);
       res.json(completion);
@@ -546,28 +553,28 @@ Format the response as JSON with this structure:
   app.post("/api/ai/stream-completion", async (req, res) => {
     try {
       const request: AICompletionRequest = req.body;
-      
+
       if (!request.messages || request.messages.length === 0) {
         return res.status(400).json({ message: "Messages are required" });
       }
-      
+
       // Set up SSE
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
-      
+
       // Stream the completion
       const stream = streamCompletion({...request, stream: true});
-      
+
       for await (const chunk of stream) {
         res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-        
+
         if (chunk.isComplete) {
           res.write(`data: [DONE]\n\n`);
           break;
         }
       }
-      
+
       res.end();
     } catch (error) {
       log(`Error in AI stream completion: ${error}`, 'error');
@@ -598,11 +605,11 @@ Format the response as JSON with this structure:
     try {
       const templateId = req.params.id;
       const template = PROMPT_TEMPLATES.find(t => t.id === templateId);
-      
+
       if (!template) {
         return res.status(404).json({ message: "Prompt template not found" });
       }
-      
+
       res.json(template);
     } catch (error) {
       res.status(500).json({ message: "Error fetching prompt template" });
@@ -613,24 +620,24 @@ Format the response as JSON with this structure:
   app.post("/api/ai/conversation", async (req, res) => {
     try {
       const { characterName, message, conversationId, context } = req.body;
-      
+
       if (!characterName || !message) {
         return res.status(400).json({ message: "Character name and message are required" });
       }
-      
+
       // Find the character's persona
       const persona = AI_PERSONAS[characterName] || {
         name: characterName,
         systemPrompt: createSystemPrompt(characterName),
         provider: 'openai'
       };
-      
+
       // Build system prompt with context if provided
       let systemPrompt = persona.systemPrompt;
       if (context) {
         systemPrompt = `${systemPrompt}\n\nAdditional context: ${context}`;
       }
-      
+
       // Create the completion request
       const request: AICompletionRequest = {
         messages: [
@@ -640,10 +647,10 @@ Format the response as JSON with this structure:
         provider: persona.provider,
         model: persona.model
       };
-      
+
       // Generate the completion
       const completion = await getCompletion(request);
-      
+
       res.json({
         characterName,
         message: completion.text,
@@ -663,7 +670,13 @@ Format the response as JSON with this structure:
   } catch (error) {
     log(`Error initializing blog storage: ${error}`, "error");
   }
-  
+
+  app.use("/api", router);
+
+  router.use("/embeddings", AIEmbeddings);
+  router.use("/completion", AICompletion);
+  router.use("/convert", convertRouter);
+
   const httpServer = createServer(app);
   return httpServer;
 }

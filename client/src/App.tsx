@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Navigate } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -17,6 +17,8 @@ import Footer from "@/components/layout/Footer";
 import FrankXAI from "@/components/ai/FrankXAI";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { AnimatePresence } from "framer-motion";
+import FileConversionPage from "@/pages/FileConversionPage"; // Added import
+
 
 function Router() {
   return (
@@ -31,6 +33,7 @@ function Router() {
         <Route path="/conversation" component={Conversation} />
         <Route path="/music" component={Music} />
         <Route path="/assessment" component={Assessment} />
+        <Route path="/tools/file-converter" component={FileConversionPage} /> {/* Added route */}
         <Route component={NotFound} />
       </Switch>
     </AnimatePresence>
