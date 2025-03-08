@@ -29,9 +29,25 @@ import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 
-// Add timestamp to bust cache for avatar images with randomized version number
-const AVATAR_URL = `/frankx-avatar-new.png?v=${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-const AVATAR_FALLBACK = "/frankx-avatar-new.svg";
+// Avatar URLs - using direct file references for stability
+const AVATAR_URL = '/frankx-avatar-updated.png';
+const AVATAR_FALLBACK = '/frankx-avatar.png';
+
+// Simple preload function
+const preloadAvatarImages = () => {
+  try {
+    const preloadImage = (src: string) => {
+      const img = new Image();
+      img.src = src;
+    };
+    
+    // Preload the main image and fallback
+    preloadImage(AVATAR_URL);
+    preloadImage(AVATAR_FALLBACK);
+  } catch (error) {
+    console.warn("Error preloading avatar images:", error);
+  }
+};
 
 // Define responsive styles to improve mobile experience
 const MOBILE_BREAKPOINT = 640; // Corresponds to sm in Tailwind
@@ -377,6 +393,11 @@ const FrankXAI = () => {
     }
   }, [messages]);
   
+  // Preload avatar images when component loads
+  useEffect(() => {
+    preloadAvatarImages();
+  }, []);
+
   // Initial greeting based on the page
   useEffect(() => {
     if (isOpen && messages.length === 0) {
@@ -617,7 +638,9 @@ const FrankXAI = () => {
               alt="FrankX.AI" 
               className="w-full h-full object-cover"
               onError={(e) => {
+                // Simple fallback to static image
                 e.currentTarget.src = AVATAR_FALLBACK;
+                e.currentTarget.onerror = null; // Prevent infinite loop
               }}
             />
             <div className="absolute top-1 right-1 w-3 h-3 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></div>
@@ -650,7 +673,9 @@ const FrankXAI = () => {
               alt="FrankX.AI" 
               className="object-cover"
               onError={(e) => {
-                e.currentTarget.src = AVATAR_FALLBACK;
+                // Simple fallback handling
+                e.currentTarget.src = AVATAR_FALLBACK; 
+                e.currentTarget.onerror = null; // Prevent infinite loop
               }} 
             />
             <AvatarFallback className="text-white bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-sm p-0">
@@ -727,7 +752,9 @@ const FrankXAI = () => {
                         alt="FrankX.AI" 
                         className="object-cover"
                         onError={(e) => {
+                          // Simple fallback handling
                           e.currentTarget.src = AVATAR_FALLBACK;
+                          e.currentTarget.onerror = null; // Prevent infinite loop
                         }}
                       />
                       <AvatarFallback className="bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-white p-0">
@@ -900,7 +927,9 @@ const FrankXAI = () => {
                       alt="FrankX.AI" 
                       className="object-cover" 
                       onError={(e) => {
+                        // Simple fallback handling
                         e.currentTarget.src = AVATAR_FALLBACK;
+                        e.currentTarget.onerror = null; // Prevent infinite loop
                       }} 
                     />
                     <AvatarFallback className="bg-gradient-to-br from-[#003A75] to-[#00A3FF] text-white p-0">
@@ -993,7 +1022,9 @@ const FrankXAI = () => {
                   alt="FrankX.AI" 
                   className="object-cover w-full h-full" 
                   onError={(e) => {
+                    // Simple fallback handling
                     e.currentTarget.src = AVATAR_FALLBACK;
+                    e.currentTarget.onerror = null; // Prevent infinite loop
                   }}
                 />
                 <div className="absolute top-0 right-0 w-2 h-2 rounded-full bg-gradient-to-r from-[#005CB2] to-[#00A3FF] animate-pulse shadow-[0_0_5px_rgba(0,163,255,0.5)]"></div>
