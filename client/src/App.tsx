@@ -23,14 +23,16 @@ import ChatWithAgentPage from '@/pages/ChatWithAgentPage';
 import ChatWithAgentFullScreen from '@/pages/ChatWithAgentFullScreen';
 import AgentConversationPage from '@/pages/AgentConversationPage';
 import Dashboard from '@/pages/Dashboard';
+import AIPersonasPage from './pages/AIPersonasPage';
+import AIFrameworkAgents from './pages/AIFrameworkAgents';
 
 
 function Router() {
   const [location] = useLocation();
-  
+
   // Check if current route is full screen chat (to hide header/footer)
   const isFullScreenChat = location.startsWith('/chat-fullscreen/');
-  
+
   return (
     <AnimatePresence mode="wait">
       <Switch>
@@ -49,6 +51,8 @@ function Router() {
         <Route path="/chat-fullscreen/:agentId" component={ChatWithAgentFullScreen} />
         <Route path="/agent-conversation/:agentId?" component={AgentConversationPage} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/ai-personas" component={AIPersonasPage} />
+        <Route path="/framework-agents" component={AIFrameworkAgents} />
         <Route component={NotFound} />
       </Switch>
     </AnimatePresence>
@@ -57,10 +61,10 @@ function Router() {
 
 function App() {
   const [location] = useLocation();
-  
+
   // Check if current route is full screen chat (to hide header/footer)
   const isFullScreenChat = location.startsWith('/chat-fullscreen/');
-  
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="frankx-theme">
