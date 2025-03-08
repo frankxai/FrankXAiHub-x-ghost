@@ -138,3 +138,17 @@ By creating or using an Agent, you acknowledge that you have read, understood, a
 });
 
 export default router;
+import { Router } from "express";
+
+const router = Router();
+
+router.get("/", async (req, res) => {
+  try {
+    // Placeholder for agent management functionality
+    res.json({ message: "Agent Management API placeholder" });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching agent management data" });
+  }
+});
+
+export default router;

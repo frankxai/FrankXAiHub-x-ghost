@@ -95,3 +95,17 @@ router.post('/convert', upload.array('files'), async (req, res) => {
 });
 
 export default router;
+import { Router } from "express";
+
+const router = Router();
+
+router.post("/", async (req, res) => {
+  try {
+    // Placeholder for convert functionality
+    res.json({ message: "Convert API placeholder" });
+  } catch (error) {
+    res.status(500).json({ message: "Error processing convert request" });
+  }
+});
+
+export default router;
