@@ -8,16 +8,16 @@ interface MarkdownRendererProps {
   content: string;
 }
 
-const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
+export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   return (
     <ReactMarkdown
       rehypePlugins={[rehypeRaw]}
       components={{
-        code: ({ className, children, ...props }: any) => {
+        code({ className, children, ...props }: any) {
           const match = /language-(\w+)/.exec(className || '');
-          return match ? (
+          return !props.inline && match ? (
             <SyntaxHighlighter
-              // @ts-ignore - Type issue with style property
+              // @ts-ignore - type definition issue with react-syntax-highlighter
               style={vscDarkPlus}
               language={match[1]}
               PreTag="div"
@@ -31,60 +31,38 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
             </code>
           );
         },
-        // Add styling for other markdown elements
-        h1: ({ children }: any) => <h1 className="text-2xl font-bold my-4">{children}</h1>,
-        h2: ({ children }: any) => <h2 className="text-xl font-bold my-3">{children}</h2>,
-        h3: ({ children }: any) => <h3 className="text-lg font-bold my-2">{children}</h3>,
-        p: ({ children }: any) => <p className="my-2">{children}</p>,
-        ul: ({ children }: any) => <ul className="list-disc ml-6 my-2">{children}</ul>,
-        ol: ({ children }: any) => <ol className="list-decimal ml-6 my-2">{children}</ol>,
-        li: ({ children }: any) => <li className="my-1">{children}</li>,
-        a: ({ href, children }: any) => (
-          <a 
-            href={href} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-primary underline hover:text-primary/80"
-          >
-            {children}
-          </a>
+        h1: (props: any) => <h1 className="text-2xl font-bold mt-6 mb-4" {...props} />,
+        h2: (props: any) => <h2 className="text-xl font-bold mt-5 mb-3" {...props} />,
+        h3: (props: any) => <h3 className="text-lg font-bold mt-4 mb-2" {...props} />,
+        p: (props: any) => <p className="mb-4" {...props} />,
+        ul: (props: any) => <ul className="list-disc pl-6 mb-4" {...props} />,
+        ol: (props: any) => <ol className="list-decimal pl-6 mb-4" {...props} />,
+        li: (props: any) => <li className="mb-1" {...props} />,
+        a: (props: any) => (
+          <a className="text-blue-500 hover:underline" target="_blank" {...props} />
         ),
-        blockquote: ({ children }: any) => (
-          <blockquote className="border-l-4 border-muted pl-4 italic my-2">
-            {children}
-          </blockquote>
+        blockquote: (props: any) => (
+          <blockquote className="border-l-4 border-gray-300 pl-4 italic my-4" {...props} />
         ),
-        img: ({ src, alt }: any) => (
-          <img 
-            src={src} 
-            alt={alt || 'Image'} 
-            className="max-w-full my-2 rounded-md"
-          />
+        img: (props: any) => (
+          <img className="max-w-full h-auto my-4 rounded" {...props} />
         ),
-        table: ({ children }: any) => (
-          <div className="overflow-x-auto my-2">
-            <table className="min-w-full border-collapse">
-              {children}
-            </table>
+        table: (props: any) => (
+          <div className="overflow-x-auto my-4">
+            <table className="min-w-full divide-y divide-gray-300" {...props} />
           </div>
         ),
-        thead: ({ children }: any) => <thead className="bg-muted/50">{children}</thead>,
-        th: ({ children }: any) => (
-          <th className="py-2 px-4 border border-border text-left">
-            {children}
-          </th>
+        thead: (props: any) => <thead className="bg-gray-100" {...props} />,
+        th: (props: any) => (
+          <th className="px-4 py-2 text-left font-semibold" {...props} />
         ),
-        td: ({ children }: any) => (
-          <td className="py-2 px-4 border border-border">
-            {children}
-          </td>
-        ),
-        hr: () => <hr className="my-4 border-t border-border" />,
+        td: (props: any) => <td className="px-4 py-2 border-t" {...props} />,
+        hr: (props: any) => <hr className="my-6" {...props} />,
       }}
     >
       {content}
     </ReactMarkdown>
   );
-};
+}
 
 export default MarkdownRenderer;

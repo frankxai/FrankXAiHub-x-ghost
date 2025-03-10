@@ -17,28 +17,24 @@ export const Spinner: React.FC<SpinnerProps> = ({
     md: 'h-6 w-6 border-2',
     lg: 'h-8 w-8 border-3',
   };
-
+  
   const colorClasses = {
-    default: 'border-muted-foreground/20 border-t-muted-foreground/60',
+    default: 'border-gray-300 border-t-gray-800',
     primary: 'border-primary/30 border-t-primary',
     secondary: 'border-secondary/30 border-t-secondary',
     white: 'border-white/30 border-t-white',
   };
-
+  
   return (
     <div
       className={cn(
-        'inline-block animate-spin rounded-full',
+        'animate-spin rounded-full',
         sizeClasses[size],
         colorClasses[color],
         className
       )}
-      role="status"
-      aria-label="Loading"
       {...props}
-    >
-      <span className="sr-only">Loading...</span>
-    </div>
+    />
   );
 };
 
