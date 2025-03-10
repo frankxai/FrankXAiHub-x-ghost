@@ -1,5 +1,5 @@
 import { Express, Request, Response } from 'express';
-import { loadAllPersonalities, getPersonalityById, getSystemPrompt } from '../config/personality-manager';
+import { loadAllPersonalities, getPersonalityById, getSystemPrompt, initializeDefaultPersonalities } from '../config/personality-manager';
 import { OPENROUTER_MODELS, getFreeOpenRouterModels, getModelById } from '../config/openrouter-models';
 import { loadAllTeams, getTeamById } from '../config/agent-teams';
 import { AICompletionRequest } from '../../shared/ai-services';
@@ -9,6 +9,8 @@ import { getCompletion, streamCompletion } from '../ai-service';
  * Register AI Configuration Routes
  */
 export function registerAIConfigRoutes(app: Express) {
+  // Initialize default personalities
+  initializeDefaultPersonalities();
   // Get all available models from OpenRouter
   app.get('/api/ai/models', (req: Request, res: Response) => {
     try {
@@ -51,7 +53,7 @@ export function registerAIConfigRoutes(app: Express) {
       
       // Get model and personality
       const model = getModelById(modelId) || OPENROUTER_MODELS[0];
-      const systemPrompt = getSystemPrompt(personalityId || 'helpful-assistant', modelId);
+      const systemPrompt = getSystemPrompt(personalityId || 'frankx-default', modelId);
       
       // Create AI request
       const request: AICompletionRequest = {
@@ -89,7 +91,7 @@ export function registerAIConfigRoutes(app: Express) {
       }
       
       // Get personality system prompt
-      const systemPrompt = getSystemPrompt(personalityId || 'helpful-assistant', modelId);
+      const systemPrompt = getSystemPrompt(personalityId || 'frankx-default', modelId);
       
       // Set up streaming response
       res.setHeader('Content-Type', 'text/event-stream');

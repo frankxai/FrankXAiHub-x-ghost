@@ -44,6 +44,31 @@ function ensureDirectoryExists() {
 }
 
 /**
+ * Initialize default personalities in the filesystem if none exist
+ */
+export function initializeDefaultPersonalities(): void {
+  ensureDirectoryExists();
+  
+  try {
+    const files = fs.readdirSync(PERSONALITIES_DIR)
+      .filter(file => file.endsWith('.json'));
+    
+    // If no personality files exist, create the default ones
+    if (files.length === 0) {
+      console.log("Initializing default personalities...");
+      
+      for (const personality of DEFAULT_PERSONALITIES) {
+        const filePath = path.join(PERSONALITIES_DIR, `${personality.id}.json`);
+        fs.writeFileSync(filePath, JSON.stringify(personality, null, 2), 'utf8');
+        console.log(`Created personality: ${personality.name} (${personality.id})`);
+      }
+    }
+  } catch (error) {
+    console.error("Error initializing default personalities:", error);
+  }
+}
+
+/**
  * Load all personalities from the filesystem
  */
 export function loadAllPersonalities(): Personality[] {
@@ -52,6 +77,11 @@ export function loadAllPersonalities(): Personality[] {
   try {
     const files = fs.readdirSync(PERSONALITIES_DIR)
       .filter(file => file.endsWith('.json'));
+    
+    // If no files exist, return the default personalities
+    if (files.length === 0) {
+      return DEFAULT_PERSONALITIES;
+    }
     
     return files.map(file => {
       const filePath = path.join(PERSONALITIES_DIR, file);
