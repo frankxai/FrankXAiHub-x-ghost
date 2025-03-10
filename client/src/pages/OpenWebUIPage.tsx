@@ -24,7 +24,7 @@ export function OpenWebUIPage() {
   const [models, setModels] = useState<ModelOption[]>([]);
   const [personalities, setPersonalities] = useState<PersonalityOption[]>([]);
   const [selectedModel, setSelectedModel] = useState<string>('openai/gpt-4o');
-  const [selectedPersonality, setSelectedPersonality] = useState<string>('helpful-assistant');
+  const [selectedPersonality, setSelectedPersonality] = useState<string>('frankx-default');
   const [loadingModels, setLoadingModels] = useState(true);
   const [loadingPersonalities, setLoadingPersonalities] = useState(true);
   
@@ -80,7 +80,7 @@ export function OpenWebUIPage() {
         
         // Set default personality if available
         if (data.length > 0) {
-          const defaultPersonality = data.find((p: PersonalityOption) => p.id === 'helpful-assistant');
+          const defaultPersonality = data.find((p: PersonalityOption) => p.id === 'frankx-default');
           if (defaultPersonality) {
             setSelectedPersonality(defaultPersonality.id);
           } else {
