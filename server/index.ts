@@ -46,14 +46,31 @@ app.use((req, res, next) => {
     log("Failed to create prompt engineering blog post: " + error, "server");
   }
   
-  const server = await registerRoutes(app);
+  let server;
+  try {
+    server = await registerRoutes(app);
+    log("Routes registered successfully", "server");
+  } catch (error) {
+    log(`Failed to register routes: ${error}`, "server");
+    process.exit(1);
+  }
 
+  // Global error handler
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
+    
+    log(`Error: ${message}`, "server-error");
+    
+    res.status(status).json({ 
+      message,
+      status,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Don't throw after handling, as it might crash the server
+    // Only log the error
+    console.error(err);
   });
 
   // importantly only setup vite in development and after

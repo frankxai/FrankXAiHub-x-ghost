@@ -14,7 +14,7 @@ import { getCompletion, streamCompletion, createSystemPrompt } from "./ai-servic
 import { AICompletionRequest, AICompletionResponse, AIPersona, AI_PERSONAS, PROMPT_TEMPLATES } from "@shared/ai-services";
 import { log } from "./vite";
 import * as blogStorage from "./blog-storage";
-import { Router } from "express";
+import express, { Router, Request, Response } from "express";
 import AIEmbeddings from "./routes/embeddings";
 import AICompletion from "./routes/completion";
 import convertRouter from "./routes/convert";
@@ -22,7 +22,6 @@ import agentManagementRouter from "./routes/agent-management";
 import conversationRouter from "./routes/conversation";
 import agentPersonasRouter from "./routes/agent-personas";
 import { registerAgentRoutes } from "./routes/agent-routes";
-import { registerAIConfigRoutes } from "./routes/ai-config-routes";
 import { advancedAgentPersonas } from './agent-framework/advanced-agent-personas';
 import { AI_MODELS } from '../shared/ai-models-config';
 
@@ -744,11 +743,8 @@ Format the response as JSON with this structure:
     log(`Error initializing blog storage: ${error}`, "error");
   }
 
-  // Register agent routes directly on Express app
+  //Register agent routes directly on Express app
   registerAgentRoutes(app);
-  
-  // Register AI configuration routes
-  registerAIConfigRoutes(app);
 
   app.use("/api", router);
 
@@ -758,6 +754,15 @@ Format the response as JSON with this structure:
   router.use("/agent-management", agentManagementRouter);
   router.use("/ai/conversation", conversationRouter);
   router.use("/ai/personas", agentPersonasRouter);
+
+  // Health check endpoint for monitoring
+  router.get('/health', (req: Request, res: Response) => {
+    res.status(200).json({
+      status: 'ok',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString()
+    });
+  });
 
   const httpServer = createServer(app);
   return httpServer;

@@ -6,62 +6,60 @@ interface AvatarWithFallbackProps {
   fallbackSrc: string;
   alt: string;
   className?: string;
+  retryCount?: number;
 }
 
 const AvatarWithFallback: React.FC<AvatarWithFallbackProps> = ({ 
   src, 
   fallbackSrc, 
   alt, 
-  className = 'w-10 h-10 rounded-full'
+  className = 'w-10 h-10 rounded-full',
+  retryCount = 0
 }) => {
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
-  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgSrc, setImgSrc] = useState<string>(src);
+  const [loadFailed, setLoadFailed] = useState<boolean>(false);
+  const [attempts, setAttempts] = useState<number>(0);
   
   useEffect(() => {
-    // Pre-load the image to check if it exists
-    const img = new Image();
-    
-    img.onload = () => {
-      setImgSrc(src);
-      setImgLoaded(true);
-    };
-    
-    img.onerror = () => {
-      console.log("Avatar pre-load failed, using fallback");
-      setImgSrc(fallbackSrc);
-      setImgLoaded(true);
-    };
-    
-    img.src = src;
-    
-    // If we already have a valid fallback, use it immediately while checking the primary
-    if (fallbackSrc) {
-      setImgSrc(fallbackSrc);
-    }
-  }, [src, fallbackSrc]);
-  
+    setImgSrc(src);
+    setLoadFailed(false);
+    setAttempts(0);
+  }, [src]);
+
   const handleError = () => {
-    console.log("Avatar runtime error, using fallback");
-    if (imgSrc !== fallbackSrc) {
+    // Only console log once
+    if (!loadFailed) {
+      console.log("Avatar load failed, using fallback");
+      setLoadFailed(true);
+    }
+    
+    // If we still have retries left, try again with a slight delay
+    if (attempts < retryCount && imgSrc !== fallbackSrc) {
+      setAttempts(prev => prev + 1);
+      setTimeout(() => {
+        // Add cache buster to URL
+        const cacheBuster = `?t=${Date.now()}`;
+        setImgSrc(`${src}${cacheBuster}`);
+      }, 300);
+    } else if (imgSrc !== fallbackSrc) {
+      // If all retries fail or no retries requested, use fallback
       setImgSrc(fallbackSrc);
     }
   };
 
-  if (!imgLoaded && !imgSrc) {
-    // Return a placeholder while loading
-    return (
-      <div className={`${className} bg-gray-200 dark:bg-gray-700 flex items-center justify-center`}>
-        <span className="text-gray-400 dark:text-gray-500 text-xs">...</span>
-      </div>
-    );
-  }
+  // Pre-load the fallback image to ensure it's available if needed
+  useEffect(() => {
+    const img = new Image();
+    img.src = fallbackSrc;
+  }, [fallbackSrc]);
 
   return (
     <img 
-      src={imgSrc || fallbackSrc} 
+      src={imgSrc} 
       alt={alt} 
       className={className}
       onError={handleError}
+      loading="lazy"
     />
   );
 };
