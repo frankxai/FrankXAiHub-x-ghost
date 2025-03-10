@@ -1,7 +1,9 @@
 import { Express, Request, Response } from 'express';
-import { loadAllPersonalities, getPersonalityById } from '../config/personality-manager';
-import { OPENROUTER_MODELS, getFreeOpenRouterModels } from '../config/openrouter-models';
+import { loadAllPersonalities, getPersonalityById, getSystemPrompt } from '../config/personality-manager';
+import { OPENROUTER_MODELS, getFreeOpenRouterModels, getModelById } from '../config/openrouter-models';
 import { loadAllTeams, getTeamById } from '../config/agent-teams';
+import { AICompletionRequest } from '../../shared/ai-services';
+import { getCompletion, streamCompletion } from '../ai-service';
 
 /**
  * Register AI Configuration Routes
@@ -33,6 +35,96 @@ export function registerAIConfigRoutes(app: Express) {
     } catch (error) {
       console.error('Error fetching model:', error);
       res.status(500).json({ error: 'Failed to retrieve model' });
+    }
+  });
+  
+
+  
+  // Chat endpoint for OpenWebUI
+  app.post('/api/ai/chat', async (req: Request, res: Response) => {
+    try {
+      const { message, modelId, personalityId } = req.body;
+      
+      if (!message) {
+        return res.status(400).json({ error: 'Message is required' });
+      }
+      
+      // Get model and personality
+      const model = getModelById(modelId) || OPENROUTER_MODELS[0];
+      const systemPrompt = getSystemPrompt(personalityId || 'helpful-assistant', modelId);
+      
+      // Create AI request
+      const request: AICompletionRequest = {
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message }
+        ],
+        model: modelId,
+        provider: 'openrouter',
+        temperature: 0.7,
+        max_tokens: 1000
+      };
+      
+      // Get completion
+      const completion = await getCompletion(request);
+      
+      res.json({ 
+        response: completion.text,
+        model: model.id,
+        usage: completion.usage
+      });
+    } catch (error) {
+      console.error('Error processing chat request:', error);
+      res.status(500).json({ error: 'Failed to process chat request' });
+    }
+  });
+  
+  // Streaming chat endpoint
+  app.post('/api/ai/chat/stream', async (req: Request, res: Response) => {
+    try {
+      const { message, modelId, personalityId } = req.body;
+      
+      if (!message) {
+        return res.status(400).json({ error: 'Message is required' });
+      }
+      
+      // Get personality system prompt
+      const systemPrompt = getSystemPrompt(personalityId || 'helpful-assistant', modelId);
+      
+      // Set up streaming response
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+      
+      // Create AI request
+      const request: AICompletionRequest = {
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message }
+        ],
+        model: modelId,
+        provider: 'openrouter',
+        temperature: 0.7,
+        max_tokens: 1000,
+        stream: true
+      };
+      
+      // Stream completion
+      for await (const chunk of streamCompletion(request)) {
+        res.write(`data: ${JSON.stringify(chunk)}\n\n`);
+        
+        // Check if client has disconnected
+        if (res.writableEnded) {
+          break;
+        }
+      }
+      
+      res.write('data: [DONE]\n\n');
+      res.end();
+    } catch (error) {
+      console.error('Error streaming chat response:', error);
+      res.write(`data: ${JSON.stringify({ error: 'Error streaming response' })}\n\n`);
+      res.end();
     }
   });
 

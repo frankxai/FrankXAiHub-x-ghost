@@ -134,7 +134,9 @@ export function OpenWebUI({
   return (
     <Card className={`flex flex-col ${fullScreen ? 'h-[calc(100vh-4rem)]' : 'h-[600px]'} ${className}`}>
       <div className="p-4 border-b flex items-center space-x-2">
-        <Avatar src={aiAvatarUrl} alt={aiName} fallbackDelay={1000} />
+        <Avatar>
+          <img src={aiAvatarUrl} alt={aiName} className="h-full w-full object-cover" />
+        </Avatar>
         <div>
           <h3 className="font-medium">{aiName}</h3>
           <p className="text-sm text-muted-foreground">Model: {modelId}</p>
@@ -160,7 +162,9 @@ export function OpenWebUI({
                     <User className="h-4 w-4" />
                   </Avatar>
                 ) : (
-                  <Avatar className="h-8 w-8" src={aiAvatarUrl} alt={aiName} />
+                  <Avatar className="h-8 w-8">
+                    <img src={aiAvatarUrl} alt={aiName} className="h-full w-full object-cover" />
+                  </Avatar>
                 )}
               </div>
               
@@ -185,7 +189,9 @@ export function OpenWebUI({
           <div className="flex justify-start">
             <div className="flex max-w-[80%] flex-row">
               <div className="flex-shrink-0">
-                <Avatar className="h-8 w-8" src={aiAvatarUrl} alt={aiName} />
+                <Avatar className="h-8 w-8">
+                  <img src={aiAvatarUrl} alt={aiName} className="h-full w-full object-cover" />
+                </Avatar>
               </div>
               <div className="mx-2 p-3 rounded-lg bg-muted flex items-center space-x-2">
                 <Spinner size="sm" />
