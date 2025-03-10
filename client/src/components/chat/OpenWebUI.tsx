@@ -24,10 +24,10 @@ interface OpenWebUIProps {
 
 export function OpenWebUI({
   initialMessages = [],
-  modelId = 'gpt-4o',
-  personalityId = 'default',
+  modelId = 'openai/gpt-4o',
+  personalityId = 'frankx-default',
   aiName = 'AI Assistant',
-  aiAvatarUrl = '/ai-avatar.png',
+  aiAvatarUrl = '/frankx-chat-avatar.png',
   userAvatarUrl,
   onSendMessage,
   className = '',
