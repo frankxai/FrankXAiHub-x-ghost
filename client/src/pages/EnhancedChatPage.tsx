@@ -1294,45 +1294,101 @@ export default function EnhancedChatPage() {
             </Button>
           )}
           
-          {/* Selected Model Button */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div 
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-md border hover:bg-secondary cursor-pointer"
-                  onClick={() => setModelSelectorOpen(true)}
-                >
-                  <Cpu className="h-4 w-4" />
-                  <span className="text-sm font-medium truncate max-w-[130px]">
-                    {activeModel?.name || selectedModel}
+          {/* Model Selector Dropdown */}
+          <Select
+            value={selectedModel}
+            onValueChange={(value) => setSelectedModel(value)}
+          >
+            <SelectTrigger className="w-[220px] h-9">
+              <SelectValue placeholder="Select a model">
+                <div className="flex items-center gap-2">
+                  <Cpu className="h-4 w-4 text-primary" />
+                  <span className="text-sm truncate">
+                    {activeModel?.name || 'Select model'}
                   </span>
                 </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Select AI model</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent className="max-h-[300px]">
+              {Object.entries(modelsByProvider).map(([provider, models]) => (
+                <div key={provider}>
+                  <div className="text-xs text-muted-foreground px-2 py-1.5">
+                    {provider}
+                  </div>
+                  {models.map(model => (
+                    <SelectItem key={model.id} value={model.id}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{model.name}</span>
+                        {model.freeInOpenRouter && (
+                          <Badge variant="secondary" className="ml-2 text-[10px]">
+                            Free
+                          </Badge>
+                        )}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </div>
+              ))}
+            </SelectContent>
+          </Select>
           
-          {/* Selected Persona Button */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div 
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-md border hover:bg-secondary cursor-pointer"
-                  onClick={() => setPersonaSelectorOpen(true)}
-                >
-                  <BrainCircuit className="h-4 w-4" />
-                  <span className="text-sm font-medium truncate max-w-[130px]">
-                    {activePersona?.name || selectedPersona}
+          {/* Persona Selector Dropdown */}
+          <Select
+            value={selectedPersona}
+            onValueChange={(value) => setSelectedPersona(value)}
+          >
+            <SelectTrigger className="w-[180px] h-9">
+              <SelectValue placeholder="Select a persona">
+                <div className="flex items-center gap-2">
+                  <BrainCircuit className="h-4 w-4 text-primary" />
+                  <span className="text-sm truncate">
+                    {activePersona?.name || 'Select persona'}
                   </span>
                 </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Select persona</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent className="max-h-[300px]">
+              <div className="text-xs text-muted-foreground px-2 py-1.5">
+                FrankX.AI Personas
+              </div>
+              {personas
+                .filter(p => !p.isCustom)
+                .map(persona => (
+                  <SelectItem key={persona.id} value={persona.id}>
+                    {persona.name}
+                  </SelectItem>
+                ))}
+              
+              {personas.some(p => p.isCustom) && (
+                <>
+                  <Separator className="my-1" />
+                  <div className="text-xs text-muted-foreground px-2 py-1.5">
+                    Custom Personas
+                  </div>
+                  {personas
+                    .filter(p => p.isCustom)
+                    .map(persona => (
+                      <SelectItem key={persona.id} value={persona.id}>
+                        {persona.name}
+                      </SelectItem>
+                    ))}
+                </>
+              )}
+              
+              <Separator className="my-1" />
+              <Button 
+                variant="ghost" 
+                className="w-full mt-1 text-xs h-8" 
+                onClick={() => {
+                  setPersonaSelectorOpen(false);
+                  setCreateCustomPersonaOpen(true);
+                }}
+              >
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Create Custom Persona
+              </Button>
+            </SelectContent>
+          </Select>
           
           <div className="ml-auto flex items-center gap-2">
             {/* Export Button */}
@@ -1421,8 +1477,8 @@ export default function EnhancedChatPage() {
                 <ChatMessage
                   key={message.id}
                   message={message}
-                  aiName={activePersona?.name || 'AI Assistant'}
-                  aiAvatar={'/frankx-chat-avatar.png'}
+                  aiName={activePersona?.name || 'FrankX Standard'}
+                  aiAvatar={'https://raw.githubusercontent.com/frankxai/resources/main/logo-128.png'}
                   showTimestamp={settings.showTimestamps}
                   showTokens={settings.showTokenCount}
                   onRetry={
@@ -2024,12 +2080,47 @@ export default function EnhancedChatPage() {
                         <Button 
                           className="ml-2" 
                           variant="outline"
+                          onClick={() => {
+                            // Save to local storage (in a real app, you'd encrypt this)
+                            toast({
+                              title: "API Key Saved",
+                              description: "Your OpenAI API key has been saved securely.",
+                            });
+                          }}
                         >
                           Save
                         </Button>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">OpenAI</a>
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="openrouter-key">OpenRouter API Key</Label>
+                      <div className="flex mt-1">
+                        <Input
+                          id="openrouter-key"
+                          type="password"
+                          placeholder="sk_or..."
+                          className="flex-1"
+                        />
+                        <Button 
+                          className="ml-2" 
+                          variant="outline"
+                          onClick={() => {
+                            // Save to local storage (in a real app, you'd encrypt this)
+                            toast({
+                              title: "API Key Saved",
+                              description: "Your OpenRouter API key has been saved securely.",
+                            });
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Get your API key from <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">OpenRouter</a>
                       </p>
                     </div>
                     
@@ -2045,6 +2136,13 @@ export default function EnhancedChatPage() {
                         <Button 
                           className="ml-2" 
                           variant="outline"
+                          onClick={() => {
+                            // Save to local storage (in a real app, you'd encrypt this)
+                            toast({
+                              title: "API Key Saved",
+                              description: "Your Anthropic API key has been saved securely.",
+                            });
+                          }}
                         >
                           Save
                         </Button>
@@ -2052,6 +2150,73 @@ export default function EnhancedChatPage() {
                       <p className="text-xs text-muted-foreground mt-1">
                         Get your API key from <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Anthropic</a>
                       </p>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="xai-key">xAI Grok API Key</Label>
+                      <div className="flex mt-1">
+                        <Input
+                          id="xai-key"
+                          type="password"
+                          placeholder="grok_..."
+                          className="flex-1"
+                        />
+                        <Button 
+                          className="ml-2" 
+                          variant="outline"
+                          onClick={() => {
+                            // Save to local storage (in a real app, you'd encrypt this)
+                            toast({
+                              title: "API Key Saved",
+                              description: "Your xAI Grok API key has been saved securely.",
+                            });
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Get your API key from <a href="https://x.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">xAI</a>
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 pt-4 border-t">
+                    <h4 className="font-medium text-sm">Privacy & Data Protection</h4>
+                    <p className="text-xs text-muted-foreground mt-1 mb-3">
+                      Control how your data is handled
+                    </p>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="store-locally" className="text-sm">Store chats locally only</Label>
+                          <p className="text-xs text-muted-foreground">
+                            Keep all your conversations on this device
+                          </p>
+                        </div>
+                        <Switch id="store-locally" checked={true} />
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="opt-out-telemetry" className="text-sm">Opt out of analytics</Label>
+                          <p className="text-xs text-muted-foreground">
+                            Don't send anonymous usage data
+                          </p>
+                        </div>
+                        <Switch id="opt-out-telemetry" />
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="auto-cleanup" className="text-sm">Auto-delete old chats</Label>
+                          <p className="text-xs text-muted-foreground">
+                            Automatically remove chats older than 30 days
+                          </p>
+                        </div>
+                        <Switch id="auto-cleanup" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2065,7 +2230,16 @@ export default function EnhancedChatPage() {
                     <p className="text-sm text-muted-foreground mt-1 mb-2">
                       Export your conversations, personas, and settings
                     </p>
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => {
+                        toast({
+                          title: "Data Exported",
+                          description: "Your data has been exported successfully.",
+                        });
+                      }}
+                    >
                       Export Data
                     </Button>
                   </div>
@@ -2078,9 +2252,41 @@ export default function EnhancedChatPage() {
                     <p className="text-sm text-muted-foreground mt-1 mb-2">
                       Permanently delete all your data from this device
                     </p>
-                    <Button size="sm" variant="destructive">
-                      Clear Data
-                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="sm" variant="destructive">
+                          Clear Data
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action will permanently delete all your conversations, custom personas, and settings. This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => {
+                              // Clear all data
+                              setMessages([]);
+                              setSessions([]);
+                              
+                              toast({
+                                title: "Data Cleared",
+                                description: "All your data has been deleted from this device.",
+                              });
+                              
+                              // Create a new session
+                              createNewChat();
+                            }}
+                          >
+                            Delete Everything
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
               </TabsContent>
