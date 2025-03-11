@@ -26,13 +26,14 @@ import Dashboard from '@/pages/Dashboard';
 import AIPersonasPage from './pages/AIPersonasPage';
 import AIFrameworkAgents from './pages/AIFrameworkAgents';
 import OpenWebUIPage from './pages/OpenWebUIPage';
+import EnhancedChatPage from './pages/EnhancedChatPage';
 
 
 function Router() {
   const [location] = useLocation();
 
   // Check if current route is full screen chat (to hide header/footer)
-  const isFullScreenChat = location.startsWith('/chat-fullscreen/');
+  const isFullScreenChat = location.startsWith('/chat-fullscreen/') || location.startsWith('/chat-enhanced');
 
   return (
     <AnimatePresence mode="wait">
@@ -50,6 +51,7 @@ function Router() {
         <Route path="/agents" component={AgentManagementPage} />
         <Route path="/chat/:agentId" component={ChatWithAgentPage} />
         <Route path="/chat-fullscreen/:agentId" component={ChatWithAgentFullScreen} />
+        <Route path="/chat-enhanced" component={EnhancedChatPage} />
         <Route path="/agent-conversation/:agentId?" component={AgentConversationPage} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/ai-personas" component={AIPersonasPage} />
@@ -65,7 +67,7 @@ function App() {
   const [location] = useLocation();
 
   // Check if current route is full screen chat (to hide header/footer)
-  const isFullScreenChat = location.startsWith('/chat-fullscreen/');
+  const isFullScreenChat = location.startsWith('/chat-fullscreen/') || location.startsWith('/chat-enhanced');
 
   return (
     <QueryClientProvider client={queryClient}>
