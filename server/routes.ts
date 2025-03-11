@@ -1,3 +1,4 @@
+
 import type { Express } from "express";
 import { createServer, type Server as HTTPServer } from "http";
 import { storage } from "./storage";
@@ -25,7 +26,8 @@ import { registerAgentRoutes } from "./routes/agent-routes";
 import { registerAIConfigRoutes } from "./routes/ai-config-routes";
 import { advancedAgentPersonas } from './agent-framework/advanced-agent-personas';
 import { AI_MODELS } from '../shared/ai-models-config';
-
+import creditSystemRouter from './routes/credit-system';
+import recommendationsRouter from './routes/recommendations';
 
 export async function registerRoutes(app: Express): Promise<HTTPServer> {
   const router = Router();
@@ -744,20 +746,25 @@ Format the response as JSON with this structure:
     log(`Error initializing blog storage: ${error}`, "error");
   }
 
-  //Register agent routes directly on Express app
-  registerAgentRoutes(app);
-  
-  //Register AI configuration routes
-  registerAIConfigRoutes(app);
+  // Register new routes
+  router.use("/credits", creditSystemRouter);
+  router.use("/recommendations", recommendationsRouter);
 
-  app.use("/api", router);
-
+  // Register existing routes
   router.use("/embeddings", AIEmbeddings);
   router.use("/completion", AICompletion);
   router.use("/convert", convertRouter);
   router.use("/agent-management", agentManagementRouter);
   router.use("/ai/conversation", conversationRouter);
   router.use("/ai/personas", agentPersonasRouter);
+
+  // Register agent routes directly on Express app
+  registerAgentRoutes(app);
+  
+  // Register AI configuration routes
+  registerAIConfigRoutes(app);
+
+  app.use("/api", router);
 
   // Health check endpoint for monitoring
   router.get('/health', (req: Request, res: Response) => {
@@ -770,4 +777,22 @@ Format the response as JSON with this structure:
 
   const httpServer = createServer(app);
   return httpServer;
+}
+
+// Helper function to generate AI responses
+async function generateAIResponse(messages: any[], model: string, provider: string) {
+  try {
+    const completion = await getCompletion({
+      messages,
+      model,
+      provider,
+      temperature: 0.7,
+      max_tokens: 1000
+    });
+    
+    return completion.text;
+  } catch (error) {
+    console.error('Error generating AI response:', error);
+    throw new Error('Failed to generate AI response');
+  }
 }
