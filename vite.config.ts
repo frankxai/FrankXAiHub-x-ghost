@@ -9,6 +9,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
+  server: {
+    host: '0.0.0.0',
+    port: 5173, // your current port
+    allowedHosts: [
+      '.replit.dev', // Allow all subdomains of replit.dev
+      '.repl.co',    // Also useful if using repl.co domains
+      'localhost'
+    ],
+  },
   plugins: [
     react(),
     runtimeErrorOverlay(),

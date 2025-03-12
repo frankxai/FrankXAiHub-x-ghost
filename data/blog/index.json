@@ -1,5 +1,5 @@
 {
-  "lastId": 76,
+  "lastId": 78,
   "posts": [
     {
       "id": 1,
@@ -1255,6 +1255,40 @@
       "category": "AI Techniques",
       "authorName": "Frank Riemer",
       "publishedAt": "2025-03-11T23:38:42.416Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
+      "featured": true
+    },
+    {
+      "id": 77,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-12T22:07:39.614Z",
+      "readTime": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
+      "tags": [
+        "prompt-engineering",
+        "ai-communication",
+        "tutorials"
+      ],
+      "featured": true
+    },
+    {
+      "id": 78,
+      "slug": "mastering-the-art-of-prompt-engineering-a-practical-guide",
+      "title": "Mastering the Art of Prompt Engineering: A Practical Guide",
+      "excerpt": "Learn expert techniques to craft effective AI prompts that generate exceptional results. This practical guide includes proven strategies for content creation, programming, data analysis, and creative tasks, along with an interactive guide with examples you can use right away.",
+      "category": "AI Techniques",
+      "authorName": "Frank Riemer",
+      "publishedAt": "2025-03-12T22:08:20.100Z",
       "readTime": 8,
       "imageUrl": "https://images.unsplash.com/photo-1677696393693-5640ca453ecd?q=80&w=2070&auto=format&fit=crop",
       "tags": [
