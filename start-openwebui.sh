@@ -2,22 +2,22 @@
 
 echo "Starting OpenWebUI..."
 
+# Navigate to OpenWebUI directory
+cd openwebui
+
 # Check if the build directory exists
-if [ ! -d "openwebui/build" ]; then
-  echo "Build directory not found. Running build script first..."
-  ./build-openwebui.sh
+if [ ! -d "build" ]; then
+  echo "Build directory not found. Running build process first..."
+  npm install
+  npm run build
+  touch build/.nojekyll
 fi
 
-# Start OpenWebUI
-cd openwebui
-npm run preview -- --port 3000 &
-OPENWEBUI_PID=$!
+# You could start a separate server for OpenWebUI here if needed
+# For now, we'll rely on serving the static files via Express
 
-echo "OpenWebUI started with PID: $OPENWEBUI_PID"
-echo "You can access it at: http://localhost:3000"
+echo "OpenWebUI is ready!"
+echo "You can access it through the main application server."
 
 # Return to project root
 cd ..
-
-# Wait for OpenWebUI process to finish
-wait $OPENWEBUI_PID
