@@ -16,7 +16,7 @@ import { AICompletionRequest, AICompletionResponse, AIPersona, AI_PERSONAS, PROM
 import { log } from "./vite";
 import * as blogStorage from "./blog-storage";
 import express, { Router, Request, Response } from "express";
-import { createProxyMiddleware } from 'http-proxy-middleware';
+// Direct integration for OpenWebUI
 import path from 'path';
 import fs from 'fs';
 import AIEmbeddings from "./routes/embeddings";
@@ -778,15 +778,19 @@ Format the response as JSON with this structure:
     });
   });
   
-  // Set up proxy for OpenWebUI
-  app.use('/openwebui', createProxyMiddleware({
-    target: 'http://localhost:8080',
-    changeOrigin: true,
-    pathRewrite: {
-      '^/openwebui': ''
-    },
-    ws: true // Enable WebSocket proxy
+  // Direct integration of OpenWebUI content
+  const openWebUIPath = path.join(process.cwd(), 'openwebui', 'build');
+  
+  // Serve OpenWebUI static files directly
+  app.use('/openwebui', express.static(openWebUIPath, {
+    index: 'index.html',
+    extensions: ['html']
   }));
+  
+  // Handle routes for OpenWebUI SPA - catch all routes and redirect to index.html
+  app.get('/openwebui/*', (req, res) => {
+    res.sendFile(path.join(openWebUIPath, 'index.html'));
+  });
 
   const httpServer = createServer(app);
   return httpServer;
