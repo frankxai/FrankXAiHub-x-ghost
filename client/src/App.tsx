@@ -32,8 +32,10 @@ import EnhancedChatPage from './pages/EnhancedChatPage';
 function Router() {
   const [location] = useLocation();
 
-  // Check if current route is full screen chat (to hide header/footer)
-  const isFullScreenChat = location.startsWith('/chat-fullscreen/') || location.startsWith('/chat-enhanced');
+  // Check if current route is full screen (to hide header/footer)
+  const isFullScreen = location.startsWith('/chat-fullscreen/') || 
+                      location.startsWith('/chat-enhanced') || 
+                      location.startsWith('/openwebui');
 
   return (
     <AnimatePresence mode="wait">
@@ -66,19 +68,21 @@ function Router() {
 function App() {
   const [location] = useLocation();
 
-  // Check if current route is full screen chat (to hide header/footer)
-  const isFullScreenChat = location.startsWith('/chat-fullscreen/') || location.startsWith('/chat-enhanced');
+  // Check if current route is full screen (to hide header/footer)
+  const isFullScreen = location.startsWith('/chat-fullscreen/') || 
+                      location.startsWith('/chat-enhanced') || 
+                      location.startsWith('/openwebui');
 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="frankx-theme">
         <div className="flex flex-col min-h-screen">
-          {!isFullScreenChat && <Header />}
-          <main className={`flex-grow ${isFullScreenChat ? 'h-screen' : ''}`}>
+          {!isFullScreen && <Header />}
+          <main className={`flex-grow ${isFullScreen ? 'h-screen' : ''}`}>
             <Router />
           </main>
-          {!isFullScreenChat && <Footer />}
-          {!isFullScreenChat && <FrankXAI />}
+          {!isFullScreen && <Footer />}
+          {!isFullScreen && <FrankXAI />}
         </div>
         <Toaster />
       </ThemeProvider>

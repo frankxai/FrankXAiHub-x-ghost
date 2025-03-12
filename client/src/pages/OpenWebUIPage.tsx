@@ -1,28 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { OpenWebUI } from '@/components/chat/OpenWebUI';
-import { 
-  Button, Card, Spinner, Select, SelectTrigger, SelectValue, SelectContent,
-  SelectItem, Tabs, TabsList, TabsTrigger, TabsContent, Switch, Label, Badge, 
-  Separator, Tooltip, TooltipTrigger, TooltipContent, TooltipProvider
-} from '@/components/ui';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { useToast } from '@/hooks/use-toast';
-import { 
-  ArrowLeft, Settings, Cloud, Brain, Zap, Clock, Plus, 
-  Bot, History, Download, Upload, Database, Moon, Sun, 
-  Monitor, Palette, Trash2, Edit, Save, MessageSquare, Search,
-  Cpu, User, Menu
-} from 'lucide-react';
+import { Card, Button, Spinner } from '@/components/ui';
+import { ArrowLeft } from 'lucide-react';
 
 interface ModelOption {
   id: string;
@@ -54,31 +33,19 @@ interface ChatSession {
 
 export function OpenWebUIPage() {
   const [, setLocation] = useLocation();
-  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
   
-  // Main data states
-  const [models, setModels] = useState<ModelOption[]>([]);
-  const [personalities, setPersonalities] = useState<PersonalityOption[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>('openai/gpt-4o');
-  const [selectedPersonality, setSelectedPersonality] = useState<string>('frankx-default');
-  const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
-  const [activeChatId, setActiveChatId] = useState<string | null>(null);
-  
-  // UI states
-  const [loadingModels, setLoadingModels] = useState(true);
-  const [loadingPersonalities, setLoadingPersonalities] = useState(true);
-  const [showModelSelector, setShowModelSelector] = useState(false);
-  const [showPersonaSelector, setShowPersonaSelector] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isCreatingPersona, setIsCreatingPersona] = useState(false);
-  const [newPersona, setNewPersona] = useState<Partial<PersonalityOption>>({
-    name: '',
-    description: '',
-    systemPrompt: ''
-  });
+  // Simulate app initialization
+  useEffect(() => {
+    // For a smooth transition
+    const timer = setTimeout(() => {
+      setLoading(false);
+      // Redirect user immediately to OpenWebUI interface
+      window.location.href = '/openwebui/';
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Create a new chat session on initial load if none exists
   useEffect(() => {

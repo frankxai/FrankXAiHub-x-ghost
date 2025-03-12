@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, Spinner } from '@/components/ui';
+import React, { useState, useEffect } from 'react';
+import { Card, Spinner, Button } from '@/components/ui';
+import { useLocation } from 'wouter';
 
 interface OpenWebUIProps {
   modelId?: string;
@@ -24,54 +25,53 @@ export function OpenWebUI({
   fullScreen = false,
   showOpenWebUI = true,
 }: OpenWebUIProps) {
-  const [iframeLoading, setIframeLoading] = useState(true);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [loading, setLoading] = useState(true);
+  const [, setLocation] = useLocation();
   
-  // Handle iframe load event
-  const handleIframeLoad = () => {
-    setIframeLoading(false);
-  };
-  
-  // Set up postMessage communication if needed in the future
   useEffect(() => {
-    const handleMessageFromIframe = (event: MessageEvent) => {
-      // Handle messages from the iframe if needed
-      if (event.origin !== window.location.origin) return;
-      
-      // Example: Process messages from OpenWebUI
-      if (event.data && event.data.type === 'openwebui-message') {
-        console.log('Message from OpenWebUI:', event.data);
-      }
-    };
+    // Simulate loading time to match the app's state initialization
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800);
     
-    window.addEventListener('message', handleMessageFromIframe);
-    
-    return () => {
-      window.removeEventListener('message', handleMessageFromIframe);
-    };
+    return () => clearTimeout(timer);
   }, []);
+  
+  const handleOpenWebUI = () => {
+    // Navigate directly to the OpenWebUI interface
+    window.location.href = '/openwebui';
+  };
   
   return (
     <Card className={`flex flex-col ${fullScreen ? 'h-[calc(100vh-4rem)]' : 'h-[600px]'} ${className} overflow-hidden`}>
-      {iframeLoading && (
+      {loading ? (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
           <div className="flex flex-col items-center gap-4">
             <Spinner size="lg" />
-            <p className="text-muted-foreground">Loading OpenWebUI...</p>
+            <p className="text-muted-foreground">Preparing OpenWebUI experience...</p>
           </div>
         </div>
-      )}
-      
-      {showOpenWebUI && (
-        <iframe
-          ref={iframeRef}
-          src="/openwebui"
-          title="OpenWebUI Interface"
-          className="w-full h-full border-0"
-          onLoad={handleIframeLoad}
-          allow="camera; microphone; clipboard-read; clipboard-write"
-          sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-downloads"
-        />
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+          <h2 className="text-2xl font-bold mb-2">OpenWebUI Integration</h2>
+          <p className="text-muted-foreground mb-6 max-w-md">
+            Access the full-featured OpenWebUI experience directly from our application, 
+            with all your data and preferences synchronized.
+          </p>
+          
+          <Button 
+            size="lg" 
+            onClick={handleOpenWebUI}
+            className="px-6"
+          >
+            Launch OpenWebUI
+          </Button>
+          
+          <div className="mt-10 text-sm text-muted-foreground max-w-lg">
+            <p>OpenWebUI is now integrated directly into the application without iframes or separate servers. 
+            Click the button above to experience the full capabilities of OpenWebUI while staying within the FrankX.AI ecosystem.</p>
+          </div>
+        </div>
       )}
     </Card>
   );
