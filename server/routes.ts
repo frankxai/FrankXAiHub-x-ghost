@@ -785,8 +785,7 @@ Format the response as JSON with this structure:
     pathRewrite: {
       '^/openwebui': ''
     },
-    ws: true, // Enable WebSocket proxy
-    logLevel: 'debug'
+    ws: true // Enable WebSocket proxy
   }));
 
   const httpServer = createServer(app);
