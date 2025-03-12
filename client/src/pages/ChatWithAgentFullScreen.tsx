@@ -6,6 +6,7 @@ import { AICharacter } from '@shared/schema';
 import { motion } from 'framer-motion';
 import { fadeIn } from '@/lib/animations';
 import { useToast } from '@/hooks/use-toast';
+import { OpenWebUI } from '@/components/chat/OpenWebUI';
 import {
   Volume2, VolumeX, Mic, MicOff, Send, Bot, User,
   Settings, ChevronLeft, Menu, RefreshCw, Download,
@@ -552,13 +553,12 @@ const ChatWithAgentFullScreen: React.FC = () => {
         </header>
 
         {showOpenWebUI ? (
-          /* OpenWebUI iframe */
+          /* OpenWebUI component */
           <div className="flex-1 h-full w-full">
-            <iframe 
-              src="/openwebui" 
-              className="w-full h-full border-0" 
-              title="OpenWebUI"
-              allowFullScreen
+            <OpenWebUI 
+              showOpenWebUI={true}
+              fullScreen={true}
+              className="border-0"
             />
           </div>
         ) : (
