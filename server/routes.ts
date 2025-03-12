@@ -16,6 +16,9 @@ import { AICompletionRequest, AICompletionResponse, AIPersona, AI_PERSONAS, PROM
 import { log } from "./vite";
 import * as blogStorage from "./blog-storage";
 import express, { Router, Request, Response } from "express";
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import path from 'path';
+import fs from 'fs';
 import AIEmbeddings from "./routes/embeddings";
 import AICompletion from "./routes/completion";
 import convertRouter from "./routes/convert";
@@ -774,6 +777,17 @@ Format the response as JSON with this structure:
       timestamp: new Date().toISOString()
     });
   });
+  
+  // Set up proxy for OpenWebUI
+  app.use('/openwebui', createProxyMiddleware({
+    target: 'http://localhost:8080',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/openwebui': ''
+    },
+    ws: true, // Enable WebSocket proxy
+    logLevel: 'debug'
+  }));
 
   const httpServer = createServer(app);
   return httpServer;

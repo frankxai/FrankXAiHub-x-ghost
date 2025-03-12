@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import {
   Volume2, VolumeX, Mic, MicOff, Send, Bot, User,
   Settings, ChevronLeft, Menu, RefreshCw, Download,
-  Share2, MoreVertical, Zap
+  Share2, MoreVertical, Zap, Globe
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -91,6 +91,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
   const [activeThread, setActiveThread] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState('openai/gpt-4o'); // Default model
   const [showAgentSelector, setShowAgentSelector] = useState(false);
+  const [showOpenWebUI, setShowOpenWebUI] = useState(false);
   const [models, setModels] = useState([
     // OpenAI models
     { id: 'openai/gpt-4o', name: 'GPT-4o', provider: 'OpenAI' },
@@ -531,149 +532,177 @@ const ChatWithAgentFullScreen: React.FC = () => {
               </Tooltip>
             </TooltipProvider>
 
-            <ModelSelectionDropdown selectedModel={selectedModel} onModelSelect={setSelectedModel} /> {/* Integrated model selection */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant={showOpenWebUI ? "default" : "ghost"} 
+                    size="icon" 
+                    onClick={() => setShowOpenWebUI(!showOpenWebUI)}
+                  >
+                    <Globe className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Toggle OpenWebUI</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <ModelSelectionDropdown selectedModel={selectedModel} onModelSelect={setSelectedModel} />
           </div>
         </header>
 
-
-        {/* Messages area */}
-        <div className="flex-1 overflow-y-auto p-4 bg-background">
-          <div className="max-w-3xl mx-auto">
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                variants={fadeIn}
-                initial="initial"
-                animate="animate"
-                className={cn(
-                  "flex mb-6",
-                  message.sender === 'user' ? "justify-end" : "justify-start"
-                )}
-              >
-                {message.sender === 'ai' && (
-                  <Avatar className="h-8 w-8 mr-3 mt-1">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      {agent?.name.charAt(0) || 'A'}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-
-                <div
-                  className={cn(
-                    "max-w-[80%] rounded-lg p-4",
-                    message.sender === 'user'
-                      ? "bg-primary text-primary-foreground"
-                      : message.isThinking
-                        ? "bg-muted text-muted-foreground animate-pulse"
-                        : "bg-card border border-border"
-                  )}
-                >
-                  {message.isThinking ? (
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: '100ms' }}></div>
-                      <div className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: '200ms' }}></div>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="prose prose-sm dark:prose-invert max-w-none">
-                        {message.content.split('\n').map((line, i) => (
-                          <p key={i} className={i > 0 ? 'mt-2' : ''}>
-                            {line}
-                          </p>
-                        ))}
-                      </div>
-
-                      <div className="flex items-center justify-between mt-2 pt-2 text-xs text-muted-foreground border-t border-border/30">
-                        <span>{formatTime(message.timestamp)}</span>
-
-                        {message.sender === 'ai' && (
-                          <div className="flex gap-2">
-                            <button className="hover:text-foreground transition-colors">
-                              <RefreshCw className="h-3 w-3" />
-                            </button>
-                            <button className="hover:text-foreground transition-colors">
-                              <Volume2 className="h-3 w-3" />
-                            </button>
-                            <button className="hover:text-foreground transition-colors">
-                              <MoreVertical className="h-3 w-3" />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                {message.sender === 'user' && (
-                  <Avatar className="h-8 w-8 ml-3 mt-1">
-                    <AvatarFallback className="bg-accent text-accent-foreground">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-              </motion.div>
-            ))}
-            <div ref={messagesEndRef} />
+        {showOpenWebUI ? (
+          /* OpenWebUI iframe */
+          <div className="flex-1 h-full w-full">
+            <iframe 
+              src="/openwebui" 
+              className="w-full h-full border-0" 
+              title="OpenWebUI"
+              allowFullScreen
+            />
           </div>
-        </div>
+        ) : (
+          <>
+            {/* Messages area */}
+            <div className="flex-1 overflow-y-auto p-4 bg-background">
+              <div className="max-w-3xl mx-auto">
+                {messages.map((message) => (
+                  <motion.div
+                    key={message.id}
+                    variants={fadeIn}
+                    initial="initial"
+                    animate="animate"
+                    className={cn(
+                      "flex mb-6",
+                      message.sender === 'user' ? "justify-end" : "justify-start"
+                    )}
+                  >
+                    {message.sender === 'ai' && (
+                      <Avatar className="h-8 w-8 mr-3 mt-1">
+                        <AvatarFallback className="bg-primary text-primary-foreground">
+                          {agent?.name.charAt(0) || 'A'}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
 
-        {/* Input area */}
-        <footer className="border-t border-border p-4 bg-background">
-          <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-            <div className="relative">
-              <Input
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Message..."
-                disabled={isLoading}
-                className="pr-28 py-6 rounded-full bg-card border-border"
-              />
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        disabled={isLoading || isListening}
-                        className="text-muted-foreground"
-                      >
-                        <Mic className="h-5 w-5" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Use voice input</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                    <div
+                      className={cn(
+                        "max-w-[80%] rounded-lg p-4",
+                        message.sender === 'user'
+                          ? "bg-primary text-primary-foreground"
+                          : message.isThinking
+                            ? "bg-muted text-muted-foreground animate-pulse"
+                            : "bg-card border border-border"
+                      )}
+                    >
+                      {message.isThinking ? (
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                          <div className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: '100ms' }}></div>
+                          <div className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: '200ms' }}></div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="prose prose-sm dark:prose-invert max-w-none">
+                            {message.content.split('\n').map((line, i) => (
+                              <p key={i} className={i > 0 ? 'mt-2' : ''}>
+                                {line}
+                              </p>
+                            ))}
+                          </div>
 
-                <Button
-                  type="submit"
-                  variant="default"
-                  size="icon"
-                  disabled={!input.trim() || isLoading}
-                  className="rounded-full"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
+                          <div className="flex items-center justify-between mt-2 pt-2 text-xs text-muted-foreground border-t border-border/30">
+                            <span>{formatTime(message.timestamp)}</span>
+
+                            {message.sender === 'ai' && (
+                              <div className="flex gap-2">
+                                <button className="hover:text-foreground transition-colors">
+                                  <RefreshCw className="h-3 w-3" />
+                                </button>
+                                <button className="hover:text-foreground transition-colors">
+                                  <Volume2 className="h-3 w-3" />
+                                </button>
+                                <button className="hover:text-foreground transition-colors">
+                                  <MoreVertical className="h-3 w-3" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {message.sender === 'user' && (
+                      <Avatar className="h-8 w-8 ml-3 mt-1">
+                        <AvatarFallback className="bg-accent text-accent-foreground">
+                          <User className="h-4 w-4" />
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </motion.div>
+                ))}
+                <div ref={messagesEndRef} />
               </div>
             </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="font-normal">
-                  {selectedModel}
-                </Badge>
-                <Badge variant="outline" className="font-normal">
-                  {selectedTone}
-                </Badge>
-              </div>
-              <div>
-                <span>Temp: {temperature.toFixed(1)}</span>
-              </div>
-            </div>
-          </form>
-        </footer>
+
+            {/* Input area */}
+            <footer className="border-t border-border p-4 bg-background">
+              <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
+                <div className="relative">
+                  <Input
+                    ref={inputRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Message..."
+                    disabled={isLoading}
+                    className="pr-28 py-6 rounded-full bg-card border-border"
+                  />
+                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            disabled={isLoading || isListening}
+                            className="text-muted-foreground"
+                          >
+                            <Mic className="h-5 w-5" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Use voice input</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <Button
+                      type="submit"
+                      variant="default"
+                      size="icon"
+                      disabled={!input.trim() || isLoading}
+                      className="rounded-full"
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="font-normal">
+                      {selectedModel}
+                    </Badge>
+                    <Badge variant="outline" className="font-normal">
+                      {selectedTone}
+                    </Badge>
+                  </div>
+                  <div>
+                    <span>Temp: {temperature.toFixed(1)}</span>
+                  </div>
+                </div>
+              </form>
+            </footer>
+          </>
+        )}
       </div>
 
       {/* Agent Selector Modal */}
@@ -689,7 +718,6 @@ const ChatWithAgentFullScreen: React.FC = () => {
           </div>
         </div>
       )}
-
 
       {/* Settings Drawer is already included inside the sidebar footer */}
     </div>
