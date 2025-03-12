@@ -92,7 +92,7 @@ const ChatWithAgentFullScreen: React.FC = () => {
   const [activeThread, setActiveThread] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState('openai/gpt-4o'); // Default model
   const [showAgentSelector, setShowAgentSelector] = useState(false);
-  const [showOpenWebUI, setShowOpenWebUI] = useState(false);
+  const [showOpenWebUI, setShowOpenWebUI] = useState(true); // Initialize OpenWebUI to be shown by default
   const [models, setModels] = useState([
     // OpenAI models
     { id: 'openai/gpt-4o', name: 'GPT-4o', provider: 'OpenAI' },
