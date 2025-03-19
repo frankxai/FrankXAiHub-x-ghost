@@ -767,6 +767,9 @@ Format the response as JSON with this structure:
   
   // Register AI configuration routes
   registerAIConfigRoutes(app);
+  
+  // Register Ghost CMS blog routes
+  registerGhostBlogRoutes(app);
 
   app.use("/api", router);
 
