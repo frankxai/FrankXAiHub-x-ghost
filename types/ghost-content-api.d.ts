@@ -1,3 +1,6 @@
+/**
+ * Type declarations for Ghost Content API
+ */
 declare module '@tryghost/content-api' {
   interface GhostContentAPIOptions {
     url: string;
