@@ -18,7 +18,6 @@ import * as blogStorage from "./blog-storage";
 import express, { Router, Request, Response } from "express";
 // Direct integration for OpenWebUI
 import path from 'path';
-import { registerGhostBlogRoutes } from "./routes/ghost-blog";
 import fs from 'fs';
 import AIEmbeddings from "./routes/embeddings";
 import AICompletion from "./routes/completion";
