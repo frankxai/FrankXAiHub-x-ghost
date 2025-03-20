@@ -16,48 +16,22 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Clock, Calendar, Tag, Search } from 'lucide-react';
-
-interface BlogPost {
-  id: number;
-  title: string;
-  excerpt: string;
-  content: string;
-  slug: string;
-  authorName: string;
-  publishedAt: string;
-  readTime: number;
-  category: string;
-  imageUrl?: string;
-  tags?: string[];
-  featured?: boolean;
-}
+import { BlogPost, fetchAllBlogPosts, fetchFeaturedPosts } from '../../lib/blogApi';
 
 const BlogPostsList: React.FC = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Fetch blog posts
+  // Fetch blog posts from both file-based and Sanity CMS systems
   const { data: blogPosts, isLoading, error } = useQuery({
-    queryKey: ['/api/blog-posts'],
-    queryFn: async () => {
-      const response = await fetch('/api/blog-posts');
-      if (!response.ok) {
-        throw new Error('Failed to fetch blog posts');
-      }
-      return response.json();
-    }
+    queryKey: ['blog-posts'],
+    queryFn: fetchAllBlogPosts
   });
 
-  // Fetch featured blog posts
+  // Fetch featured blog posts from both systems
   const { data: featuredPosts, isLoading: isFeaturedLoading } = useQuery({
-    queryKey: ['/api/blog-posts/featured'],
-    queryFn: async () => {
-      const response = await fetch('/api/blog-posts/featured');
-      if (!response.ok) {
-        throw new Error('Failed to fetch featured blog posts');
-      }
-      return response.json();
-    }
+    queryKey: ['featured-posts'],
+    queryFn: fetchFeaturedPosts
   });
 
   // Filter posts based on search term and active tab

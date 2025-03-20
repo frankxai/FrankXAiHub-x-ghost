@@ -12,43 +12,18 @@ import { Share2, Calendar, Clock, ArrowLeft } from 'lucide-react';
 import { Link } from 'wouter';
 import { TextSelectionProvider } from '../social/TextSelectionShareProvider';
 import SelectionToolbar from '../social/SelectionToolbar';
+import { fetchBlogPostById } from '../../lib/blogApi';
 
 const BlogPostDetail: React.FC = () => {
   const { id } = useParams();
   const postId = parseInt(id || '0');
 
-  // First try to get the post from file-based system
-  const { data: fileBasedPost, isLoading: isLoadingFileBasedPost, error: fileBasedError } = useQuery({
-    queryKey: ['/api/blog-posts', postId],
-    queryFn: async () => {
-      const response = await fetch(`/api/blog-posts/${postId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch blog post from file system');
-      }
-      return response.json();
-    },
-    enabled: !!postId,
-    retry: false,
+  // Fetch post from both systems using our unified API
+  const { data: post, isLoading, error } = useQuery({
+    queryKey: ['blog-post', postId],
+    queryFn: () => fetchBlogPostById(postId),
+    enabled: !!postId
   });
-
-  // If file-based system fails, try Sanity CMS
-  const { data: sanityPost, isLoading: isLoadingSanityPost, error: sanityError } = useQuery({
-    queryKey: ['/api/blog', postId],
-    queryFn: async () => {
-      const response = await fetch(`/api/blog/${postId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch blog post from Sanity');
-      }
-      return response.json();
-    },
-    enabled: !!postId && !!fileBasedError,
-    retry: false,
-  });
-
-  // Combine results
-  const post = fileBasedPost || sanityPost;
-  const isLoading = isLoadingFileBasedPost || isLoadingSanityPost;
-  const error = fileBasedError && sanityError;
 
   // Calculate the post URL for sharing
   const postUrl = typeof window !== 'undefined' 
