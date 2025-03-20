@@ -8,26 +8,19 @@ dotenv.config();
 // Sanity CMS client setup
 let sanityClient: ReturnType<typeof createClient> | null = null;
 
-try {
-  if (
-    process.env.SANITY_PROJECT_ID &&
-    process.env.SANITY_DATASET &&
-    process.env.SANITY_API_TOKEN
-  ) {
-    sanityClient = createClient({
-      projectId: process.env.SANITY_PROJECT_ID,
-      dataset: process.env.SANITY_DATASET,
-      useCdn: process.env.NODE_ENV === 'production',
-      apiVersion: '2021-10-21', // Use a date in the format: YYYY-MM-DD
-      token: process.env.SANITY_API_TOKEN
-    });
-    console.log('Sanity CMS API client initialized successfully');
-  } else {
-    console.warn('Sanity CMS API credentials not found in environment variables');
-  }
-} catch (error) {
-  console.error('Failed to initialize Sanity CMS API client:', error);
+if (!process.env.SANITY_PROJECT_ID || !process.env.SANITY_DATASET || !process.env.SANITY_API_TOKEN) {
+  throw new Error('Missing required Sanity environment variables');
 }
+
+sanityClient = createClient({
+  projectId: process.env.SANITY_PROJECT_ID,
+  dataset: process.env.SANITY_DATASET,
+  useCdn: false,
+  apiVersion: '2023-05-03',
+  token: process.env.SANITY_API_TOKEN
+});
+
+console.log('Sanity CMS API client initialized');
 
 /**
  * Transform a Sanity post into our app's BlogPost type
