@@ -27,7 +27,7 @@ import conversationRouter from "./routes/conversation";
 import agentPersonasRouter from "./routes/agent-personas";
 import { registerAgentRoutes } from "./routes/agent-routes";
 import { registerAIConfigRoutes } from "./routes/ai-config-routes";
-import { registerGhostBlogRoutes } from "./routes/ghost-blog";
+import { registerSanityBlogRoutes } from "./routes/sanity-blog";
 import { advancedAgentPersonas } from './agent-framework/advanced-agent-personas';
 import { AI_MODELS } from '../shared/ai-models-config';
 import creditSystemRouter from './routes/credit-system';
@@ -769,7 +769,7 @@ Format the response as JSON with this structure:
   registerAIConfigRoutes(app);
   
   // Register Ghost CMS blog routes
-  registerGhostBlogRoutes(app);
+  registerSanityBlogRoutes(app);
 
   app.use("/api", router);
 
