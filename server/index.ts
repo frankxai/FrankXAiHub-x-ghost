@@ -92,6 +92,6 @@ app.use((req, res, next) => {
     host: "0.0.0.0",
     reusePort: true,
   }, () => {
-    log(`serving on port ${port} with OpenWebUI integrated`);
+    log(`serving on port ${port} with OpenWebUI integrated at http://0.0.0.0:${port}`);
   });
 })();
