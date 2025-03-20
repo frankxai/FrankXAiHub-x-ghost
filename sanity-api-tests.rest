@@ -1,0 +1,47 @@
+# Sanity CMS API Test Endpoints
+# Use with VS Code REST Client extension or similar
+
+### Get all blog posts
+GET http://localhost:5000/api/blog
+Content-Type: application/json
+
+### Get featured blog posts
+GET http://localhost:5000/api/blog/featured
+Content-Type: application/json
+
+### Get blog post by ID
+GET http://localhost:5000/api/blog/1
+Content-Type: application/json
+
+### Get blog post by slug
+GET http://localhost:5000/api/blog/slug/test-post
+Content-Type: application/json
+
+### Create new blog post
+POST http://localhost:5000/api/blog
+Content-Type: application/json
+
+{
+  "title": "Test Post from Sanity",
+  "slug": "test-post-sanity",
+  "content": "This is a test post content created through the Sanity CMS API.",
+  "excerpt": "A test post for Sanity CMS integration.",
+  "authorName": "Test Author",
+  "category": "Test",
+  "readTime": 2,
+  "tags": ["test", "sanity", "cms"],
+  "featured": true
+}
+
+### Update blog post
+PATCH http://localhost:5000/api/blog/1
+Content-Type: application/json
+
+{
+  "title": "Updated Test Post",
+  "content": "This content has been updated through the Sanity CMS API."
+}
+
+### Delete blog post
+DELETE http://localhost:5000/api/blog/1
+Content-Type: application/json
