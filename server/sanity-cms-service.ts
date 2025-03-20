@@ -40,7 +40,7 @@ const transformSanityPost = (post: any): BlogPost => {
     content: post.content || '',
     excerpt: post.excerpt || '',
     authorName: post.author?.name || 'Unknown',
-    publishedAt: new Date(post.publishedAt || post._createdAt),
+    publishedAt: post.publishedAt || post._createdAt,
     readTime: Math.ceil((post.content?.length || 0) / 1500) || 5, // Estimate reading time
     category: post.category || 'General',
     tags: post.tags || [],
