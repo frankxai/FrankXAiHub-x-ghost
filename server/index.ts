@@ -40,12 +40,31 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Create the prompt engineering blog post
+  // Initialize blog system
   try {
+    // First clean up duplicate posts
+    const { cleanupBlogPosts } = await import("./cleanup-blog");
+    await cleanupBlogPosts();
+    log("Blog cleanup completed", "server");
+    
+    // Create the prompt engineering blog post (only if it doesn't exist)
     await createPromptEngineeringPost();
-    log("Prompt engineering blog post created successfully", "server");
+    log("Blog system initialized successfully", "server");
+    
+    // Generate missing images for blog posts
+    const { generateMissingBlogImages } = await import("./image-generation");
+    // Run image generation in background to avoid blocking server startup
+    setTimeout(async () => {
+      try {
+        await generateMissingBlogImages();
+        log("Blog image generation completed", "server");
+      } catch (error) {
+        log("Blog image generation failed: " + error, "server");
+      }
+    }, 5000); // Start after 5 seconds
+    
   } catch (error) {
-    log("Failed to create prompt engineering blog post: " + error, "server");
+    log("Failed to initialize blog system: " + error, "server");
   }
   
   let server;

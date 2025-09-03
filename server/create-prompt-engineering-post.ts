@@ -1,6 +1,13 @@
 import * as blogStorage from "./blog-storage";
 
 export async function createPromptEngineeringPost() {
+  // Check if the prompt engineering post already exists
+  const existingPost = await blogStorage.getBlogPostBySlug("mastering-prompt-engineering-practical-guide");
+  if (existingPost) {
+    console.log("Prompt engineering post already exists, skipping creation");
+    return existingPost;
+  }
+  
   const now = new Date();
   
   const newPost = {

@@ -8,6 +8,26 @@ FrankX.AI is a sophisticated web platform designed as an AI Center of Excellence
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes (February 2025)
+
+### Blog System Overhaul
+- **Fixed "Too Many Articles" Bug**: Resolved issue where 150+ duplicate blog posts were being created on each server restart
+- **Implemented Blog Post Cleanup**: Automated system that removes duplicates and maintains clean content (reduced from 150 to 5 posts)
+- **Added AI Image Generation**: Integrated OpenAI DALL-E 3 for automatic blog post image generation with category-specific styling
+- **Comprehensive UI/UX Redesign**: Implemented ModernBlogLayout with gradient backgrounds, glass morphism effects, and enhanced visual hierarchy
+
+### CMS Integration Status
+- **Dual System Architecture**: File-based blog storage with Sanity CMS integration as fallback
+- **File System**: Primary storage in `data/blog/` with JSON index and individual post files
+- **Sanity Integration**: Secondary CMS with comprehensive schema and API integration
+- **Unified API**: Single blogApi service that seamlessly handles both systems with automatic failover
+
+### Technical Improvements
+- **Fixed CSS Animation Warnings**: Converted HSL color values to RGB format for better browser compatibility
+- **Enhanced Error Handling**: Comprehensive ErrorBoundary components throughout the application
+- **Loading State Optimization**: Modern skeleton components with proper animation and responsive design
+- **Social Sharing Enhancement**: Multi-platform sharing with text selection toolbar for Twitter/X, LinkedIn, and native sharing
+
 ## System Architecture
 
 ### Frontend Architecture

@@ -9,7 +9,7 @@
     --primary-foreground: 0 0% 100%;
     
     /* Electric blue (futuristic, AI innovation) */
-    --secondary: 195 100% 50%;
+    --secondary: 0 194 255;
     --secondary-foreground: 0 0% 100%;
     
     /* Animatable secondary color for transitions */
@@ -49,7 +49,7 @@
     --primary-foreground: 0 0% 100%;
     
     /* Brighter electric blue for dark mode */
-    --secondary: 195 100% 50%;
+    --secondary: 0 194 255;
     --secondary-foreground: 0 0% 100%;
     
     /* Brighter coral accent for dark mode */
