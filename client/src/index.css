@@ -12,6 +12,9 @@
     --secondary: 195 100% 50%;
     --secondary-foreground: 0 0% 100%;
     
+    /* Animatable secondary color for transitions */
+    --secondary-rgb: 0, 194, 255;
+    
     /* Coral red (energy, creativity) */
     --accent: 348 100% 60%;
     --accent-foreground: 0 0% 100%;

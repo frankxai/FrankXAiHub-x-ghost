@@ -72,7 +72,7 @@ const MusicPlayer = ({ samples }: MusicPlayerProps) => {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h5 className="font-medium text-white">{sample.title}</h5>
-                <p className="text-xs text-gray-400">{sample.tags}</p>
+                <p className="text-xs text-gray-400">{sample.type}</p>
               </div>
               <Button
                 size="icon" 
@@ -96,7 +96,7 @@ const MusicPlayer = ({ samples }: MusicPlayerProps) => {
               <span>
                 {formatTime(progress[sample.id] || 0, sample.duration)}
               </span>
-              <span>{sample.duration}</span>
+              <span>{formatDuration(sample.duration)}</span>
             </div>
           </motion.div>
         ))}
@@ -115,15 +115,20 @@ const MusicPlayer = ({ samples }: MusicPlayerProps) => {
 };
 
 // Helper function to format time
-const formatTime = (progressPercent: number, totalDuration: string) => {
-  const [minutes, seconds] = totalDuration.split(':').map(Number);
-  const totalSeconds = minutes * 60 + seconds;
-  const currentSeconds = Math.floor((totalSeconds * progressPercent) / 100);
+const formatTime = (progressPercent: number, totalDurationSeconds: number) => {
+  const currentSeconds = Math.floor((totalDurationSeconds * progressPercent) / 100);
   
   const currentMinutes = Math.floor(currentSeconds / 60);
   const remainingSeconds = currentSeconds % 60;
   
   return `${currentMinutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
+// Helper function to format duration from seconds to MM:SS
+const formatDuration = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
 export default MusicPlayer;

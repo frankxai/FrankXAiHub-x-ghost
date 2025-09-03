@@ -3,16 +3,17 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'wouter';
 import ReactMarkdown from 'react-markdown';
 import { format } from 'date-fns';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Share2, Calendar, Clock, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 import { Link } from 'wouter';
 import { TextSelectionProvider } from '../social/TextSelectionShareProvider';
 import SelectionToolbar from '../social/SelectionToolbar';
 import { fetchBlogPostById } from '../../lib/blogApi';
+import { ErrorBoundary } from '../ErrorBoundary';
+import { BlogPostDetailSkeleton } from '../ui/loading-states';
 
 const BlogPostDetail: React.FC = () => {
   const { id } = useParams();
@@ -31,7 +32,7 @@ const BlogPostDetail: React.FC = () => {
     : '';
 
   if (isLoading) {
-    return <LoadingSkeleton />;
+    return <BlogPostDetailSkeleton />;
   }
 
   if (error || !post) {
@@ -125,25 +126,10 @@ const BlogPostDetail: React.FC = () => {
   );
 };
 
-const LoadingSkeleton = () => (
-  <div className="max-w-4xl mx-auto px-4 py-8">
-    <Skeleton className="h-10 w-32 mb-6" />
-    <Skeleton className="h-12 w-3/4 mb-4" />
-    <div className="flex flex-wrap gap-4 mb-6">
-      <Skeleton className="h-6 w-32" />
-      <Skeleton className="h-6 w-24" />
-      <Skeleton className="h-6 w-28" />
-    </div>
-    <Skeleton className="h-20 w-full mb-6" />
-    <Skeleton className="h-64 w-full mb-8" />
-    <div className="space-y-4">
-      <Skeleton className="h-6 w-full" />
-      <Skeleton className="h-6 w-full" />
-      <Skeleton className="h-6 w-5/6" />
-      <Skeleton className="h-6 w-full" />
-      <Skeleton className="h-6 w-4/5" />
-    </div>
-  </div>
+const BlogPostDetailWithErrorBoundary = () => (
+  <ErrorBoundary>
+    <BlogPostDetail />
+  </ErrorBoundary>
 );
 
-export default BlogPostDetail;
+export default BlogPostDetailWithErrorBoundary;

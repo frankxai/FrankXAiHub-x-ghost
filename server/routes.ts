@@ -12,7 +12,7 @@ import {
   insertAssessmentSchema,
 } from "@shared/schema";
 import { getCompletion, streamCompletion, createSystemPrompt } from "./ai-service";
-import { AICompletionRequest, AICompletionResponse, AIPersona, AI_PERSONAS, PROMPT_TEMPLATES } from "@shared/ai-services";
+import { AICompletionRequest, AICompletionResponse, AIPersona, AI_PERSONAS, PROMPT_TEMPLATES, AIModelProvider } from "@shared/ai-services";
 import { log } from "./vite";
 import * as blogStorage from "./blog-storage";
 import express, { Router, Request, Response } from "express";
@@ -688,7 +688,7 @@ Format the response as JSON with this structure:
 
   // Agent personas
   app.get('/api/agent-personas', (req, res) => {
-    res.json(agentPersonas);
+    res.json(AI_PERSONAS);
   });
 
   // Get AI framework specialist agents
@@ -703,7 +703,7 @@ Format the response as JSON with this structure:
       const { message, conversation, model } = req.body;
 
       // Find the agent persona - check both standard personas and advanced agents
-      let agentPersona = agentPersonas.find(agent => agent.id === agentId);
+      let agentPersona = AI_PERSONAS[agentId];
 
       // If not found in standard personas, check the advanced ones
       if (!agentPersona) {
@@ -719,8 +719,8 @@ Format the response as JSON with this structure:
       const conversationHistory = conversation || [];
 
       // Use provided model or fall back to agent's default
-      const modelToUse = model || agentPersona.defaultModel || 'gpt-4-turbo-preview';
-      const providerToUse = model ? 'openrouter' : (agentPersona.defaultProvider || 'openai');
+      const modelToUse = model || agentPersona.model || 'gpt-4-turbo-preview';
+      const providerToUse = model ? 'openrouter' : (agentPersona.provider || 'openai');
 
       console.log(`Using model: ${modelToUse} with provider: ${providerToUse}`);
 
@@ -806,7 +806,7 @@ async function generateAIResponse(messages: any[], model: string, provider: stri
     const completion = await getCompletion({
       messages,
       model,
-      provider,
+      provider: provider as AIModelProvider,
       temperature: 0.7,
       max_tokens: 1000
     });

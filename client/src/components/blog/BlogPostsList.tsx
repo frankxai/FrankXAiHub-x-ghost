@@ -14,9 +14,10 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Clock, Calendar, Tag, Search } from 'lucide-react';
+import { Clock, Calendar, Search } from 'lucide-react';
 import { BlogPost, fetchAllBlogPosts, fetchFeaturedPosts } from '../../lib/blogApi';
+import { ErrorBoundary } from '../ErrorBoundary';
+import { BlogPostCardSkeleton, FeaturedPostCardSkeleton, GridLoadingSkeleton } from '../ui/loading-states';
 
 const BlogPostsList: React.FC = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -77,16 +78,22 @@ const BlogPostsList: React.FC = () => {
       </div>
       
       {/* Featured Posts Section */}
-      {!isFeaturedLoading && featuredPosts && featuredPosts.length > 0 && (
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Featured Posts</h2>
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold mb-6">Featured Posts</h2>
+        {isFeaturedLoading ? (
+          <GridLoadingSkeleton 
+            count={3} 
+            component={FeaturedPostCardSkeleton} 
+            columns={3} 
+          />
+        ) : featuredPosts && featuredPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredPosts.map((post: BlogPost) => (
               <FeaturedPostCard key={post.id} post={post} />
             ))}
           </div>
-        </div>
-      )}
+        ) : null}
+      </div>
       
       {/* Category Tabs */}
       <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="mb-8">
@@ -101,11 +108,11 @@ const BlogPostsList: React.FC = () => {
         
         <TabsContent value={activeTab}>
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[...Array(4)].map((_, i) => (
-                <BlogPostSkeleton key={i} />
-              ))}
-            </div>
+            <GridLoadingSkeleton 
+              count={4} 
+              component={BlogPostCardSkeleton} 
+              columns={2} 
+            />
           ) : (
             <>
               {filteredPosts.length === 0 ? (
@@ -205,24 +212,10 @@ const BlogPostCard: React.FC<{ post: BlogPost }> = ({ post }) => (
   </Card>
 );
 
-const BlogPostSkeleton = () => (
-  <Card className="h-full">
-    <CardHeader className="pb-2">
-      <Skeleton className="h-6 w-24 mb-2" />
-      <Skeleton className="h-7 w-full" />
-    </CardHeader>
-    <CardContent className="pb-2">
-      <Skeleton className="h-4 w-full mb-2" />
-      <Skeleton className="h-4 w-full mb-2" />
-      <Skeleton className="h-4 w-2/3" />
-    </CardContent>
-    <CardFooter className="pt-2">
-      <div className="flex justify-between w-full">
-        <Skeleton className="h-5 w-24" />
-        <Skeleton className="h-5 w-32" />
-      </div>
-    </CardFooter>
-  </Card>
+const BlogPostsListWithErrorBoundary = () => (
+  <ErrorBoundary>
+    <BlogPostsList />
+  </ErrorBoundary>
 );
 
-export default BlogPostsList;
+export default BlogPostsListWithErrorBoundary;
